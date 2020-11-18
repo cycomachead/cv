@@ -1,0 +1,80 @@
+%% start of file `template.tex'.
+%% Copyright 2006-2013 Xavier Danaux (xdanaux@gmail.com).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+
+
+\documentclass[12pt, letterpaper, sans, unicode]{moderncv}
+% possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
+
+% modern themes
+\moderncvstyle{banking}
+% style options are 'casual' (default), 'classic', 'oldstyle' and 'banking'
+
+\moderncvcolor{blue}
+% color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+
+\renewcommand{\familydefault}{\IBMPlexSansLight}
+% to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
+
+%\nopagenumbers{}
+% suppress automatic page numbering for CVs longer than one page
+
+% character encoding
+\usepackage[utf8]{inputenc}                       % if you are not using xelatex ou lualatex, replace by the encoding you are using
+
+% adjust the page margins
+\usepackage[scale=0.75]{geometry}
+%\setlength{\hintscolumnwidth}{3cm}                % if you want to change the width of the column with the dates
+%\setlength{\makecvtitlenamewidth}{10cm}           % for the 'classic' style, if you want to force the width allocated to your name and avoid line breaks. be careful though, the length is normally calculated to avoid any overlap with your personal info; use this at your own typographical risks...
+
+\usepackage{import}
+% \usepackage{hyperref}
+
+% personal data
+\name{Michael}{Ball}
+\title{Curriculum Vitae}
+\address{San Francisco, CA} {}
+\phone[fixed]{(909) 993-3988}
+%\phone[fax]{+3~(456)~789~012}
+\email{ball@berkeley.edu}
+\homepage{https://michaelball.co}
+% \extrainfo{}
+%  \photo[64pt][0.4pt]{profile_pic.png} % optional, remove / comment the line if not wanted; '64pt' is the height the picture must be resized to, 0.4pt is the thickness of the frame around it (put it to 0pt for no frame) and 'picture' is the name of the picture file
+%\quote{Some quote}
+
+% \input{bibtex_preamble.tex}
+
+\begin{document}
+    \makecvtitle
+
+    % \small{TODO}
+
+    \input{1-education.tex}
+
+    \input{2-jobs.tex}
+
+    \input{4-teaching.tex}
+    
+    \input{5-awards.tex}
+
+    \input{6-service.tex}
+
+    \input{6-publications/1-conferences.tex}
+    
+    \input{6-publications/2-other-writing.tex}
+    
+    \input{6-publications/3-press.tex}
+    
+    \input{3-projects.tex}
+    
+    \input{7-personal.tex}
+
+    \input{8-references.tex}
+
+    % \input{bibtex_post.tex}
+    \vspace{50pt}
+    Last Updated: 2020-9-12
+\end{document}
