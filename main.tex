@@ -23,7 +23,7 @@
 % suppress automatic page numbering for CVs longer than one page
 
 % character encoding
-\usepackage[utf8]{inputenc}                       % if you are not using xelatex ou lualatex, replace by the encoding you are using
+\usepackage[utf8]{inputenc}
 
 % adjust the page margins
 \usepackage[scale=0.75]{geometry}
@@ -47,12 +47,14 @@
 
 % \input{bibtex_preamble.tex}
 
+\newcommand{\me}{\textbf{Ball, Michael}}
+
 \begin{document}
     \makecvtitle
 
-    % \small{TODO}
-
     \input{1-education.tex}
+
+    \input{research-interests}
 
     \input{2-jobs.tex}
 
@@ -61,6 +63,8 @@
     \input{5-awards.tex}
 
     \input{6-service.tex}
+    
+    \input{students}
 
     \input{6-publications/1-conferences.tex}
     
@@ -76,5 +80,6 @@
 
     % \input{bibtex_post.tex}
     \vspace{50pt}
+    
     Last Updated: 2020-9-12
 \end{document}
