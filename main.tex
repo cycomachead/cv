@@ -19,11 +19,12 @@
 \moderncvcolor{blue}
 % color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
 
-\renewcommand{\familydefault}{\IBMPlexSansLight}
-% to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
+\usepackage[sfdefault,thin]{roboto}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand\customfont[1]{{\usefont{T1}{custom}{m}{n} #1 }}
 
-%\nopagenumbers{}
-% suppress automatic page numbering for CVs longer than one page
+% to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
 
 % character encoding
 \usepackage[utf8]{inputenc}
@@ -41,7 +42,6 @@
 \title{Curriculum Vitae}
 \address{San Francisco, CA} {}
 \phone[fixed]{(909) 993-3988}
-%\phone[fax]{+3~(456)~789~012}
 \email{ball@berkeley.edu}
 \homepage{https://michaelball.co}
 \social[twitter]{\_mball\_}                            
@@ -81,13 +81,13 @@
     
     \input{7-personal.tex}
 
-    \input{8-references.tex}
+    \input{references.tex}
 
     % \input{bibtex_post.tex}
     \emptysection{}\closesection
     \vfill
     \begin{center}
-    \textit{\small Last significant update: 2021-11-15}
+    \textit{\small Last update \today}
     \end{center}
     % \makeletterclosing
 \end{document}
