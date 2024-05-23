@@ -1,23 +1,28 @@
-%% start of file `template.tex'.
-%% Copyright 2006-2013 Xavier Danaux (xdanaux@gmail.com).
-%
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License version 1.3c,
-% available at http://www.latex-project.org/lppl/.
-
 %%%%%%%%%%%%%%%%%% DOCUMENTATION LINKS:
 % https://github.com/moderncv/moderncv/blob/master/manual/moderncv_userguide.pdf
 
 
-\documentclass[12pt, letterpaper, sans, unicode]{moderncv}
+\documentclass[12pt, letterpaper, unicode]{moderncv}
 % possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
 
-% modern themes
-\moderncvstyle{banking}
-% style options are 'casual' (default), 'classic', 'oldstyle' and 'banking'
+% adjust the page margins, roughly 1"
+\usepackage[scale=0.75]{geometry}
+% \recomputelengths
+% character encoding
+\usepackage[utf8]{inputenc}
+\usepackage{etaremune}
+\usepackage[super]{nth}
+\usepackage{import}
+\PassOptionsToPackage{hyphens}{url}
+% \usepackage{hyperref}
 
-\moderncvcolor{blue}
-% color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+\moderncvstyle{banking}
+% primary text color
+\definecolor{color0}{rgb}{0,0,0}
+% headings -  berkeley blue
+\definecolor{color1}{rgb}{0.0,0.2,0.43}
+% accents - page no's, personal info
+\definecolor{color2}{HTML}{46535E} % Pacific Hex
 
 \usepackage[sfdefault,thin]{roboto}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
@@ -26,16 +31,9 @@
 
 % to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
 
-% character encoding
-\usepackage[utf8]{inputenc}
-
-% adjust the page margins
-\usepackage[scale=0.75]{geometry}
 %\setlength{\hintscolumnwidth}{3cm}                % if you want to change the width of the column with the dates
 %\setlength{\makecvtitlenamewidth}{10cm}           % for the 'classic' style, if you want to force the width allocated to your name and avoid line breaks. be careful though, the length is normally calculated to avoid any overlap with your personal info; use this at your own typographical risks...
 
-\usepackage{import}
-% \usepackage{hyperref}
 
 % personal data
 \name{Michael}{Ball}
@@ -44,50 +42,46 @@
 \phone[fixed]{(909) 993-3988}
 \email{ball@berkeley.edu}
 \homepage{https://michaelball.co}
-\social[twitter]{\_mball\_}                            
+\social[twitter]{\_mball\_}                   
 \social[github]{cycomachead}   
 
 % \input{bibtex_preamble.tex}
 
+% Frequent Coauthors
 \newcommand{\me}{\textbf{Ball, Michael}}
+\newcommand{\firstme}{\textbf{Michael Ball}}
 \newcommand{\dan}{Garcia, Daniel}
 \newcommand{\lauren}{Mock, Lauren}
+\newcommand{\mary}{Fries, Mary}
+\newcommand{\pamela}{Fox, Pamela}
+\newcommand{\tiffany}{Barnes, Tiffany}
+\newcommand{\bh}{Harvey, Brian}
+
 \newcommand{\snap}{Snap\textit{!}}
 
 \begin{document}
     \makecvtitle
 
-    \input{1-education.tex}
-
+    \input{1-education}
+    \input{2-jobs}
+    \input{4-teaching}
+    \input{5-awards}
     \input{research-interests}
-
-    \input{2-jobs.tex}
-
-    \input{4-teaching.tex}
-    
-    \input{5-awards.tex}
-
-    \input{6-service.tex}
-    
     \input{students}
+    \input{6-service}
+    \input{6-publications/1-conferences}
+    \input{6-publications/2-other-writing}
+    \input{6-publications/3-press}
+    \input{3-projects}
+    \input{7-personal}
+    \input{references}
 
-    \input{6-publications/1-conferences.tex}
+    % \input{bibtex_post}
     
-    \input{6-publications/2-other-writing.tex}
-    
-    \input{6-publications/3-press.tex}
-    
-    \input{3-projects.tex}
-    
-    \input{7-personal.tex}
-
-    \input{references.tex}
-
-    % \input{bibtex_post.tex}
     \emptysection{}\closesection
     \vfill
     \begin{center}
-    \textit{\small Last update \today}
+    \textit{\footnotesize{Last update \today}}
     \end{center}
     % \makeletterclosing
 \end{document}
