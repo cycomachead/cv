@@ -21,11 +21,18 @@
 \definecolor{color0}{rgb}{0,0,0}
 % headings -  berkeley blue
 \definecolor{color1}{rgb}{0.0,0.2,0.43}
+% headings -  berkeley blue -- brighter 2024
+% \definecolor{color1}{rgb}{0.0,0.07,0.54}
 % accents - page no's, personal info
 \definecolor{color2}{HTML}{46535E} % Pacific Hex
 
-\usepackage[sfdefault,thin]{roboto}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
+\usepackage{fontenc}
+\usepackage{fontspec}
+% https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
+\setsansfont{Source Sans Pro}
+% \setmainfont{Inter}
+% \usepackage[sfdefault,thin]{inter}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
 \renewcommand{\familydefault}{\sfdefault}
 \newcommand\customfont[1]{{\usefont{T1}{custom}{m}{n} #1 }}
 
@@ -48,8 +55,9 @@
 % \input{bibtex_preamble.tex}
 
 % Frequent Coauthors
-\newcommand{\me}{\textbf{Ball, Michael}}
-\newcommand{\firstme}{\textbf{Michael Ball}}
+\usepackage{xspace}
+\newcommand{\me}{\textbf{Ball, Michael}\xspace}
+\newcommand{\firstme}{\textbf{Michael Ball}\xspace}
 \newcommand{\dan}{Garcia, Daniel}
 \newcommand{\lauren}{Mock, Lauren}
 \newcommand{\mary}{Fries, Mary}
@@ -57,7 +65,10 @@
 \newcommand{\tiffany}{Barnes, Tiffany}
 \newcommand{\bh}{Harvey, Brian}
 
-\newcommand{\snap}{Snap\textit{!}}
+\newcommand{\snap}{Snap\textit{!}\xspace}
+\newcommand{\snapcon}{Snap\textit{!}Con\xspace}
+\newcommand{\snapshot}{Snap\textit{!}shot\xspace}
+\newcommand{\bjc}{The Beauty and Joy of Computing\xspace}
 
 \begin{document}
     \makecvtitle
