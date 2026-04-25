@@ -1,33 +1,45 @@
 %%%%%%%%%%%%%%%%%% DOCUMENTATION LINKS:
 % https://github.com/moderncv/moderncv/blob/master/manual/moderncv_userguide.pdf
 
+\DocumentMetadata{
+  lang        = en,
+  pdfstandard = ua-2,
+  pdfstandard = a-4f, %or a-4
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE} 
+}
+
 
 \documentclass[12pt, letterpaper, unicode]{moderncv}
 % possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
 
 % adjust the page margins, roughly 1"
-\usepackage[scale=0.75]{geometry}
+\usepackage[scale=0.8]{geometry}
 % \recomputelengths
 % character encoding
-\usepackage[utf8]{inputenc}
+
 \usepackage{etaremune}
 \usepackage[super]{nth}
 \usepackage{import}
+\usepackage[luatex]{xcolor}
+\usepackage{quoting}
+\PassOptionsToPackage{HTML}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
 % \usepackage{hyperref}
 
-\moderncvstyle{banking}
 % primary text color
 \definecolor{color0}{rgb}{0,0,0}
-% headings -  berkeley blue
-\definecolor{color1}{rgb}{0.0,0.2,0.43}
-% headings -  berkeley blue -- brighter 2024
-% \definecolor{color1}{rgb}{0.0,0.07,0.54}
-% accents - page no's, personal info
+% % headings -  berkeley blue
+% \definecolor{color1}{rgb}{0.0,0.2,0.43}
+% % headings -  berkeley blue -- brighter 2024
+\definecolor{color1}{HTML}{002676}
+% % accents - page no's, personal info
 \definecolor{color2}{HTML}{46535E} % Pacific Hex
 
-\usepackage[T1]{fontenc}
-\usepackage{fontenc}
+\moderncvstyle{banking}
+
+% \usepackage[T1]{fontenc}
+% \usepackage{fontenc}
 \usepackage{fontspec}
 % https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
 \setsansfont{Source Sans Pro}
@@ -46,10 +58,10 @@
 \name{Michael}{Ball}
 \title{Curriculum Vitae}
 \address{San Francisco, CA} {}
-\phone[fixed]{(909) 993-3988}
+% \phone[fixed]{(909) 993-3988}
 \email{ball@berkeley.edu}
-\homepage{https://michaelball.co}
-\social[twitter]{\_mball\_}                   
+\homepage{https://mball.co}
+% \social[twitter]{\_mball\_}                  
 \social[github]{cycomachead}   
 
 % \input{bibtex_preamble.tex}
@@ -92,7 +104,7 @@
     \emptysection{}\closesection
     \vfill
     \begin{center}
-    \textit{\footnotesize{Last update \today}}
+        \textit \footnotesize{Last update \today} 
     \end{center}
     % \makeletterclosing
 \end{document}

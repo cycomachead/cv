@@ -1,0 +1,88 @@
+%% ModernCV template for Michael Ball
+\documentclass[11pt,letter,sans]{moderncv}
+
+% moderncv themes
+\moderncvstyle{casual} 
+% \moderncvstyle{banking} 
+% style options: 'casual', 'classic', 'banking', 'oldstyle' and 'fancy'
+
+\definecolor{color0}{rgb}{0,0,0}
+% headings -  berkeley blue
+\definecolor{color1}{rgb}{0.0,0.15,0.46}
+% headings -  berkeley blue -- brighter 2024
+% \definecolor{color1}{rgb}{0.0,0.07,0.54}
+% accents - page no's, personal info
+\definecolor{color2}{HTML}{46535E} % Pacific Hex
+% \moderncvcolor{'#002676'}                           % color options: 'blue', 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+
+\usepackage[scale=0.9]{geometry}
+\usepackage{fontawesome5}                      % for modern icons
+\setlength{\footskip}{18pt}
+
+% personal data
+\name{Michael}{Ball}
+\title{Software Engineer \& Educator}
+\address{San Francisco, CA}{}
+\phone[mobile]{(909) 993-3988}
+\email{ball@berkeley.edu}
+\homepage{mball.co}
+\social[github]{cycomachead}
+% \social[twitter]{_mball_}
+
+\begin{document}
+\makecvtitle
+
+\section{Education}
+\cventry{2015--2016}{M.S. Computer Science}{UC Berkeley, College of Engineering}{}{}{}
+% \cventry{2015--2016}{M.S. Computer Science}{University of California, Berkeley}{}{Advisor: Dr. Daniel Garcia}{\textit{Thesis: Lambda: An Autograder for Snap!}}
+\cventry{2011--2015}{B.A. Computer Science}{UC Berkeley, College of Letters \& Sciences}{}{}{}
+
+\section{Professional Experience}
+\cventry{2019--Present}{Lecturer}{UC Berkeley EECS Department}{Berkeley, CA}{}{
+\begin{itemize}
+\item Full-time lecturer involved in EECS undergraduate curricular development and pedagogy
+\item Led courses including Data Science (C88C), Software Engineering (CS169A/L), Computer Science Fundamentals (CS88)
+\item Coordinated EECS Summer Instruction program (2022-2024)
+\item Member of Undergraduate Study Committee (2019-2024) and Student Grievances Committee (2020-2023)
+\end{itemize}}
+
+\cventry{2019--2021}{Part-Time Software Engineer}{TurnItIn}{Oakland, CA}{}{
+\begin{itemize}
+\item Early engineer from startup through acquisition by Turnitin
+\item Led web accessibility initiatives and presented at educational conferences
+\item Contributed to the design and development of autograding infrastructure
+\end{itemize}}
+
+\cventry{2016--2019}{Software Engineer}{Gradescope}{Berkeley, CA}{}{
+\begin{itemize}
+\item Early engineer from startup through acquisition by Turnitin
+\item Led web accessibility initiatives and presented at educational conferences
+\item Contributed to the design and development of autograding infrastructure
+\end{itemize}}
+
+\section{Software Projects}
+\cventry{}{Snap!}{}{}{}{
+A blocks-based visual programming language designed to teach computer science while exposing advanced concepts like lambdas and recursion. Contributed to core IDE and designed/built cloud infrastructure supporting 5M+ projects and 500K+ users. \texttt{https://snap.berkeley.edu}
+}
+
+\cventry{}{Beauty and Joy of Computing (BJC)}{}{}{}{
+AP Computer Science Principles curriculum emphasizing programming and social implications of computing. Provided infrastructure maintenance, technical consulting, and curriculum development. \texttt{https://bjc.berkeley.edu}
+}
+
+\cventry{}{Alonzo, A Staff Chatbot}{}{}{}{
+Chatbot automating grading processes for course staff, enabling efficient oral lab check-offs. Originally a side project that evolved with contributions from multiple generations of TAs. \texttt{https://github.com/cs10/Alonzo}
+}
+
+\section{Awards \& Grants}
+\cventry{2023--2025}{UC Berkeley Instructional Technology Grant}{}{}{}{Awarded \$100,000 to modernize educational tools for CS and Data Science courses}
+\cventry{2021--2022}{UC Berkeley Presidential Chair Fellows}{}{}{}{Awarded \$22,500 grant to add Parsons Problems to CS courses}
+\cventry{2019--2020}{UC Berkeley Lecturer Teaching Fellows}{}{}{}{Year-long project on Parsons Puzzles in intro CS courses}
+\cventry{2015}{Eugene L. Lawler Prize}{UC Berkeley EECS}{}{}{Honored for academic effort and surmounting difficulties}
+\cventry{2015}{EECS Distinguished Graduate Student Instructor Award}{UC Berkeley}{}{}{Selected from top 9\% of UC Berkeley EECS GSIs}
+
+\section{Technical Skills}
+\cvitem{Languages}{Snap!, JavaScript, Ruby, Python, SQL, bash, CSS, HTML}
+\cvitem{Tools}{Git, React, AWS, Heroku, Terraform, PostgreSQL, accessibility testing}
+\cvitem{Media}{Semi-Professional Photography, Online events, Adobe Creative Suite, Final Cut Pro X}
+
+\end{document}
