@@ -1,0 +1,61 @@
+name: Build CV PDFs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for the `pdfs` branch publish step
+    steps:
+      - uses: actions/checkout@v4
+
+      # main.tex uses \usepackage{fontspec} + Source Sans Pro, which requires
+      # lualatex (or xelatex). The one-pager only needs pdflatex but we run
+      # both with lualatex for consistency.
+      - name: Build full CV (main.tex)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          extra_system_packages: "fonts-sourcecodepro fonts-sourcesanspro"
+
+      - name: Build one-page resume
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: one-page-resume.tex
+          latexmk_use_lualatex: true
+
+      - name: Upload PDFs as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdfs
+          path: |
+            main.pdf
+            one-page-resume.pdf
+          if-no-files-found: error
+          retention-days: 90
+
+      # On pushes to main, also publish the latest PDFs to a `pdfs` branch so
+      # you always have a stable URL (raw.githubusercontent.com/.../pdfs/...).
+      # Remove this step if you don't want auto-published builds.
+      - name: Stage PDFs for publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p _publish
+          cp main.pdf one-page-resume.pdf _publish/
+
+      - name: Publish PDFs to `pdfs` branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: pdfs
+          publish_dir: ./_publish
+          keep_files: false
+          commit_message: "Build PDFs from ${{ github.sha }}"
