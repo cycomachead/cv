@@ -1,22 +1,24 @@
-# SPRING 2024
-- [ ] Add Spring 2024 Classes
-- [ ] Add Microgrant 2024-2025
-- [ ] Add CS169 regular class description
-- [ ] SIGCSE 2024 Submissions
-- [ ] 
+# Content Gaps (need user input)
 
-# TODOs
+- [ ] Add Snap!Con 2025 session details (placeholder exists)
+- [ ] Add UC Open 2026 entry (placeholder exists)
+- [ ] Add UC Berkeley Teaching and Learning Conf. poster: Vargas-Navarro, Edwin et al. on Flextensions
+- [ ] Add Student-Organized AI Event talk (April 25, 2025; UC Berkeley) — title/URL needed
+- [ ] Add Daily Cal interviews and additional CSEdPodcast appearances (URLs in `6-publications/3-press.tex`)
+- [ ] Verify SIGCSE 2024 SIGCSE Online Posters & Lightning Talks Program Chair role
+- [ ] Add PCF (Presidential Chair Fellows) grant description text
+- [ ] Add Snap!Con descriptions
+- [ ] Rewrite BJC project section in `3-projects.tex`
+- [ ] Identify additional software projects to list in `3-projects.tex` (notes mention seating-tool, berkeley-class-site)
 
-- Make names be "First Last" on *all* items
+# Style / Formatting TODOs (carry-overs from earlier audit)
+
+- Make author names "First Last" on *all* items (currently mixed "Last, First" and "First Last")
 - `\cvline` should indent subsequent lines of text
-- Students section bullets are not centered right
-- Figure out better spacing **before** a subsection
-- URLs should have a different style?
-- Add URLs for each snpacon
+- Students section bullets are not centered correctly
+- Better spacing **before** a subsection
+- URL style — distinguish from body text?
+- Add URLs for each Snap!Con item
 - Include Teaching eval scores?
-- I don't like the line height/font mix.
-- Add text for PCF Grants
-- Add descriptions for Snap!Con?
+- Reconsider line height / font mix
 - Should presentations be numbered?
-- Rewrite BJC section
-- What software projects are missing?
