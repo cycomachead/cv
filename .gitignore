@@ -1,0 +1,23 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+
+# Generated PDFs (built by CI; uncomment to keep PDFs out of git entirely)
+# main.pdf
+# one-page-resume.pdf
+
+# Editor / OS noise
+.DS_Store
+.vscode/
