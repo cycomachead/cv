@@ -1,0 +1,8 @@
+# Template keys included in the one-page resume.html (in this order). Pulls
+# the matching entries from sections.yml.
+sections:
+  - positions
+  - projects
+  - awards
+  - skills
+  - education

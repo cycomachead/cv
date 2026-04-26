@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= h(data.basics['name']) %> — Resume</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main class="cv cv--resume">
+  <%= partial('_header') %>
+
+  <nav class="cv__alt">
+    <a href="index.html">← Full CV</a>
+  </nav>
+
+  <% Array(data.resume['sections']).each do |key| -%>
+    <% section = data.sections.find { |s| s['template'] == key } or next -%>
+    <%= partial("_#{section['template']}", section: section) %>
+  <% end -%>
+
+  <footer class="cv__footer">
+    <p>Last updated <%= Time.now.strftime('%B %-d, %Y') %>. Source on
+      <a href="https://github.com/cycomachead/cv">GitHub</a>.</p>
+  </footer>
+</main>
+</body>
+</html>

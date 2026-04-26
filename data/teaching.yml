@@ -1,0 +1,129 @@
+courses:
+  - code: CS 10
+    title: The Beauty and Joy of Computing
+    units: 4
+    description: >-
+      Non-majors introduction to computer science. Hands-on, project-based
+      course taught using Snap! and Python.
+  - code: CS 88 / DATA C88C
+    title: Computational Structures for Data Science
+    units: 3
+    description: >-
+      CS1-or-1.5 course for data science majors, based on Sussman's SICP and
+      taught in Python.
+  - code: CS 169
+    title: Engineering Software as a Service
+    units: 4
+    description: >-
+      The original software engineering course, later split into CS169A and
+      CS169L.
+  - code: CS 169A
+    title: Engineering Software as a Service
+    units: 4
+    description: >-
+      Upper-division course on modern software engineering through RESTful
+      design, HTTP, and team projects.
+  - code: CS 169L
+    title: Software Engineering Team Project
+    units: 4
+    description: >-
+      Follow-up to CS 169A; teams build a semester-long project for a campus
+      organization or local nonprofit.
+  - code: CS W186
+    title: Introduction to Databases
+    units: 4
+    description: Upper-division databases course offered in an online format.
+  - code: CS 194-23
+    title: Art & Science of Digital Photography
+    units: 4
+    description: Highly technical photography course bridging art and engineering.
+  - code: CS 195 / CS H195
+    title: The Social Implications of Computing Technology
+    units: 1 / 3
+    description: >-
+      Course exploring the unintended consequences of computing, including
+      the culture of how we build programs. H195 is an honors course where
+      students complete a small research project.
+  - code: CS 294-188
+    title: Design and Evaluation of CS at Scale
+    units: 1
+    description: >-
+      Pedagogy course for teaching assistants on course-course collaborations
+      and current computing-education pedagogy.
+  - code: CS 302
+    title: Designing Computer Science Education
+    units: 3
+    description: >-
+      Course preparing students to be the instructor of record for a summer
+      CS course.
+  - code: CS 375
+    title: Teaching Practicum
+    units: 2
+    description: First-time CS teaching assistant training.
+  - code: DATA 101 / CS C187
+    title: Data Engineering
+    units: 4
+    description: >-
+      Upper-division course putting databases into practice. Topics include
+      SQL, window functions, indexing, design, ETL, NoSQL, and graph
+      databases.
+
+notes:
+  - "* denotes courses that were co-taught."
+  - Spring 2020 included an abrupt switch to remote instruction.
+  - Fall 2020 and Spring 2021 were entirely remote semesters.
+  - Fall 2021, Spring 2022, and Fall 2022 included significant hybrid teaching components.
+
+assignments:
+  - term: Summer 2026
+    detail: Co-Director EECS Summer Program (10 courses)
+  - term: Spring 2026
+    detail: DATA C88C (500 students, 14 staff), CS 169L* (18 students, 2 staff), CS 302* (8 students, 1 staff)
+  - term: Fall 2025
+    detail: DATA C88C (550 students, 13 staff), CS 169A (140 students, 3 staff), CS 294-189* (16 students, 0 staff)
+  - term: Summer 2025
+    detail: Co-Director EECS Summer Program (10 courses)
+  - term: Spring 2025
+    detail: DATA C88C (550 students, 14 staff), CS 169L* (18 students, 3 staff), CS 302* (25 students, 1 staff)
+  - term: Fall 2024
+    detail: DATA 101* (450 students, 12 staff), CS 169A (280 students, 5 staff)
+  - term: Summer 2024
+    detail: Co-Organizer EECS Summer Program (11 courses)
+  - term: Spring 2024
+    detail: DATA C88C (500 students, 14 staff), CS 169L* (16 students, 2 staff), CS 302* (20 students, 0 staff)
+  - term: Fall 2023
+    detail: DATA C88C (460 students, 10 staff), CS 169A* (270 students, 6 staff)
+  - term: Summer 2023
+    detail: Organizer EECS Summer Program (10 courses)
+  - term: Spring 2023
+    detail: DATA C88C (500 students, 15 staff), CS 169L* (20 students, 1 TA), CS 302 (24 students, 0 staff)
+  - term: Fall 2022
+    detail: CS 88 (450 students, 14 staff), CS 169A* (240 students, 7 staff), CS 195/H195* (300 students, 1 TA)
+  - term: Summer 2022
+    detail: Co-Organizer EECS Summer Program (10 courses)
+  - term: Spring 2022
+    detail: CS 88 (420 students, 12 staff), CS 10 (150 students, 6 staff), CS 302* (25 students, 1 reader)
+  - term: Fall 2021
+    detail: CS 88 (400 students), CS 169A* (300 students), CS 294-188 (10 students)
+  - term: Spring 2021
+    detail: CS 88 (400 students), CS 195 (400 students), CS 169L* (60 students)
+  - term: Fall 2020
+    detail: CS 88 (360 students), CS 169A* (300 students)
+  - term: Spring 2020
+    detail: CS 88* (300 students), CS W186* (700 students), CS 195* (400 students)
+  - term: Fall 2019
+    detail: CS 88 (240 students, 8 staff), CS 169 (120 students, 4 staff), CS 375 (80 students)
+  - term: Summer 2015
+    detail: CS 10* (60 students, 5 staff)
+  - term: Spring 2015
+    detail: Head TA, CS 10 (330 students)
+  - term: Fall 2014
+    detail: Head TA, CS 10 (330 students)
+  - term: Spring 2014
+    detail: Head TA, CS 10 (300 students)
+  - term: Fall 2013
+    detail: TA, CS 10 (300 students)
+  - term: Spring 2013
+    detail: TA, CS 194-23 (30 students); TA, CS 10 (300 students)
+  - term: Fall 2012
+    detail: TA, CS 10 (240 students)

@@ -21,3 +21,10 @@
 # Editor / OS noise
 .DS_Store
 .vscode/
+
+# Ruby site generator outputs
+/build/
+/dblp.bib
+/.bundle/
+/vendor/bundle/
+Gemfile.lock

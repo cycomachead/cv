@@ -1,0 +1,19 @@
+<section class="cv__section" id="students">
+  <h2><%= h(section['title']) %></h2>
+  <ol class="cv__entries">
+    <% data.students.each do |s| -%>
+      <li class="cv__entry">
+        <div class="cv__entry-head">
+          <span class="cv__entry-when"><%= h(s['when']) %></span>
+          <span class="cv__entry-what"><strong><%= h(s['name']) %></strong><% if s['title'] %> — <em><%= h(s['title']) %></em><% end %></span>
+        </div>
+        <% if s['advising'] -%>
+          <div class="cv__entry-meta"><%= h(s['advising']) %></div>
+        <% end -%>
+        <% if s['url'] -%>
+          <div class="cv__entry-meta"><a href="<%= s['url'] %>"><%= s['url'].sub(%r{^https?://}, '') %></a></div>
+        <% end -%>
+      </li>
+    <% end -%>
+  </ol>
+</section>

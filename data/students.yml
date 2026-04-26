@@ -1,0 +1,25 @@
+- when:     May 2026
+  name:     Rebecca Dang
+  advising: Co-advised with Lisa Yan
+
+- when:     May 2025
+  name:     Edwin Vargas-Navarro
+  advising: Co-advised with Lisa Yan
+
+- when:     May 2021
+  name:     Alex Kassil
+  title:    Active Academic Integrity
+  advising: Co-advised with John DeNero
+  url:      https://www2.eecs.berkeley.edu/Pubs/TechRpts/2021/EECS-2021-157.html
+
+- when:     May 2020
+  name:     Mansi Shah
+  title:    Exploring the Use of Parsons Problems for Learning a New Programming Language
+  advising: 2nd Reader; advised by Dan Garcia
+  url:      https://www2.eecs.berkeley.edu/Pubs/TechRpts/2020/EECS-2020-88.html
+
+- when:     May 2020
+  name:     Harikaran Subbaraj
+  title:    Using Dataflow for Machine Learning Inference
+  advising: 2nd Reader; advised by Joey Gonzalez
+  url:      https://www2.eecs.berkeley.edu/Pubs/TechRpts/2020/EECS-2020-75.html

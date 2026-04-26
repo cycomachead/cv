@@ -1,0 +1,9 @@
+<section class="cv__section" id="research-interests">
+  <h2><%= h(section['title']) %></h2>
+  <dl class="cv__definitions">
+    <% data.research_interests.each do |item| -%>
+      <dt><%= h(item['title']) %></dt>
+      <dd><%= h(item['description']) %></dd>
+    <% end -%>
+  </dl>
+</section>

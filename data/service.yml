@@ -1,0 +1,75 @@
+- heading: Professional Service
+  items:
+    - when:   2024
+      detail: "SIGCSE Online: 2024 Posters and Lightning Talks Program Chair"
+    - when:   2024
+      detail: "Snap!shot 2024 Co-Organizer; Technical Lead"
+    - when:   2023
+      detail: "Snap!Con 2023 Co-Organizer; Technical Lead"
+    - when:   2022
+      detail: "Snap!Con 2022 Co-Organizer; Technical Lead"
+    - when:   2021
+      detail: "Snap!shot 2021 Mini-Conference Co-Organizer; Technical Lead, December 2021"
+    - when:   2021
+      detail: "Snap!Con 2021 Co-Organizer; Technical Lead"
+    - when:   2021
+      detail: SIGCSE Technical Symposium Publicity Co-Chair
+    - when:   2021
+      detail: SIGCSE Technical Symposium Associate Program Chair / Senior Reviewer "Experience Reports and Tools"
+    - when:   2020
+      detail: "Snap!shot 2020 Mini-Conference Co-Organizer; Technical Lead"
+    - when:   2020
+      detail: "Snap!Con 2020 Co-Organizer; Technical Lead"
+    - when:   2020
+      detail: SIGCSE Technical Symposium Publicity Co-Chair
+    - when:   "2018–2020"
+      detail: SIGCSE Technical Symposium Computer Science Principles Providers and Teachers Forum Co-Organizer
+      note:   >-
+        Launched because there had been no formal face-to-face community for
+        providers and teachers of CSP to discuss best practices, feedback, or
+        share teaching experiences at SIGCSE.
+    - when:   "2016–2020"
+      detail: SIGCSE Technical Symposium Reviewer
+    - when:   2018
+      detail: SIGCSE Technical Symposium Photography Chair
+
+- heading: Departmental & Institutional Service
+  items:
+    - when:   "2025–2026"
+      detail: UC Berkeley EECS Summer 2026 Instruction Co-Director
+    - when:   2026
+      detail: UC Berkeley Unit 18 Faculty Excellence Review Committee (Lecturer in Computer Science)
+    - when:   "2024–2025"
+      detail: UC Berkeley EECS Summer 2025 Instruction Co-Director
+    - when:   2025
+      detail: UC Berkeley Unit 18 Faculty Excellence Review Committee (Lecturer in Economics)
+    - when:   "2024–2025"
+      detail: UC Berkeley EECS Computer Networks and Instructional Labs Committee
+    - when:   "2023–2024"
+      detail: UC Berkeley EECS Summer 2024 Instruction Co-Director
+      note:   "Hired 10 Unit 18 Lecturers; involved in union- and campus-level negotiations."
+    - when:   "2023–2026"
+      detail: UC Berkeley Teach-Net Faculty Community Moderator
+      note:   Campus-wide community of 1,000 faculty, staff, and administrators.
+    - when:   "2022–2023"
+      detail: UC Berkeley EECS Summer 2023 Instruction Coordinator
+    - when:   "2019–2025"
+      detail: UC Berkeley EECS Undergraduate Study Committee
+    - when:   "2021–2022"
+      detail: UC Berkeley EECS Summer 2022 Instruction Co-Coordinator
+    - when:   "2021–2022"
+      detail: "UC Berkeley: Research, Teaching & Learning Faculty Advisory Committee, Co-Chair"
+    - when:   "2020–2023"
+      detail: EECS Department Student Grievances Committee, CS Chair
+    - when:   "2020–2021"
+      detail: "UC Berkeley: Disabled Students Program Faculty Advisory Committee, Member"
+    - when:   "2020–2021"
+      detail: "UC Berkeley: Research, Teaching & Learning Faculty Advisory Committee, Member"
+    - when:   "Winter 2020–2021"
+      detail: "UC Berkeley Working Group: Online Proctoring Policies, Member"
+    - when:   Spring 2020
+      detail: "UC Berkeley Working Group: Best Practices for Remote Exams, Member"
+    - when:   2016
+      detail: UC Berkeley EECS Graduate Student Instructor Survey Presentation for Faculty
+    - when:   "2014–2015"
+      detail: UC Berkeley EECS Undergraduate Study Committee, Student Member

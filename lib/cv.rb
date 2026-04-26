@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require 'pathname'
+
+module CV
+  ROOT = Pathname.new(File.expand_path('..', __dir__))
+  DATA_DIR     = ROOT.join('data')
+  TEMPLATE_DIR = ROOT.join('templates')
+  BUILD_DIR    = ROOT.join('build')
+  BIB_FILE     = ROOT.join('personal.bib')
+
+  autoload :Macros,   'cv/macros'
+  autoload :Bib,      'cv/bib'
+  autoload :Data,     'cv/data'
+  autoload :Renderer, 'cv/renderer'
+  autoload :Site,     'cv/site'
+  autoload :DBLP,     'cv/dblp'
+end

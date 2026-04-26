@@ -1,0 +1,374 @@
+# Publications. Each group has a heading and an ordered list of items.
+# Items can be one of:
+#   - { bib: "<key from personal.bib>", kind?, venue_override?, url? }
+#   - { authors: [...], title, kind?, venue, url?, year? }   # fully inline
+#   - { text: "<free-form HTML / LaTeX-friendly prose>" }    # for the awkward
+#                                                              ones that don't
+#                                                              fit a schema yet
+#
+# Reorder the items array to reorder publications. Reorder the groups to
+# reorder sections. Set `reverse: true` on a group to render it as a
+# reverse-chronological enumerated list (etaremune in LaTeX).
+
+- heading: Invited Talks, Workshops & Lectures
+  id:      invited
+  items:
+    - title:  "Faberllull: Educational Programming Languages and Robotics IX"
+      kind:   Invited Resident
+      venue:  Olot, Spain
+      year:   2026
+      url:    "https://faberllull.cat/en/residencia.cfm?id=43646"
+    - title:  "Faberllull: Educational Programming Languages and Robotics VIII"
+      kind:   Invited Resident
+      venue:  Olot, Spain
+      year:   2025
+      url:    "https://faberllull.cat/en/residencia.cfm?id=43646"
+    - title:  "Faberllull: Educational Programming Languages and Robotics VII"
+      kind:   Invited Resident
+      venue:  Olot, Spain
+      year:   2024
+      url:    "https://faberllull.cat/en/residencia.cfm?id=43646"
+    - title:  "Faberllull: Educational Programming Languages and Robotics VI"
+      kind:   Invited Resident
+      venue:  Olot, Spain
+      year:   2023
+      url:    "https://faberllull.cat/en/residencia.cfm?id=42597"
+    - title:  "ChatGPT: What does it mean for Education?"
+      kind:   Invited Panelist
+      venue:  UC Berkeley Center for Teaching and Learning
+      year:   2023
+    - title:  "UC Berkeley Vice Provost for Undergraduate Education's Remote Proctoring Session"
+      kind:   Online Workshop, Co-host
+      venue:  UC Berkeley
+      year:   2022
+    - title:  Educational Programming Languages and Systems
+      kind:   Invited participant, Dagstuhl Seminar 22302
+      venue:  Wadern, Germany
+      year:   2022
+      url:    "https://doi.org/10.4230/DagRep.12.7.205"
+    - title:  "UC Berkeley Vice Provost for Undergraduate Education's Remote Proctoring Session"
+      kind:   Online Workshop, Co-host
+      venue:  UC Berkeley
+      year:   2022
+    - authors: ["Ball, Michael", "Garcia, Daniel"]
+      title:   Online Learning
+      kind:    Talk
+      venue:   University of Washington CS Education Seminar (Online)
+      year:    2020
+    - authors: ["Ball, Michael", "Garcia, Daniel"]
+      title:   Mastery Learning at Scale
+      kind:    Talk
+      venue:   University of Washington CS Education Seminar (Online)
+      year:    2020
+
+- heading: Conference Papers
+  id:      papers
+  reverse: true
+  items:
+    - bib:   garcia_bjc_sparks_2023
+      # bib key not yet in personal.bib — fall back to inline:
+      text: >-
+        Garcia, Daniel; Fries, Mary; Ball, Michael; Fox, Pamela; Gelosi,
+        Deanna; Mock, Lauren; Dastur, Della; Briccetti, Dave; Kahn, Bob.
+        BJC Sparks: A New Functional-First Middle School CS Curriculum.
+        SIGCSE 2023, March 2023.
+        [https://doi.org/10.1145/3545945.3569842](https://doi.org/10.1145/3545945.3569842)
+
+- heading: Conference and Workshop Presentations
+  id:      presentations
+  reverse: true
+  items:
+    # SIGCSE 2026
+    - authors: ["Ball, Michael", "Mönig, Jens", "Garcia, Daniel", "Phelps, Victoria", "Garcia, Yuan", "Huegle, Jadga"]
+      title:   "A Community of Snap! Educators — New Features and Tools for Teaching AI"
+      kind:    Demo
+      venue:   "SIGCSE 2026 (Proc. of the 57th ACM Technical Symposium on CS Education V.2)"
+      year:    2026
+      url:     "https://doi.org/10.1145/3770761.3777109"
+    - authors: ["Blank, Adam", "Ball, Michael", "McGaha, Travis", "Rampure, Suraj", "Velasco, Yesenia", "Walther, Kendra"]
+      title:   "Teaching Faculty Careers without a PhD: A Mentoring Community"
+      kind:    BoF
+      venue:   SIGCSE 2026
+      year:    2026
+      url:     "https://doi.org/10.1145/3770761.3777084"
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Fries, Mary", "Hill, Marnie", "Dastur, Della", "Mock, Lauren"]
+      title:   "The Beauty and Joy of Computing: CS Curricula That Scales from Middle School to University"
+      kind:    Tutorial
+      venue:   SIGCSE 2026
+      year:    2026
+      url:     "https://doi.org/10.1145/3770761.3777056"
+    - authors: ["Garcia, Daniel", "Mönig, Jens", "Hügle, Jadga", "Fries, Mary", "Kang, Jane M.", "Dastur, Delnavaz", "Phelps, Victoria", "Bettencourt, Bryant", "Ball, Michael", "Mock, Lauren"]
+      title:   "A Hands-on and Interactive Introduction to the Fundamentals of Artificial Intelligence using Snap!"
+      kind:    Tutorial
+      venue:   SIGCSE 2026
+      year:    2026
+      url:     "https://doi.org/10.1145/3770761.3777048"
+
+    # SIGCSE 2025
+    - authors: ["Ball, Michael", "Rampure, Suraj", "Lin, Kevin"]
+      title:   "A New Class of Teaching-Track Faculty: No Ph.D. Required"
+      kind:    BoF
+      venue:   SIGCSE 2025
+      year:    2025
+      url:     "https://doi.org/10.1145/3641555.3705113"
+    - authors: ["Phelps, Victoria", "Ball, Michael", "Garcia, Daniel", "Garcia, Yuan"]
+      title:   "Snap! 10 — From Blocks to AI: Empowering Learning with Custom Primitives and Machine Learning"
+      kind:    Demo
+      venue:   SIGCSE 2025
+      year:    2025
+      url:     "https://doi.org/10.1145/3641555.3705048"
+
+    # SIGCSE 2024
+    - authors: ["Garcia, Daniel", "Fries, Mary", "Ball, Michael", "Mock, Lauren"]
+      title:   "Igniting Curiosity with BJC Sparks: A Transformative Curriculum for Middle and High School Computer Science"
+      kind:    Workshop
+      venue:   SIGCSE 2024
+      year:    2024
+      url:     "https://doi.org/10.1145/3626253.3633415"
+    - authors: ["Garcia, Daniel", "Hug, Josh", "Badrinath, Anirudhan", "Ball, Michael", "Mock, Lauren"]
+      title:   "Student Mission Control: Integrating Space Data Exploration into Data and Computer Science Education"
+      kind:    Workshop
+      venue:   SIGCSE 2024
+      year:    2024
+      url:     "https://doi.org/10.1145/3626253.3633417"
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Phelps, Victoria", "Garcia, Yuan"]
+      title:   "Snap! 9 — Support for Teachers and Programming with Data"
+      kind:    Demo
+      venue:   SIGCSE 2024
+      year:    2024
+      url:     "https://doi.org/10.1145/3626253.3635437"
+
+    # SIGCSE 2023
+    - authors: ["Walther, Kendra", "Blank, Adam", "Ball, Michael", "Rampure, Suraj"]
+      title:   "A New Class of Teaching-Track Faculty: No Ph.D. Required"
+      kind:    Panel
+      venue:   SIGCSE 2023
+      year:    2023
+      url:     "https://doi.org/10.1145/3545947.3569608"
+    - authors: ["Zhou, Lauren", "Dewan, Akshit", "Kothapalli, Anirudh", "Fox, Pamela", "Ball, Michael", "Joseph, Thomas"]
+      title:   Implementing Faded Parsons Problems in a Very Large CS1 Course
+      kind:    Poster
+      venue:   SIGCSE 2023
+      year:    2023
+      url:     "https://doi.org/10.1145/3545947.3576300"
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Garcia, Yuan"]
+      title:   "Snap! 8 — Smart Script Pics and Metaprogramming for All!"
+      kind:    Demo
+      venue:   SIGCSE 2023
+      year:    2023
+      url:     "https://doi.org/10.1145/3545947.3573231"
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Garcia, Yuan"]
+      title:   "Ten Years of Snap! — Where Should We Go Next?"
+      kind:    Birds of a Feather
+      venue:   SIGCSE 2023
+      year:    2023
+      url:     "https://doi.org/10.1145/3545947.3573357"
+
+    # SIGCSE 2022 — these come from personal.bib
+    - bib:   walther_new_2022
+      kind:  Panel
+    - bib:   garcia_snap_2022
+      kind:  Demo
+    - bib:   ball_beauty_2022
+      kind:  Workshop
+
+    # TAPIA 2021
+    - authors: ["Blank, Adam", "Walther, Kendra", "Ball, Michael"]
+      title:   Teaching Track Faculty with a Masters-Only
+      kind:    BoF
+      venue:   2021 Richard Tapia Celebration of Computing (Online)
+      year:    2021
+
+    # SnapCon 2021
+    - authors: ["Mönig, Jens", "Romagosa, Bernat", "Harvey, Brian", "Ball, Michael", "Hügle, Jadga"]
+      title:   "What Might Be the Future of Snap!?"
+      kind:    Panel
+      venue:   "Snap!Con 2021 (Online)"
+      year:    2021
+      url:     https://www.snapcon.org/conferences/2021/program/proposals/295
+    - authors: ["Garcia, Daniel", "Gelosi, Deanna", "Fries, Mary", "Fox, Pamela", "Ball, Michael"]
+      title:   BJC Middle School 1.0
+      kind:    Panel
+      venue:   "Snap!Con 2021 (Online)"
+      year:    2021
+      url:     https://www.snapcon.org/conferences/2021/program/proposals/277
+
+    # SIGCSE 2021 — bib keys
+    - bib:   ball_teaching_2021
+      kind:  Panel
+    - bib:   kassil_active_2021
+      kind:  Poster
+    - bib:   ball_effective_2021
+      kind:  Workshop
+    - bib:   lin_strategies_2021
+      kind:  Birds of a Feather
+    - bib:   hill_teaching_2021
+      kind:  Workshop
+    - bib:   garcia_snap6_2021
+      kind:  Demo
+
+    # 2020
+    - authors: ["Mönig, Jens", "Harvey, Brian", "Ball, Michael", "Guillén, Joan", "Hügle, Jadga", "Romagosa, Bernat"]
+      title:   "The Future of Snap!"
+      kind:    Panel
+      venue:   "Snap!Con 2020 (Online)"
+      year:    2020
+      url:     https://www.snapcon.org/conferences/2020/program/proposals/35
+    - bib:   garcia_snap_2020
+      kind:  Demo
+    - bib:   ball_beauty_2020
+      kind:  Workshop
+    - bib:   ball_teaching_2020
+      kind:  Panel
+
+    # 2019
+    - authors: ["Ball, Michael", "Jatzlau, Sven"]
+      title:   "An Analysis of 500,000 Snap! Projects"
+      kind:    Lightning Talk
+      venue:   "Snap!Con 2019, Heidelberg, Germany"
+      year:    2019
+    - authors: ["Ball, Michael"]
+      title:   Using JSFunction with the Wolfram Alpha API
+      kind:    Lightning Talk
+      venue:   "Snap!Con 2019, Heidelberg, Germany"
+      year:    2019
+    - authors: ["Mönig, Jens", "Romagosa, Bernat", "Ball, Michael", "Harvey, Brian"]
+      title:   "The Future of Snap!"
+      kind:    Panel
+      venue:   "Snap!Con 2019"
+      year:    2019
+    - authors: ["Ball, Michael"]
+      title:   "Snap! — A Look at 550K Projects"
+      kind:    Poster
+      venue:   "Snap!Con 2019, Heidelberg, Germany"
+      year:    2019
+    - authors: ["Ball, Michael"]
+      title:   "What's New in Snap! 5?"
+      kind:    Poster
+      venue:   "Snap!Con 2019, Heidelberg, Germany"
+      year:    2019
+    - authors: ["Ball, Michael"]
+      title:   "A Look at 6 Years of the Snap! Cloud"
+      venue:   "Snap!Con 2019, Heidelberg, Germany"
+      year:    2019
+    - bib:   ball_snap_2019
+      kind:  Poster
+    - authors: ["Mock, Lauren", "Ball, Michael", "Garcia, Daniel", "Barnes, Tiffany"]
+      title:   Computer Science Principles Providers and Teachers Forum
+      kind:    Pre-Symposium Workshop
+      venue:   SIGCSE 2019
+      year:    2019
+    - authors: ["Ball, Michael"]
+      title:   "Teaching Accessibility Using Software"
+      kind:    SIGCSE 2019 Pre-Symposium Event
+      venue:   SIGCSE 2019
+      year:    2019
+
+    # 2018
+    - bib:   ball_irt_2018
+      kind:  Lightning Talk
+    - bib:   galanos_technology_2018
+      kind:  Panel
+    - bib:   milliken_ap_2018
+      kind:  Workshop
+
+    # 2017
+    - authors: ["Garcia, Daniel", "Harvey, Brian", "Mönig, Jens", "Ball, Michael", "Romagosa, Bernat", "Low, Robert", "Mock, Lauren"]
+      title:   The Beauty and Joy of Computing
+      kind:    Workshop
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Mock, Lauren"]
+      title:   "Writing Autograders for Snap! and Integrating them Into Your Course"
+      kind:    Short Talk
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - authors: ["Garcia, Daniel", "Harvey, Brian", "Mönig, Jens", "Ball, Michael", "Mock, Lauren", "Low, Robert", "Romagosa, Bernat"]
+      title:   "The Beauty and Joy of Computing and the Snap! Programming Language"
+      kind:    Poster
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - authors: ["Ball, Michael", "Garcia, Daniel", "Mock, Lauren"]
+      title:   "Early Analysis of \"In-Lab\" Autograding for Snap!"
+      kind:    Poster
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - authors: ["Mock, Lauren", "Ball, Michael", "Garcia, Daniel", "Harvey, Brian"]
+      title:   Lessons Learned Delivering a Customizable Course with Autograders to 200 Teachers
+      kind:    Ignite Talk
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - authors: ["Garcia, Daniel", "Romagosa, Bernat", "Ball, Michael", "Mönig, Jens", "Harvey, Brian"]
+      title:   "Programming the Internet (of things) with Snap!"
+      kind:    Short Demo
+      venue:   "Scratch Conference 2017, Bordeaux, France"
+      year:    2017
+    - bib:   ball_writing_2017
+      kind:  Demo
+    - bib:   ball_implementing_2017
+      kind:  Poster
+
+    # 2016
+    - authors: ["Garcia, Daniel", "Ball, Michael"]
+      title:   "Bringing the Beauty and Joy of Computing to the World via edX: An Experience Report"
+      kind:    Panel
+      venue:   "Scratch Conference 2016, Cambridge, MA"
+      year:    2016
+    - bib:   ball_autograding_2016
+      kind:  Poster
+    - bib:   garcia_ap_2016
+      kind:  Workshop
+    - bib:   ball_using_2016
+      kind:  Abstract Only
+
+    # 2015
+    - authors: ["Garcia, Daniel", "Harvey, Brian", "Mönig, Jens", "Ball, Michael"]
+      title:   The Beauty and Joy of Computing
+      kind:    Workshop
+      venue:   "Scratch 2015, Amsterdam, Netherlands"
+      year:    2015
+    - authors: ["Garcia, Daniel", "Harvey, Brian", "Mönig, Jens", "Ball, Michael"]
+      title:   Bringing the Beauty and Joy of Computing to the World via edX
+      kind:    Special Session
+      venue:   "Scratch 2015, Amsterdam, Netherlands"
+      year:    2015
+    - authors: ["Garcia, Daniel", "Harvey, Brian", "Mönig, Jens", "Ball, Michael"]
+      title:   "The Beauty and Joy of Computing and the Snap! Programming Language"
+      kind:    Poster
+      venue:   "Scratch 2015, Amsterdam, Netherlands"
+      year:    2015
+    - bib:   ball_oh_2015
+      kind:  Poster
+
+    # 2014
+    - bib:   garcia_ls_2014
+      kind:  Demo + Paper
+
+- heading: Other Writing
+  id:      other_writing
+  items:
+    - authors: ["Fox, Armando"]
+      title:   "Engineering Software as a Service, 2nd Edition — Contributed Book Chapter on Accessibility"
+      venue:   saasbook.info
+      url:     https://saasbook.info
+    - authors: ["Ball, Michael"]
+      title:   "AUTOGRADING FOR SNAP!"
+      venue:   "Hello World Magazine, Issue 3, Autumn 2017"
+      year:    2017
+      url:     https://magazines-static.raspberrypi.org/issues/full_pdfs/000/000/004/orignal/HelloWorld03.pdf
+    - authors: ["Ball, Michael"]
+      title:   "Where are the Practical Computing Classes?"
+      kind:    Op-Ed
+      venue:   The Daily Californian
+      year:    2014
+      url:     https://www.dailycal.org/2014/01/31/practical-computing-classes/
+
+- heading: Theses
+  id:      theses
+  items:
+    - authors: ["Ball, Michael"]
+      title:   "Lambda: Autograding for Snap!"
+      kind:    Master's Thesis
+      venue:   UC Berkeley EECS Technical Report 2018-2
+      year:    2018
+      url:     http://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-2.pdf

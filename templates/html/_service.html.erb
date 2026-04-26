@@ -1,0 +1,17 @@
+<section class="cv__section" id="service">
+  <h2><%= h(section['title']) %></h2>
+  <% data.service.each do |group| -%>
+    <h3><%= h(group['heading']) %></h3>
+    <ol class="cv__entries cv__entries--compact">
+      <% group['items'].each do |item| -%>
+        <li class="cv__entry">
+          <span class="cv__entry-when"><%= h(item['when']) %></span>
+          <span class="cv__entry-what"><%= h(item['detail']) %></span>
+          <% if item['note'] -%>
+            <div class="cv__entry-meta"><%= h(item['note']) %></div>
+          <% end -%>
+        </li>
+      <% end -%>
+    </ol>
+  <% end -%>
+</section>

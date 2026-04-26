@@ -1,0 +1,31 @@
+<%
+  # Determine the fields. Items can come from a bib key, an inline schema, or
+  # free-form `text:`. The renderer picks whichever is provided.
+  if item['text']
+-%>
+<div class="cv__pub-text"><%= h(item['text']) %></div>
+<% else
+  if item['bib']
+    entry = bib[item['bib']] or raise "Missing bib key: #{item['bib']}"
+    authors_list = entry.authors
+    title  = entry.title
+    venue  = item['venue_override'] || entry['booktitle']
+    url    = item['url'] || entry.url
+    year   = entry.year
+  else
+    authors_list = Array(item['authors'])
+    title  = item['title']
+    venue  = item['venue']
+    url    = item['url']
+    year   = item['year']
+  end
+-%>
+<%- if authors_list.any? -%><%= authors(authors_list) %>. <% end -%>
+<span class="cv__pub-title"><%= h(title) %></span><%- if item['kind'] %> <span class="cv__pub-kind">(<%= h(item['kind']) %>)</span><% end -%>.
+<%- if venue -%>
+<span class="cv__pub-venue"><%= h(venue) %><% if year %>, <%= year %><% end %>.</span>
+<%- end -%>
+<%- if url -%>
+<a class="cv__pub-url" href="<%= url %>"><%= url %></a>
+<%- end -%>
+<% end -%>

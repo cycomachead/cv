@@ -1,4 +1,4 @@
-name: Build CV PDFs
+name: Build CV
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-pdfs:
     runs-on: ubuntu-latest
     permissions:
       contents: write   # needed for the `pdfs` branch publish step
@@ -43,7 +43,6 @@ jobs:
 
       # On pushes to main, also publish the latest PDFs to a `pdfs` branch so
       # you always have a stable URL (raw.githubusercontent.com/.../pdfs/...).
-      # Remove this step if you don't want auto-published builds.
       - name: Stage PDFs for publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -59,3 +58,42 @@ jobs:
           publish_dir: ./_publish
           keep_files: false
           commit_message: "Build PDFs from ${{ github.sha }}"
+
+  build-site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for the `gh-pages` deploy step
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test
+
+      - name: Build HTML site
+        run: bundle exec rake site:build
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-site
+          path: build/site
+          if-no-files-found: error
+          retention-days: 90
+
+      # On pushes to main, deploy the rendered HTML to gh-pages. Pair with
+      # GitHub Pages' "Deploy from branch → gh-pages" setting (or copy the
+      # contents into cycomachead.github.io) to get a public URL.
+      - name: Deploy to gh-pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./build/site
+          keep_files: false
+          commit_message: "Build site from ${{ github.sha }}"

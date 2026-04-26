@@ -1,0 +1,40 @@
+- when:     July 2025 – Present
+  role:     Continuing Lecturer
+  employer: UC Berkeley EECS & Data Science
+  location: Berkeley, CA
+
+- when:     July 2019 – June 2025
+  role:     Lecturer
+  employer: UC Berkeley EECS & Data Science
+  location: Berkeley, CA
+  summary: >-
+    Full-time lecturer, actively involved in EECS undergraduate curricular
+    matters and pedagogy. Primarily responsible for CS 88 / DATA C88C, an
+    introductory CS course for data science students; share work in many
+    activities for training student instructors and advising summer
+    instructors.
+
+- when:     July 2016 – July 2021
+  role:     Software Engineer
+  employer: Gradescope (acquired by Turnitin, 2018)
+  location: Berkeley, CA
+  summary: >-
+    Early software engineer from startup through acquisition. Responsible for
+    web accessibility and conference presentations. Part-time starting Fall
+    2019.
+  highlights:
+    - Led web accessibility work; addressed compliance with WCAG 2.0/2.1, set
+      up automated front-end accessibility testing, and trained engineers in
+      the wider Turnitin organization.
+    - Built modern AWS-hosted data pipelines for user onboarding and product
+      analytics.
+    - Collaborated with the design team on new platform features and
+      provided customer support and training.
+
+- when:     2016–2018
+  role:     Researcher and Engineer
+  employer: UC Berkeley EECS
+  location: Berkeley, CA
+  summary: >-
+    Part-time role focused on Snap! and The Beauty and Joy of Computing
+    projects (funded via Hopper-Dean Foundation grant).

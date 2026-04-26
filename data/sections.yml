@@ -1,0 +1,29 @@
+# Top-level section ordering on the HTML CV. Each entry's `template` matches
+# templates/html/_<template>.html.erb (and the data/<template>.yml file when
+# applicable). Reorder, add, or remove entries to change the rendered page.
+- template: education
+  title: Education
+- template: positions
+  title: Positions
+- template: research_interests
+  title: Research Interests
+- template: teaching
+  title: Teaching — UC Berkeley
+- template: awards
+  title: Awards
+- template: grants
+  title: Grants & Gifts
+- template: students
+  title: Students Supervised
+- template: service
+  title: Service
+- template: publications
+  title: Writing & Publications
+- template: press
+  title: Media & News
+- template: projects
+  title: Academic & Open-Source Software
+- template: skills
+  title: Technical Skills
+- template: references
+  title: References
