@@ -20,10 +20,18 @@
 \usepackage[super]{nth}
 \usepackage{import}
 \usepackage[luatex]{xcolor}
-\usepackage{quoting}
 \usepackage{xspace}
 \PassOptionsToPackage{HTML}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
+
+% Workaround: with TeX Live 2024+, moderncv's \begin{document} hook calls
+% \renewenvironment{quotation}{...}, which now errors against the modern
+% kernel ("Environment 'quotation' undefined"). Pre-define the env if
+% missing so the renew succeeds.
+\makeatletter
+\@ifundefined{quotation}{\newenvironment{quotation}{}{}}{}
+\@ifundefined{quote}{\newenvironment{quote}{}{}}{}
+\makeatother
 
 \definecolor{color0}{rgb}{0,0,0}
 \definecolor{color1}{HTML}{002676}   % Berkeley Blue (headings)
