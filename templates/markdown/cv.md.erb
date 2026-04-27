@@ -1,6 +1,10 @@
 <%# Note on italic syntax: this template uses `_..._` (underscore italic) for
     italics rather than `*..*`, because the Snap! macro emits `*!*` and we
-    don't want to trip kramdown's nested-asterisk parsing. -%>
+    don't want to trip kramdown's nested-asterisk parsing.
+
+    Note on the `{:.entry}` IAL: kramdown attaches the class to the
+    preceding paragraph; preview.css and the deployed Jekyll layout target
+    `.entry` to make role/title lines visually distinct from the body. -%>
 <%- if jekyll_front_matter -%>
 ---
 layout: cv
@@ -18,6 +22,12 @@ permalink: /cv/
      link(data.basics['homepage']),
      *Array(data.basics['profiles']).map { |p| link(p['url'], p['label']) }
     ].compact.reject(&:empty?).join(' · ') %>
+{:.contact}
+
+<%- if data.basics['bio'] && data.basics['bio']['short'] %>
+<%= data.basics['bio']['short'].strip %>
+{:.bio}
+<% end %>
 
 ---
 
@@ -31,7 +41,8 @@ Advisor: <%= h(e['advisor']) %>
 <%- end -%>
 <%- if e['thesis'] -%>
 Thesis: _<%= h(e['thesis']) %>_
-<%- end %>
+<%- end -%>
+{:.entry}
 
 <% end -%>
 
@@ -40,6 +51,7 @@ Thesis: _<%= h(e['thesis']) %>_
 <%- data.positions.each do |p| -%>
 **<%= h(p['role']) %>** · <%= p['when'] %>
 <%= h(p['employer']) %><%- if p['location'] %>, <%= h(p['location']) -%><% end %>
+{:.entry}
 <%- if p['summary'] %>
 
 <%= h(p['summary']) %>
@@ -79,6 +91,7 @@ Thesis: _<%= h(e['thesis']) %>_
 
 <%- data.awards.each do |a| -%>
 **<%= h(a['title']) %>** · <%= a['when'] %><%- if a['issuer'] %> · <%= h(a['issuer']) -%><% end %>
+{:.entry}
 <%- if a['summary'] %>
 
 <%= h(a['summary']) %>
@@ -94,6 +107,7 @@ Thesis: _<%= h(e['thesis']) %>_
 <%- data.grants.each do |g| -%>
 **<%= h(g['title']) %>** · <%= g['when'] %>
 <%= [g['amount'], g['role']].compact.map { |s| h(s) }.join(' · ') %>
+{:.entry}
 <%- if g['summary'] %>
 
 <%= h(g['summary']) %>
@@ -123,8 +137,16 @@ Thesis: _<%= h(e['thesis']) %>_
 <%- data.publications.each do |group| -%>
 ### <%= h(group['heading']) %>
 
+<%- if group['reverse'] -%>
+<ol reversed start="<%= group['items'].size %>" markdown="block">
+<%- group['items'].each do |item| -%>
+<li markdown="span"><%= partial('_publication', item: item) %></li>
+<%- end %>
+</ol>
+<%- else -%>
 <%- group['items'].each_with_index do |item, idx| -%>
 <%= idx + 1 %>. <%= partial('_publication', item: item) %>
+<%- end %>
 <%- end %>
 
 <% end -%>
@@ -139,6 +161,8 @@ Thesis: _<%= h(e['thesis']) %>_
 
 <%- data.projects.each do |p| -%>
 **<%= h(p['name']) %>**
+{:.entry}
+
 <%= h(p['summary']) %>
 <%- if p['url'] %>
 <%= link(p['url']) %>
@@ -157,6 +181,7 @@ Thesis: _<%= h(e['thesis']) %>_
 <%- data.references.each do |r| -%>
 **<%= h(r['name']) %>**
 <%= h(r['title']) if r['title'] %>
+{:.entry}
 <%- if r['email'] -%>
 <%= link("mailto:#{r['email']}", r['email']) %>
 <%- end -%>

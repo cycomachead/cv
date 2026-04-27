@@ -12,6 +12,15 @@ class DataTest < Minitest::Test
     assert_match(/berkeley/i, @data.basics['email'])
   end
 
+  def test_basics_includes_bios
+    bio = @data.basics['bio']
+    refute_nil bio
+    assert_kind_of String, bio['oneline']
+    assert_kind_of String, bio['short']
+    assert_kind_of String, bio['medium']
+    assert_kind_of String, bio['long']
+  end
+
   def test_education_is_array_of_hashes
     assert_kind_of Array, @data.education
     assert @data.education.all? { |e| e.is_a?(Hash) }

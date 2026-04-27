@@ -81,20 +81,29 @@ module CV
       out
     end
 
-    # Render an inline string to LaTeX-safe content. We assume callers want
-    # paragraph-style content; nothing fancy. We do NOT escape every special
-    # character (this is a small project — LaTeX content is already LaTeX-ish
-    # in the source files), but we do swap stylized words for their macros.
+    # LaTeX special characters that need escaping when found in plain prose.
+    # We deliberately do NOT escape `\`, `{`, `}` because the macros engine
+    # itself emits `\href{}`, `\snap{}`, `\textbf{}`, etc. after this pass —
+    # those backslashes and braces must reach the output unchanged. Source
+    # YAML doesn't contain literal backslashes or braces in practice.
+    LATEX_ESCAPES = { '&' => '\\&', '%' => '\\%', '$' => '\\$',
+                      '#' => '\\#', '_' => '\\_' }.freeze
+
+    # Render an inline string to LaTeX-safe content. Steps:
+    #   1. escape LaTeX special chars in the user prose
+    #   2. swap stylized words (`Snap!` → `\snap{}`)
+    #   3. expand markdown links / bold / italic to LaTeX equivalents
     def to_latex(str)
       return '' if str.nil?
       out = str.to_s.dup
-      STYLIZED.each do |word, repl|
-        out.gsub!(word, repl[:latex])
-      end
-      # Markdown-ish links → \href
+      out.gsub!(/[&%$#_]/, LATEX_ESCAPES)
+      STYLIZED.each { |word, repl| out.gsub!(word, repl[:latex]) }
       out.gsub!(/\[([^\]]+)\]\(([^)]+)\)/) do
         label, url = Regexp.last_match(1), Regexp.last_match(2)
-        "\\href{#{url}}{#{label}}"
+        # The url has already been through the escaper, undo `\#` and `\&`
+        # for inside \href{} where they're harmful.
+        clean_url = url.gsub('\\#', '#').gsub('\\&', '&').gsub('\\_', '_')
+        "\\href{#{clean_url}}{#{label}}"
       end
       out.gsub!(/\*\*([^*]+)\*\*/, '\\textbf{\1}')
       out.gsub!(/(?<!\*)\*([^*]+)\*(?!\*)/, '\\textit{\1}')

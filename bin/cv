@@ -19,6 +19,9 @@ when 'preview'
   CV::Markdown.build
   out = CV::Preview.build
   puts "wrote #{out}"
+when 'tex'
+  out = CV::Latex.build
+  puts "wrote #{out}"
 when 'pubs:tex'
   output = ARGV.shift || (CV::BUILD_DIR.join('publications.tex'))
   data = CV::Data.load
@@ -36,7 +39,8 @@ when 'help', '-h', '--help'
     Usage: bin/cv <command>
       md                Build the canonical Markdown CV (build/cv.md)
       preview           Build cv.md and a standalone HTML preview (build/cv.html)
-      pubs:tex [path]   Render publications.tex from YAML + bib
+      tex               Render the full single-file LaTeX CV (build/cv.tex)
+      pubs:tex [path]   Render only the publications LaTeX fragment
 
     To refresh dblp.bib from DBLP, use `make dblp` (curl one-liner).
   USAGE

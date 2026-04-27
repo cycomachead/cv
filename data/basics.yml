@@ -3,6 +3,102 @@ title:    Continuing Lecturer, UC Berkeley EECS & Data Science
 address:  San Francisco, CA
 email:    ball@berkeley.edu
 homepage: https://mball.co
+
+# Profile links shown in the contact line. Order matters; reorder freely.
+# Each entry needs `label` (display text) and `url`. The `kind` is optional
+# metadata for future use (e.g. icons in the deployed Jekyll layout).
 profiles:
-  - label: github.com/cycomachead
+  - label: Faculty page
+    kind:  faculty
+    # TODO: replace with the canonical Berkeley EECS / Data Science URL
+    url:   https://www2.eecs.berkeley.edu/Faculty/Homepages/ball.html
+  - label: GitHub
+    kind:  github
     url:   https://github.com/cycomachead
+  - label: DBLP
+    kind:  dblp
+    url:   https://dblp.org/pid/175/6457.html
+  - label: ORCID
+    kind:  orcid
+    # TODO: drop in the real ORCID iD (0000-XXXX-XXXX-XXXX)
+    url:   https://orcid.org/
+  - label: LinkedIn
+    kind:  linkedin
+    url:   https://www.linkedin.com/in/cycomachead/
+  - label: Snap!
+    kind:  snap
+    url:   https://snap.berkeley.edu/user?username=cycomachead
+
+# Reusable bios. Each is Markdown — the renderer pastes the value through
+# verbatim (links, *italic*, kramdown-compatible inline HTML are all fine).
+# The web CV uses `short`; the others are available for talk intros, funding
+# applications, twitter/Bluesky bios, etc.
+#
+#   oneline — sentence fragment, no links: for tight contexts (Twitter, sigs)
+#   short   — 2–3 sentences with a couple of links: top of the web CV
+#   medium  — paragraph for talk intros / grant applications
+#   long    — multi-paragraph narrative for major applications
+bio:
+  oneline: >-
+    Continuing Lecturer at UC Berkeley EECS & Data Science. CS education,
+    web accessibility, and the open-source tools that hold a classroom
+    together.
+
+  short: >-
+    I'm a software engineer and educator at UC Berkeley, where I teach
+    undergraduate computing courses and contribute to open-source educational
+    software, including [Snap!](https://snap.berkeley.edu) and
+    [The Beauty and Joy of Computing](https://bjc.berkeley.edu). My work
+    focuses on CS education, web accessibility, and tooling that helps teachers
+    and students.
+
+  medium: >-
+    Michael Ball is a Continuing Lecturer in EECS and Data Science at UC
+    Berkeley, where he teaches CS1 / data-science (DATA C88C) and software
+    engineering (CS 169A/L), and co-directs the EECS Summer Instruction
+    program. He is a contributor to the open-source [Snap!](https://snap.berkeley.edu)
+    programming language and to the
+    [Beauty and Joy of Computing](https://bjc.berkeley.edu) AP CS Principles
+    curriculum, and he was an early engineer at
+    [Gradescope](https://www.gradescope.com) (acquired by Turnitin in 2018)
+    where he led web-accessibility work. His current interests are computing
+    education at scale, structural improvements to course operations, and
+    digital accessibility tooling.
+
+  long: |
+    Michael Ball is a Continuing Lecturer in EECS and Data Science at UC
+    Berkeley, having joined the lecturer faculty in July 2019 and become
+    continuing in July 2025. He primarily teaches DATA C88C
+    (Computational Structures for Data Science, ~500 students/term) and
+    has taught CS 169A/L, CS 10, CS W186, CS 195, and the CS 302 / CS 375
+    pedagogy courses for new teaching assistants. Since 2022 he has
+    co-directed the EECS Summer Instruction program, overseeing roughly
+    ten courses per session and the associated hiring, payroll, and
+    curriculum approval.
+
+    Michael's research and teaching interests sit at the intersection of
+    computer science education and digital accessibility. He is principal
+    or co-investigator on more than \$150K of UC Berkeley instructional
+    technology grants funding accessibility, autograding, and curriculum
+    modernization, and he was an early member of the *Beauty and Joy of
+    Computing* (BJC) team — the AP CS Principles curriculum used by tens
+    of thousands of high-school and undergraduate students annually. He is
+    a long-time contributor to [Snap!](https://snap.berkeley.edu), the
+    blocks-based programming language at the heart of BJC, where he
+    designed and maintains the cloud-based project infrastructure
+    (5M+ projects, 500K+ users).
+
+    Before becoming a full-time lecturer, Michael was a software engineer
+    at Gradescope (Berkeley, CA), an edtech startup acquired by Turnitin
+    in 2018. He led the company's web-accessibility work to WCAG 2.0/2.1
+    compliance and built data pipelines for product analytics and
+    onboarding. He served on the UC Berkeley EECS Undergraduate Study
+    Committee from 2019 to 2025, the EECS Student Grievances Committee
+    from 2020 to 2023, and is a frequent SIGCSE program co-chair, panelist,
+    and presenter.
+
+    He earned an M.S. in Computer Science from UC Berkeley (2016, advised
+    by Dan Garcia) for *Lambda: An Autograder for Snap!*, and a B.A. in
+    Computer Science from UC Berkeley (2015), where he received the
+    Eugene L. Lawler Prize and the EECS Distinguished Graduate Student
+    Instructor Award.

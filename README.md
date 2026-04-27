@@ -37,6 +37,14 @@ PDF builds need `lualatex` (`latexmk -lualatex`) and the
 Content lives in `data/*.yml`. Each file is loaded by name (`data.basics`,
 `data.education`, `data.publications`, …) and consumed by `templates/markdown/cv.md.erb`.
 
+- **`basics.yml`** — name, title, contact, profile links (faculty page,
+  GitHub, DBLP, ORCID, LinkedIn, Snap!), plus four reusable bios under
+  `bio:` in Markdown:
+  - `oneline` — one sentence, no links (Twitter / signatures)
+  - `short`   — 2–3 sentences with a couple of links (top of the web CV)
+  - `medium`  — paragraph (talk intros, grant applications)
+  - `long`    — multi-paragraph narrative
+
 - **Add a publication**: edit `data/publications.yml`. Items are one of:
   - `{ bib: <key>, kind?: ..., venue_override?: ..., url?: ... }` — pulls
     authors/title/venue/year from `personal.bib`
@@ -60,6 +68,22 @@ across Markdown, HTML, and LaTeX:
 - `**bold**`, `*italic*` — emphasis (use `_underscore_` italics in YAML when
   the text might contain `Snap!`, to avoid asterisk collisions)
 
+### Visual styling
+
+- **Reversed publication numbering**: set `reverse: true` on a group in
+  `data/publications.yml`. The renderer emits `<ol reversed start="N">`,
+  so the latest item gets the highest number. (Matches the LaTeX
+  `etaremune` look.)
+- **Entry headings**: role / award / grant / project lines are emitted with
+  the kramdown `{:.entry}` IAL. `preview.css` (and the deployed Jekyll
+  layout) target `.entry` to make those titles a touch larger and
+  Berkeley-blue, which scans much more easily than plain bold.
+- **Sidebar TOC**: the local preview (`make preview`) auto-generates a
+  left-sidebar nav from the rendered `<h2>`/`<h3>` headings. The
+  deployed Jekyll site can replicate this in its own layout — the
+  generated `cv.md` has stable `id` anchors thanks to kramdown's
+  `auto_ids`.
+
 ## Refreshing publications from DBLP
 
 ```sh
@@ -70,24 +94,34 @@ make dblp DBLP_URL=<other>     # override the profile URL
 Manually merge interesting entries into `personal.bib`. We don't pull
 `dblp.bib` directly into the build because DBLP keys are unstable.
 
-## Regenerating the LaTeX publications fragment
+## Regenerating the LaTeX CV from YAML
 
-The handcrafted `6-publications/1-conferences.tex` is still the source of
-truth for the PDF. To regenerate it from `data/publications.yml + personal.bib`:
+There are two LaTeX paths:
 
 ```sh
-make pubs-tex                       # writes build/publications.tex
-# Then \input{build/publications} from main.tex when you're happy with the output.
+make tex            # build/cv.tex — single-file scaffold from data/*.yml + personal.bib
+make cv-pdf         # build/cv.pdf — same, then compile via lualatex
+make pubs-tex       # build/publications.tex — just the publications subsection
 ```
+
+The scaffold (`templates/latex/cv.tex.erb`) mirrors the moderncv preamble
+in `main.tex` and emits `\cventry`, `\cvline`, etc. for every section
+from YAML. Treat it as a starting point — the handcrafted `main.tex` and
+`6-publications/1-conferences.tex` remain the source of truth for the
+printable PDF until you decide to swap over.
+
+Special-character escaping (`&`, `%`, `$`, `#`, `_`) happens automatically
+in `lib/cv/macros.rb#to_latex`, so a grant amount like `$50,000` or a
+title containing `&` renders correctly.
 
 ## Project layout
 
 ```
 data/                        # YAML content (the only place to edit prose)
 personal.bib                 # citation database (manual + future DBLP imports)
-lib/cv/                      # Ruby: macros, bib (bibtex-ruby shim), data, renderer, markdown, preview
+lib/cv/                      # Ruby: macros, bib (bibtex-ruby shim), data, renderer, markdown, latex, preview
 templates/markdown/          # cv.md.erb + 1 partial + preview shell + preview.css
-templates/latex/             # publications.tex.erb (regenerable LaTeX fragment)
+templates/latex/             # cv.tex.erb (full scaffold) + publications.tex.erb (fragment)
 test/                        # minitest suite (`make test`)
 *.tex, 6-publications/       # existing moderncv documents (drive the PDFs)
 site/                        # static landing page (legacy; still served by deploy.yml)

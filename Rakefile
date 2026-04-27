@@ -45,9 +45,15 @@ namespace :site do
   end
 end
 
-namespace :pubs do
-  desc 'Render publications.tex from YAML + bib (default: build/publications.tex)'
-  task :tex, [:output] do |_, args|
+namespace :tex do
+  desc 'Render the full single-file LaTeX CV from YAML+bib (build/cv.tex)'
+  task :build do
+    out = CV::Latex.build
+    puts "wrote #{out}"
+  end
+
+  desc 'Render only the publications fragment (build/publications.tex)'
+  task :pubs, [:output] do |_, args|
     output = args[:output] || CV::BUILD_DIR.join('publications.tex')
     rendered = CV::Renderer.new(format: :latex)
                            .render('publications.tex',

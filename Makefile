@@ -21,7 +21,7 @@ TEX_FILES  := main.tex one-page-resume.tex
 PDFS       := $(TEX_FILES:.tex=.pdf)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
-.PHONY: all md preview pdf pubs-tex deploy-out test dblp clean help
+.PHONY: all md preview pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
 
 all: md preview pdf
 
@@ -40,10 +40,17 @@ pdf: $(PDFS)
 %.pdf: %.tex
 	$(LATEXMK) $(LATEX_OPTS) $<
 
-# Optional — regenerate the publications LaTeX fragment from YAML+bib so the
-# LaTeX and Markdown outputs stay in sync. The hand-edited
-# 6-publications/1-conferences.tex remains the source of truth until you
-# decide to switch over.
+# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited main.tex
+# + 1-education.tex etc. remain the source of truth for the printable PDF
+# until you decide to switch over; this is a parallel, regenerable target.
+tex:
+	@$(RUBY) bin/cv tex
+
+cv-pdf: tex
+	$(LATEXMK) $(LATEX_OPTS) -output-directory=$(BUILD_DIR) $(BUILD_DIR)/cv.tex
+
+# Just the publications LaTeX fragment — useful if you only want to swap
+# the publications section into main.tex.
 pubs-tex:
 	@$(RUBY) bin/cv pubs:tex $(BUILD_DIR)/publications.tex
 
@@ -82,6 +89,8 @@ help:
 	@echo "  make md         build $(BUILD_DIR)/cv.md from YAML+bib"
 	@echo "  make preview    build cv.html and serve it on http://localhost:$(PORT)"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
+	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
+	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
 	@echo "  make pubs-tex   regenerate publications.tex from YAML+bib"
 	@echo "  make deploy-out stage cv.md + PDFs for cycomachead.github.io/cv/"
 	@echo "  make test       run the minitest suite"

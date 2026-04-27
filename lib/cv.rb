@@ -14,5 +14,6 @@ module CV
   autoload :Data,     'cv/data'
   autoload :Renderer, 'cv/renderer'
   autoload :Markdown, 'cv/markdown'
+  autoload :Latex,    'cv/latex'
   autoload :Preview,  'cv/preview'
 end

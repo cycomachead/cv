@@ -22,6 +22,18 @@ class MacrosTest < Minitest::Test
     assert_equal 'I love \snap{}', CV::Macros.to_latex('I love Snap!')
   end
 
+  def test_latex_escapes_special_chars
+    assert_equal 'AT\&T \$50,000 100\% \#1 foo\_bar',
+                 CV::Macros.to_latex('AT&T $50,000 100% #1 foo_bar')
+  end
+
+  def test_latex_link_keeps_url_intact
+    # The bare # and _ inside a URL inside \href{} must NOT be backslash-
+    # escaped (they break the link), even though we escape them in prose.
+    out = CV::Macros.to_latex('[docs](https://ex.com/foo_bar#sec)')
+    assert_equal '\\href{https://ex.com/foo_bar#sec}{docs}', out
+  end
+
   def test_authors_md_bolds_self
     md = CV::Macros.authors_to_md(['Garcia, Daniel', 'Ball, Michael'])
     assert_includes md, '**Ball, Michael**'
