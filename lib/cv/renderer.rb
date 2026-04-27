@@ -5,10 +5,13 @@ require 'pathname'
 
 module CV
   # Wraps ERB templating. Templates live in templates/<format>/<name>.erb.
-  # The renderer evaluates them in a Context that exposes the loaded data
-  # and the macros engine, so templates can call e.g. `h(text)` to escape and
-  # convert inline markers, or look up `bib['key']`.
+  # Supported formats: :markdown (default — feeds into kramdown / Jekyll) and
+  # :latex (for the regenerable publications fragment). The :html format is
+  # not used directly any more — Markdown is the canonical authoring format
+  # and HTML is a downstream rendering of it.
   class Renderer
+    EXTENSIONS = { markdown: 'md', latex: 'tex' }.freeze
+
     class Context
       attr_reader :data, :bib
 
@@ -22,34 +25,43 @@ module CV
       # Render inline text — chooses the right macro pass for the format.
       def h(text)
         case @format
-        when :html  then CV::Macros.to_html(text)
-        when :latex then CV::Macros.to_latex(text)
+        when :markdown then CV::Macros.to_md(text)
+        when :latex    then CV::Macros.to_latex(text)
         else text.to_s
         end
       end
 
-      # Render a list of authors with the user's name bolded (HTML only).
+      # Render a list of authors with the user's name bolded.
       def authors(list)
         case @format
-        when :html  then CV::Macros.authors_to_html(list)
-        when :latex then list.map { |a| CV::Macros.to_latex(a) }.join('; ')
+        when :markdown then CV::Macros.authors_to_md(list)
+        when :latex    then list.map { |a| CV::Macros.to_latex(a) }.join('; ')
         else list.join('; ')
         end
       end
 
-      # Render a partial template by name. Useful so the layout template can
-      # delegate to a section-specific template.
+      # Auto-link a bare URL appropriately for the output format.
+      def link(url, label = nil)
+        return '' if url.nil? || url.empty?
+        label ||= url.sub(%r{^https?://}, '')
+        case @format
+        when :markdown then "[#{label}](#{url})"
+        when :latex    then "\\href{#{url}}{#{label}}"
+        else "<a href=\"#{url}\">#{label}</a>"
+        end
+      end
+
+      # Render a partial template by name (relative to the same format dir).
       def partial(name, locals = {})
         @helpers[:render_partial].call(name, locals)
       end
 
-      # Allow data.x and bib.y access in templates without the `@` prefix.
       def get_binding
         binding
       end
     end
 
-    def initialize(template_dir: CV::TEMPLATE_DIR, format: :html)
+    def initialize(template_dir: CV::TEMPLATE_DIR, format: :markdown)
       @template_dir = Pathname.new(template_dir)
       @format       = format
     end
@@ -65,8 +77,6 @@ module CV
         format:  @format,
         helpers: { render_partial: ->(name, lcs) { render(name, data: data, bib: bib, locals: lcs) } }
       )
-      # Expose locals as singleton methods on the context so templates can
-      # reference them by name.
       locals.each { |k, v| ctx.define_singleton_method(k) { v } }
 
       template.result(ctx.get_binding)
@@ -75,7 +85,7 @@ module CV
     private
 
     def resolve(name)
-      ext = (@format == :html ? 'html' : 'tex')
+      ext = EXTENSIONS.fetch(@format, @format.to_s)
       candidates = [
         @template_dir.join(@format.to_s, "#{name}.#{ext}.erb"),
         @template_dir.join(@format.to_s, "#{name}.erb"),

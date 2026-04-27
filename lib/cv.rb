@@ -13,6 +13,6 @@ module CV
   autoload :Bib,      'cv/bib'
   autoload :Data,     'cv/data'
   autoload :Renderer, 'cv/renderer'
-  autoload :Site,     'cv/site'
-  autoload :DBLP,     'cv/dblp'
+  autoload :Markdown, 'cv/markdown'
+  autoload :Preview,  'cv/preview'
 end

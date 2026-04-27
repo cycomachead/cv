@@ -1,156 +1,91 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require 'bibtex'
 
 module CV
-  # Tiny BibTeX parser. Handles the subset of BibTeX used in personal.bib:
-  # @type{key, field = {value} or "value", ...}. Brace-balanced values are
-  # supported (so titles like "{Snap!}" work). String concatenation, @string
-  # macros, @comment, and @preamble are not supported — the bib file in this
-  # repo doesn't use them.
+  # Thin shim over the `bibtex-ruby` gem. Templates only ever touch the small
+  # surface defined here (`bib[key]`, `entry.authors / title / url / year`,
+  # `entry[field]`), so swapping the underlying parser without changing the
+  # rest of the codebase is a one-file change.
   class Bib
-    Entry = Struct.new(:key, :type, :fields, keyword_init: true) do
+    # Wraps a single BibTeX::Entry with our preferred accessors. We strip
+    # TeX brace-protection ({Snap!} → Snap!) and decode TeX escapes (\&amp; →
+    # &) since the consumer wants display-ready text.
+    class Entry
+      def initialize(entry)
+        @entry = entry
+      end
+
+      def key
+        @entry.key.to_s
+      end
+
+      def type
+        @entry.type.to_s
+      end
+
+      # entry["booktitle"], entry[:booktitle] — returns a cleaned string or nil.
       def [](field)
-        v = fields[field.to_s]
-        v.nil? ? nil : v
-      end
-
-      def authors
-        return [] unless self[:author]
-        self[:author].split(/\s+and\s+/).map(&:strip)
-      end
-
-      def year
-        self[:year]&.to_i
-      end
-
-      def url
-        self[:url] || (self[:doi] ? "https://doi.org/#{self[:doi]}" : nil)
+        v = @entry.respond_to?(field) ? @entry.send(field) : nil
+        v.nil? || v.to_s.empty? ? nil : clean(v.to_s)
       end
 
       def title
-        # Strip BibTeX brace-protection: {Snap!} → Snap!
-        (self[:title] || '').gsub(/[{}]/, '')
+        clean(@entry.title.to_s)
+      end
+
+      def authors
+        return [] unless @entry.respond_to?(:author) && @entry.author
+        @entry.author.map(&:to_s)
+      end
+
+      def year
+        v = @entry.year
+        v.nil? ? nil : v.to_s.to_i
+      end
+
+      def url
+        return clean(@entry.url.to_s) if @entry.respond_to?(:url) && @entry.url
+        return "https://doi.org/#{@entry.doi}" if @entry.respond_to?(:doi) && @entry.doi
+        nil
+      end
+
+      private
+
+      def clean(s)
+        s.gsub(/[{}]/, '')                    # strip brace-protection
+         .gsub(/\\&amp;/, '&').gsub(/\\&/, '&') # un-escape TeX-escaped HTML
       end
     end
 
-    attr_reader :entries
+    attr_reader :bibliography
 
     def self.load(path = CV::BIB_FILE)
-      new(File.read(path, encoding: 'UTF-8'))
+      new(BibTeX.open(path.to_s))
     end
 
     def initialize(source)
-      @source = source
-      @entries = parse(source)
+      @bibliography = source.is_a?(BibTeX::Bibliography) ? source : BibTeX.parse(source.to_s)
     end
 
     def [](key)
-      @entries.find { |e| e.key == key.to_s }
+      raw = @bibliography[key.to_s]
+      raw ? Entry.new(raw) : nil
     end
 
+    # All citation keys (skips @comment / @preamble / @string entries).
     def keys
-      @entries.map(&:key)
+      records.map { |e| e.key.to_s }
+    end
+
+    def entries
+      records.map { |e| Entry.new(e) }
     end
 
     private
 
-    def parse(src)
-      entries = []
-      i = 0
-      while i < src.length
-        # Find the next '@' starting a record.
-        i = src.index('@', i)
-        break unless i
-
-        # Read entry type: @type{
-        m = src[i..].match(/\A@(\w+)\s*\{/)
-        unless m
-          i += 1
-          next
-        end
-        type = m[1].downcase
-        i += m[0].length
-
-        # Skip @comment / @preamble / @string blocks: read until balanced }.
-        if %w[comment preamble string].include?(type)
-          i = skip_balanced(src, i)
-          next
-        end
-
-        # Citation key up to the first comma at brace-depth 0.
-        key_end = src.index(',', i)
-        key = src[i...key_end].strip
-        i = key_end + 1
-
-        fields = {}
-        loop do
-          # Skip whitespace.
-          i += 1 while i < src.length && src[i].match?(/\s/)
-          break if i >= src.length || src[i] == '}'
-
-          name_end = src.index('=', i)
-          break unless name_end
-
-          name = src[i...name_end].strip.downcase
-          i = name_end + 1
-          i += 1 while i < src.length && src[i].match?(/\s/)
-
-          value, i = read_value(src, i)
-          fields[name] = value
-
-          i += 1 while i < src.length && src[i].match?(/[\s,]/)
-        end
-        i += 1 if i < src.length && src[i] == '}'
-
-        entries << Entry.new(key: key, type: type, fields: fields)
-      end
-      entries
-    end
-
-    # Read a BibTeX value starting at i. Values are either {balanced braces},
-    # "quoted strings", or bare numbers/identifiers.
-    def read_value(src, i)
-      case src[i]
-      when '{'
-        depth = 0
-        start = i
-        while i < src.length
-          case src[i]
-          when '{' then depth += 1
-          when '}'
-            depth -= 1
-            if depth == 0
-              return [src[(start + 1)...i], i + 1]
-            end
-          end
-          i += 1
-        end
-        [src[(start + 1)..], i]
-      when '"'
-        start = i + 1
-        i += 1
-        i += 1 while i < src.length && src[i] != '"'
-        [src[start...i], i + 1]
-      else
-        start = i
-        i += 1 while i < src.length && !src[i].match?(/[,\s}]/)
-        [src[start...i], i]
-      end
-    end
-
-    # Skip a brace-balanced @comment/@string/@preamble block. We've already
-    # consumed the opening '{'.
-    def skip_balanced(src, i)
-      depth = 1
-      while i < src.length && depth > 0
-        case src[i]
-        when '{' then depth += 1
-        when '}' then depth -= 1
-        end
-        i += 1
-      end
-      i
+    def records
+      @bibliography.select { |e| e.respond_to?(:key) && e.key }
     end
   end
 end

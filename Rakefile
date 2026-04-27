@@ -13,17 +13,29 @@ Rake::TestTask.new(:test) do |t|
 end
 
 namespace :site do
-  desc 'Build the HTML site to build/site/'
-  task :build do
-    out = CV::Site.new.build
-    puts "wrote site to #{out}"
+  desc 'Render the canonical Markdown CV (build/cv.md)'
+  task :md do
+    out = CV::Markdown.build
+    puts "wrote #{out}"
   end
 
-  desc 'Serve the built HTML site locally on http://localhost:8000'
-  task serve: :build do
-    Dir.chdir(CV::BUILD_DIR.join('site')) do
-      sh 'ruby -run -e httpd . -p 8000'
+  desc 'Build a standalone HTML preview (build/cv.html)'
+  task preview: :md do
+    out = CV::Preview.build
+    puts "wrote #{out}"
+  end
+
+  desc 'Stage cv.md + PDFs for the cycomachead.github.io/cv/ deploy'
+  task deploy_out: :md do
+    deploy = CV::BUILD_DIR.join('deploy')
+    FileUtils.mkdir_p(deploy)
+    FileUtils.cp(CV::Markdown::DEFAULT_OUTPUT, deploy.join('index.md'))
+    %w[main.pdf one-page-resume.pdf].each do |pdf|
+      src = CV::ROOT.join(pdf)
+      next unless src.exist?
+      FileUtils.cp(src, deploy.join(pdf == 'main.pdf' ? 'cv.pdf' : 'resume.pdf'))
     end
+    puts "staged #{deploy}"
   end
 
   desc 'Remove the build directory'
@@ -37,11 +49,9 @@ namespace :pubs do
   desc 'Render publications.tex from YAML + bib (default: build/publications.tex)'
   task :tex, [:output] do |_, args|
     output = args[:output] || CV::BUILD_DIR.join('publications.tex')
-    data = CV::Data.load
-    bib  = CV::Bib.load
     rendered = CV::Renderer.new(format: :latex)
                            .render('publications.tex',
-                                   data: data, bib: bib,
+                                   data: CV::Data.load, bib: CV::Bib.load,
                                    locals: { section: { 'title' => 'Writing & Publications' } })
     FileUtils.mkdir_p(File.dirname(output))
     File.write(output, rendered)
@@ -49,12 +59,4 @@ namespace :pubs do
   end
 end
 
-namespace :dblp do
-  desc 'Refresh dblp.bib from DBLP (default: ball-michael profile)'
-  task :update do
-    out = CV::DBLP.fetch
-    puts "wrote #{out}"
-  end
-end
-
-task default: %i[test site:build]
+task default: %i[test site:md site:preview]

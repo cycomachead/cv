@@ -1,0 +1,167 @@
+<%# Note on italic syntax: this template uses `_..._` (underscore italic) for
+    italics rather than `*..*`, because the Snap! macro emits `*!*` and we
+    don't want to trip kramdown's nested-asterisk parsing. -%>
+<%- if jekyll_front_matter -%>
+---
+layout: cv
+title: <%= h(data.basics['name']) %>
+subtitle: <%= h(data.basics['title']) %>
+permalink: /cv/
+---
+<% end -%>
+
+# <%= h(data.basics['name']) %>
+
+**<%= h(data.basics['title']) %>**
+
+<%= [data.basics['address'], link("mailto:#{data.basics['email']}", data.basics['email']),
+     link(data.basics['homepage']),
+     *Array(data.basics['profiles']).map { |p| link(p['url'], p['label']) }
+    ].compact.reject(&:empty?).join(' · ') %>
+
+---
+
+## Education
+
+<%- data.education.each do |e| -%>
+**<%= h(e['degree']) %>** · <%= e['when'] %>
+<%= h(e['institution']) %><%- if e['location'] %>, <%= h(e['location']) -%><% end %>
+<%- if e['advisor'] -%>
+Advisor: <%= h(e['advisor']) %>
+<%- end -%>
+<%- if e['thesis'] -%>
+Thesis: _<%= h(e['thesis']) %>_
+<%- end %>
+
+<% end -%>
+
+## Positions
+
+<%- data.positions.each do |p| -%>
+**<%= h(p['role']) %>** · <%= p['when'] %>
+<%= h(p['employer']) %><%- if p['location'] %>, <%= h(p['location']) -%><% end %>
+<%- if p['summary'] %>
+
+<%= h(p['summary']) %>
+<%- end -%>
+<%- Array(p['highlights']).each do |hl| %>
+- <%= h(hl) %>
+<%- end %>
+
+<% end -%>
+
+## Research Interests
+
+<%- data.research_interests.each do |r| -%>
+**<%= h(r['title']) %>** — <%= h(r['description']) %>
+
+<%- end -%>
+
+## Teaching — UC Berkeley
+
+### Course Descriptions
+
+<%- data.teaching['courses'].each do |c| -%>
+- **<%= h(c['code']) %>** — _<%= h(c['title']) %>_<% if c['units'] %> (<%= c['units'] %> units)<% end %>. <%= h(c['description']) %>
+<%- end %>
+
+### Teaching Assignments
+
+<%- Array(data.teaching['notes']).each do |n| -%>
+> <%= h(n) %>
+<%- end %>
+
+<%- data.teaching['assignments'].each do |a| -%>
+- **<%= h(a['term']) %>** — <%= h(a['detail']) %>
+<%- end %>
+
+## Awards
+
+<%- data.awards.each do |a| -%>
+**<%= h(a['title']) %>** · <%= a['when'] %><%- if a['issuer'] %> · <%= h(a['issuer']) -%><% end %>
+<%- if a['summary'] %>
+
+<%= h(a['summary']) %>
+<%- end %>
+<%- if a['url'] %>
+<%= link(a['url']) %>
+<%- end %>
+
+<% end -%>
+
+## Grants & Gifts
+
+<%- data.grants.each do |g| -%>
+**<%= h(g['title']) %>** · <%= g['when'] %>
+<%= [g['amount'], g['role']].compact.map { |s| h(s) }.join(' · ') %>
+<%- if g['summary'] %>
+
+<%= h(g['summary']) %>
+<%- end %>
+
+<% end -%>
+
+## Students Supervised
+
+<%- data.students.each do |s| -%>
+- **<%= h(s['name']) %>** · <%= s['when'] %><%- if s['title'] %> — _<%= h(s['title']) %>_<% end -%><%- if s['advising'] %> (<%= h(s['advising']) %>)<% end -%><%- if s['url'] %>. <%= link(s['url']) %><% end %>
+<%- end %>
+
+## Service
+
+<%- data.service.each do |group| -%>
+### <%= h(group['heading']) %>
+
+<%- group['items'].each do |item| -%>
+- **<%= h(item['when']) %>** — <%= h(item['detail']) %><%- if item['note'] -%> _(<%= h(item['note']) %>)_<%- end %>
+<%- end %>
+
+<% end -%>
+
+## Writing & Publications
+
+<%- data.publications.each do |group| -%>
+### <%= h(group['heading']) %>
+
+<%- group['items'].each_with_index do |item, idx| -%>
+<%= idx + 1 %>. <%= partial('_publication', item: item) %>
+<%- end %>
+
+<% end -%>
+
+## Media & News
+
+<%- data.press.each do |p| -%>
+- **<%= h(p['outlet']) %>** — <%= h(p['title']) %><%- if p['date'] -%> · <%= h(p['date']) -%><% end -%><%- if p['url'] -%>. <%= link(p['url']) %><%- end %>
+<%- end %>
+
+## Academic & Open-Source Software
+
+<%- data.projects.each do |p| -%>
+**<%= h(p['name']) %>**
+<%= h(p['summary']) %>
+<%- if p['url'] %>
+<%= link(p['url']) %>
+<%- end %>
+
+<% end -%>
+
+## Technical Skills
+
+<%- data.skills.each do |s| -%>
+- **<%= h(s['label']) %>** — <%= h(s['detail']) %>
+<%- end %>
+
+## References
+
+<%- data.references.each do |r| -%>
+**<%= h(r['name']) %>**
+<%= h(r['title']) if r['title'] %>
+<%- if r['email'] -%>
+<%= link("mailto:#{r['email']}", r['email']) %>
+<%- end -%>
+<%- if r['phone'] %>
+<%= h(r['phone']) %>
+<%- end %>
+
+<% end -%>

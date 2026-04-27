@@ -11,13 +11,19 @@ module CV
   module Macros
     module_function
 
-    # Stylized words. The HTML form wraps the "!" in <em>; the LaTeX form
-    # mirrors the existing \snap / \snapcon macros from main.tex so the two
+    # Stylized words. The Markdown form uses *…* (italic) so kramdown renders
+    # it as <em>!</em>; the HTML form is the same after conversion. The LaTeX
+    # form mirrors the existing \snap / \snapcon macros in main.tex so both
     # documents stay visually consistent.
+    # The Markdown form embeds raw <em> HTML rather than `*!*` because
+    # kramdown won't re-emphasize an asterisk pair already inside an italic
+    # span (so a thesis title like _Lambda: ...Snap!_ would otherwise leave
+    # the `*!*` literal). Inline HTML inside Markdown is fine for both
+    # kramdown and Jekyll.
     STYLIZED = {
-      'Snap!Con'  => { html: 'Snap<em>!</em>Con',  latex: '\snapcon{}'   },
-      'Snap!shot' => { html: 'Snap<em>!</em>shot', latex: '\snapshot{}'  },
-      'Snap!'     => { html: 'Snap<em>!</em>',     latex: '\snap{}'      }
+      'Snap!Con'  => { md: 'Snap<em>!</em>Con',  html: 'Snap<em>!</em>Con',  latex: '\snapcon{}'  },
+      'Snap!shot' => { md: 'Snap<em>!</em>shot', html: 'Snap<em>!</em>shot', latex: '\snapshot{}' },
+      'Snap!'     => { md: 'Snap<em>!</em>',     html: 'Snap<em>!</em>',     latex: '\snap{}'     }
     }.freeze
 
     # Render an inline string to HTML.
@@ -64,6 +70,17 @@ module CV
       out
     end
 
+    # Render an inline string as Markdown. Markdown is the canonical authoring
+    # format: links, bold, and italic in the YAML are already markdown-shaped,
+    # so this pass mainly substitutes stylized words. The output is fed to
+    # kramdown (or a Jekyll site) for the final HTML.
+    def to_md(str)
+      return '' if str.nil?
+      out = str.to_s.dup
+      STYLIZED.each { |word, repl| out.gsub!(word, repl[:md]) }
+      out
+    end
+
     # Render an inline string to LaTeX-safe content. We assume callers want
     # paragraph-style content; nothing fancy. We do NOT escape every special
     # character (this is a small project — LaTeX content is already LaTeX-ish
@@ -92,6 +109,13 @@ module CV
       authors.map do |a|
         rendered = to_html(a)
         a == bold_self ? "<strong>#{rendered}</strong>" : rendered
+      end.join('; ')
+    end
+
+    def authors_to_md(authors, bold_self: 'Ball, Michael')
+      Array(authors).map do |a|
+        rendered = to_md(a)
+        a == bold_self ? "**#{rendered}**" : rendered
       end.join('; ')
     end
   end

@@ -1,0 +1,64 @@
+/* Preview-only CSS for `make preview`. Production styling lives in the
+   target Jekyll site (cycomachead.github.io/cv/) — this file is just enough
+   to read the rendered Markdown locally. */
+
+:root {
+  --berkeley-blue: #002676;
+  --pacific:       #46535e;
+  --rule:          #e5e7eb;
+  --text:          #111827;
+  --bg:            #ffffff;
+  --max-width:     46rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { --text: #e5e7eb; --bg: #0f1115; --rule: #2b3340; --pacific: #9ca3af; --berkeley-blue: #79a8ff; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Source Sans Pro",
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 3rem 1.25rem 5rem;
+}
+
+h1, h2, h3 {
+  color: var(--berkeley-blue);
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.25rem; margin: 0 0 0.25rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.4rem; margin: 2.5rem 0 0.5rem; padding-bottom: 0.2rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.05rem; margin: 1.4rem 0 0.4rem; }
+
+a { color: var(--berkeley-blue); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover { border-bottom-color: var(--berkeley-blue); }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: 1.5rem 0; }
+
+ol, ul { padding-left: 1.4rem; }
+li + li { margin-top: 0.25rem; }
+
+blockquote {
+  border-left: 3px solid var(--rule);
+  margin: 0.5rem 0;
+  padding: 0.1rem 0.9rem;
+  color: var(--pacific);
+  font-size: 0.95rem;
+}
+
+p { margin: 0.4rem 0; }
+
+em { font-style: italic; }
+strong { font-weight: 600; }
