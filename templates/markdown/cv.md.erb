@@ -19,8 +19,11 @@ permalink: /cv/
 **<%= h(data.basics['title']) %>**
 
 <%= [data.basics['address'], link("mailto:#{data.basics['email']}", data.basics['email']),
-     link(data.basics['homepage']),
-     *Array(data.basics['profiles']).map { |p| link(p['url'], p['label']) }
+     link(data.basics['homepage'])
+    ].compact.reject(&:empty?).join(' · ') %>
+{:.contact}
+
+<%= [*Array(data.basics['profiles']).map { |p| link(p['url'], p['label']) }
     ].compact.reject(&:empty?).join(' · ') %>
 {:.contact}
 

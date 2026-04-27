@@ -20,11 +20,10 @@ profiles:
     url:   https://dblp.org/pid/175/6457.html
   - label: ORCID
     kind:  orcid
-    # TODO: drop in the real ORCID iD (0000-XXXX-XXXX-XXXX)
-    url:   https://orcid.org/
+    url:   https://orcid.org/0000-0002-7036-3902
   - label: LinkedIn
     kind:  linkedin
-    url:   https://www.linkedin.com/in/cycomachead/
+    url:   https://www.linkedin.com/in/michaelaball/
   - label: Snap!
     kind:  snap
     url:   https://snap.berkeley.edu/user?username=cycomachead
