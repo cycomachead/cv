@@ -29,5 +29,13 @@ one-page-resume.pdf
 # Pages build output
 _site/
 
-# OS
+# OS / editor
 .DS_Store
+.vscode/
+
+# Ruby site generator outputs
+/build/
+/dblp.bib
+/.bundle/
+/vendor/bundle/
+Gemfile.lock

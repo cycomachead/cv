@@ -1,58 +1,78 @@
-name: Build & deploy CV site
+name: Build & deploy CV to cycomachead.github.io/cv
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
+# Only one deploy at a time — protects the external repo from racing pushes.
 concurrency:
-  group: pages
+  group: deploy-cv
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Compile public CV (lualatex)
+      # ---------- 1. Build PDFs from LaTeX ----------
+      - name: Build full CV (main.tex)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_use_lualatex: true
+          extra_system_packages: "fonts-sourcecodepro fonts-sourcesanspro"
+
+      - name: Build one-page resume
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: one-page-resume.tex
+          latexmk_use_lualatex: true
+
+      # public.tex is a wrapper that excludes references for the public site.
+      - name: Build public CV
         uses: xu-cheng/latex-action@v3
         with:
           root_file: public.tex
           latexmk_use_lualatex: true
+          extra_system_packages: "fonts-sourcecodepro fonts-sourcesanspro"
 
-      - name: Assemble Pages artifact
+      # ---------- 2. Build cv.md from YAML+bib ----------
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test
+
+      - name: Render cv.md
+        run: bundle exec rake site:md
+
+      # ---------- 3. Stage the files for the external repo ----------
+      - name: Stage deploy bundle
         run: |
           set -euo pipefail
-          mkdir -p _site
-          cp -R site/. _site/
-          cp public.pdf _site/cv.pdf
-          build_iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          build_display="$(date -u +'%B %-d, %Y')"
-          sed -i "s|__BUILD_DATE__|${build_iso}|g" _site/index.html
-          sed -i "s|__BUILD_DATE_DISPLAY__|${build_display}|g" _site/index.html
+          mkdir -p _deploy
+          cp build/cv.md          _deploy/index.md
+          cp public.pdf           _deploy/cv.pdf
+          cp main.pdf             _deploy/cv-full.pdf
+          cp one-page-resume.pdf  _deploy/resume.pdf
+          ls -la _deploy
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      # ---------- 4. Push to cycomachead/cycomachead.github.io ----------
+      # Requires a PAT (CYCOMACHEAD_GH_PAGES_TOKEN) with `contents: write` on
+      # the target repo, stored as a repository secret. See README.md.
+      - name: Deploy to cycomachead.github.io/cv
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          personal_token:      ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
+          external_repository: cycomachead/cycomachead.github.io
+          publish_branch:      main
+          publish_dir:         ./_deploy
+          destination_dir:     cv
+          keep_files:          true   # preserve the rest of cycomachead.github.io
+          commit_message:      "cv: build from cycomachead/cv@${{ github.sha }}"
+          user_name:           "github-actions[bot]"
+          user_email:          "41898282+github-actions[bot]@users.noreply.github.com"

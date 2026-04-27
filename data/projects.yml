@@ -1,0 +1,43 @@
+- name:    Snap!
+  summary: >-
+    Snap! is a blocks-based visual language designed to make teaching
+    computer science easy while exposing hard concepts like lambdas,
+    recursion, and web APIs. I contribute to the core IDE and
+    collaboratively designed, built, and maintain the Snap! cloud-based
+    project infrastructure, which currently supports more than 5 million
+    projects and 500,000 users.
+  url:     https://snap.berkeley.edu
+
+- name:    The Beauty and Joy of Computing
+  summary: >-
+    BJC is a university-level non-majors or high-school AP CS Principles
+    course designed to broaden participation in computing. In addition to
+    programming, the course emphasizes the context and implications of
+    computing. I provide infrastructure maintenance, technical consulting,
+    and curriculum review, and contributed heavily to early versions of
+    the course still used at UC Berkeley.
+  url:     https://bjc.berkeley.edu
+
+- name:    Flextensions — Assignment Extension Management
+  summary: >-
+    Web application that streamlines requesting, approving, and applying
+    assignment extensions in Canvas. Originally piloted with support from
+    Berkeley's Research, Teaching, and Learning unit, the tool reached
+    10,000+ student enrollments across two semesters. Supervised a team of
+    12 students and led the campus integration with Canvas and partner
+    units.
+  url:     https://github.com/berkeley-cdss/flextensions
+
+- name:    Alonzo, A Staff Chatbot
+  summary: >-
+    Course staff chatbot that automates grading workflows, including
+    in-class oral lab check-offs for CS10. Maintained across multiple
+    generations of TAs.
+  url:     https://github.com/cs10/Alonzo
+
+- name:    Downshift
+  summary: >-
+    Prior maintainer of Downshift, an open-source React component (~3M
+    weekly NPM downloads). Contributed accessibility enhancements and
+    reviews.
+  url:     https://github.com/paypal/downshift
