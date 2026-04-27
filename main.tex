@@ -97,7 +97,9 @@
     \input{6-publications/3-press}
     \input{3-projects}
     \input{7-personal}
-    \input{references}
+    \ifdefined\publicversion\else
+        \input{references}
+    \fi
 
     % \input{bibtex_post}
     
