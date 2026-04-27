@@ -1,0 +1,58 @@
+name: Build & deploy CV site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile public CV (lualatex)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: public.tex
+          latexmk_use_lualatex: true
+
+      - name: Assemble Pages artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp -R site/. _site/
+          cp public.pdf _site/cv.pdf
+          build_iso="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          build_display="$(date -u +'%B %-d, %Y')"
+          sed -i "s|__BUILD_DATE__|${build_iso}|g" _site/index.html
+          sed -i "s|__BUILD_DATE_DISPLAY__|${build_display}|g" _site/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
