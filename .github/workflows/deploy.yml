@@ -47,18 +47,28 @@ jobs:
       - name: Run tests
         run: bundle exec rake test
 
-      - name: Render cv.md
-        run: bundle exec rake site:md
+      - name: Render cv-embed.md + sidebar fragment + assets
+        run: bundle exec rake site:embed
 
       # ---------- 3. Stage the files for the external repo ----------
+      # The Jekyll site at cycomachead.github.io/cv/ consumes:
+      #   index.md            — markdown body, no in-page header (the site
+      #                         layout supplies its own page title)
+      #   cv-sidebar.html     — sidebar fragment with download buttons +
+      #                         section TOC + dark mode toggle
+      #   cv.css, cv-theme.js — the styles + script the sidebar/body need
+      #   cv.pdf, resume.pdf  — the download targets
       - name: Stage deploy bundle
         run: |
           set -euo pipefail
           mkdir -p _deploy
-          cp build/cv.md          _deploy/index.md
-          cp public.pdf           _deploy/cv.pdf
-          cp main.pdf             _deploy/cv-full.pdf
-          cp one-page-resume.pdf  _deploy/resume.pdf
+          cp build/cv-embed.md         _deploy/index.md
+          cp build/cv-sidebar.html     _deploy/cv-sidebar.html
+          cp build/cv.css              _deploy/cv.css
+          cp build/cv-theme.js         _deploy/cv-theme.js
+          cp public.pdf                _deploy/cv.pdf
+          cp main.pdf                  _deploy/cv-full.pdf
+          cp one-page-resume.pdf       _deploy/resume.pdf
           ls -la _deploy
 
       # ---------- 4. Push to cycomachead/cycomachead.github.io ----------

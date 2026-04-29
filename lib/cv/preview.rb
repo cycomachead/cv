@@ -5,14 +5,17 @@ require 'fileutils'
 module CV
   # Local-preview pipeline: take the rendered cv.md and convert it to a
   # standalone HTML file using kramdown (the same renderer Jekyll uses), then
-  # wrap it in a minimal HTML shell with a sidebar table of contents and the
-  # preview CSS so you can open the file in a browser without running Jekyll.
+  # wrap it in a minimal HTML shell that mirrors what the deployed Jekyll
+  # site will look like — sidebar with download buttons + section TOC + dark
+  # mode toggle, content column with the rendered CV body.
   module Preview
     DEFAULT_OUTPUT = CV::BUILD_DIR.join('cv.html')
 
     module_function
 
-    def build(input: CV::Markdown::DEFAULT_OUTPUT, output: DEFAULT_OUTPUT)
+    def build(input: CV::Markdown::DEFAULT_OUTPUT, output: DEFAULT_OUTPUT,
+              cv_pdf_url: CV::Sidebar::DEFAULT_CV_PDF_URL,
+              resume_pdf_url: CV::Sidebar::DEFAULT_RESUME_PDF_URL)
       require 'kramdown'
       require 'kramdown-parser-gfm'
 
@@ -25,48 +28,25 @@ module CV
         smart_quotes: %w[apos rsquo apos rsquo]
       ).to_html
 
-      sidebar = build_sidebar(html_body)
+      sidebar = CV::Sidebar.render(html_body: html_body,
+                                   cv_pdf_url: cv_pdf_url,
+                                   resume_pdf_url: resume_pdf_url)
       shell   = File.read(CV::TEMPLATE_DIR.join('markdown', 'preview.html.erb'),
                           encoding: 'UTF-8')
       css     = File.read(CV::TEMPLATE_DIR.join('markdown', 'preview.css'),
+                          encoding: 'UTF-8')
+      script  = File.read(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'),
                           encoding: 'UTF-8')
 
       html = shell.sub('{{TITLE}}',   'Michael Ball — CV')
                   .sub('{{CSS}}',     css)
                   .sub('{{SIDEBAR}}', sidebar)
                   .sub('{{BODY}}',    html_body)
+                  .sub('{{SCRIPT}}',  script)
 
       FileUtils.mkdir_p(File.dirname(output))
       File.write(output, html)
       output
-    end
-
-    # Extract the rendered <h2 id="…">Title</h2> (and h3) blocks and build a
-    # nested sidebar nav. We keep this naive because the input is the output
-    # of our own template — no need for a full HTML parser.
-    def build_sidebar(html_body)
-      nav = +'<nav class="toc" aria-label="Section navigation">' "\n  <ol>\n"
-      open_h2 = open_h3 = false
-      html_body.scan(%r{<h([23])\s+id="([^"]+)"[^>]*>(.*?)</h\1>}m).each do |level, id, label|
-        text = label.gsub(/<[^>]+>/, '').strip
-        if level == '2'
-          nav << "    </ol>\n" if open_h3
-          nav << "  </li>\n"   if open_h2
-          nav << %(  <li><a href="##{id}">#{text}</a>)
-          open_h2 = true
-          open_h3 = false
-        else
-          unless open_h3
-            nav << "\n    <ol>\n"
-            open_h3 = true
-          end
-          nav << %(      <li><a href="##{id}">#{text}</a></li>\n)
-        end
-      end
-      nav << "    </ol>\n" if open_h3
-      nav << "  </li>\n"   if open_h2
-      nav << "  </ol>\n</nav>\n"
-      nav
     end
   end
 end

@@ -5,6 +5,7 @@
     Note on the `{:.entry}` IAL: kramdown attaches the class to the
     preceding paragraph; preview.css and the deployed Jekyll layout target
     `.entry` to make role/title lines visually distinct from the body. -%>
+<%- show_header = defined?(page_header) ? page_header : true -%>
 <%- if jekyll_front_matter -%>
 ---
 layout: cv
@@ -13,6 +14,7 @@ subtitle: <%= h(data.basics['title']) %>
 permalink: /cv/
 ---
 <% end -%>
+<%- if show_header -%>
 
 # <%= h(data.basics['name']) %>
 
@@ -33,6 +35,7 @@ permalink: /cv/
 <% end %>
 
 ---
+<%- end -%>
 
 ## Education
 

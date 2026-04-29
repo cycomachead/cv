@@ -15,5 +15,6 @@ module CV
   autoload :Renderer, 'cv/renderer'
   autoload :Markdown, 'cv/markdown'
   autoload :Latex,    'cv/latex'
+  autoload :Sidebar,  'cv/sidebar'
   autoload :Preview,  'cv/preview'
 end

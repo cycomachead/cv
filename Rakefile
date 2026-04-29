@@ -19,17 +19,42 @@ namespace :site do
     puts "wrote #{out}"
   end
 
+  desc 'Render the header-stripped Markdown for the Jekyll embed (build/cv-embed.md)'
+  task :md_embed do
+    out = CV::Markdown.build_embed
+    puts "wrote #{out}"
+  end
+
   desc 'Build a standalone HTML preview (build/cv.html)'
   task preview: :md do
     out = CV::Preview.build
     puts "wrote #{out}"
   end
 
-  desc 'Stage cv.md + PDFs for the cycomachead.github.io/cv/ deploy'
-  task deploy_out: :md do
+  desc 'Build the cv-sidebar.html fragment for the Jekyll site (build/cv-sidebar.html)'
+  task sidebar: :md do
+    out = CV::Sidebar.build
+    puts "wrote #{out}"
+  end
+
+  desc 'Build the embed bundle: cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js'
+  task embed: %i[md_embed sidebar] do
+    %w[preview.css cv-theme.js].each do |asset|
+      src  = CV::TEMPLATE_DIR.join('markdown', asset)
+      dest = CV::BUILD_DIR.join(asset == 'preview.css' ? 'cv.css' : asset)
+      FileUtils.cp(src, dest)
+      puts "wrote #{dest}"
+    end
+  end
+
+  desc 'Stage cv-embed.md + sidebar + assets + PDFs for the cycomachead.github.io/cv/ deploy'
+  task deploy_out: %i[md_embed sidebar] do
     deploy = CV::BUILD_DIR.join('deploy')
     FileUtils.mkdir_p(deploy)
-    FileUtils.cp(CV::Markdown::DEFAULT_OUTPUT, deploy.join('index.md'))
+    FileUtils.cp(CV::Markdown::EMBED_DEFAULT_OUTPUT,    deploy.join('index.md'))
+    FileUtils.cp(CV::Sidebar::DEFAULT_OUTPUT,           deploy.join('cv-sidebar.html'))
+    FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'preview.css'), deploy.join('cv.css'))
+    FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'), deploy.join('cv-theme.js'))
     %w[main.pdf one-page-resume.pdf].each do |pdf|
       src = CV::ROOT.join(pdf)
       next unless src.exist?

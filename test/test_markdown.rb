@@ -52,10 +52,25 @@ class MarkdownBuildTest < Minitest::Test
       assert_includes html, '<h1 id="michael-ball">Michael Ball</h1>'
       assert_includes html, 'Snap<em>!</em>'
 
-      # Sidebar TOC was generated and has h2 entries plus at least one h3.
-      assert_includes html, 'class="toc"'
+      # Layout wrapper is present so the dark-mode toggle (via data-theme on
+      # .cv-layout) and the scoped CSS find their root.
+      assert_includes html, 'class="cv-layout"'
+
+      # Sidebar contains downloads, TOC, theme toggle.
+      assert_includes html, 'class="cv-sidebar"'
+      assert_includes html, 'class="cv-downloads"'
+      assert_includes html, 'cv-btn cv-btn-primary'
+      assert_includes html, 'Download CV (PDF)'
+      assert_includes html, 'cv-btn cv-btn-secondary'
+      assert_includes html, '1 page'
+      assert_includes html, 'class="cv-toc"'
+      assert_includes html, 'data-cv-theme-toggle'
       assert_includes html, 'href="#education"'
       assert_includes html, 'href="#course-descriptions"'
+
+      # Theme toggle script is inlined.
+      assert_includes html, "STORAGE_KEY = 'cv-theme'"
+      assert_includes html, 'data-cv-theme-toggle'
 
       # Entry paragraphs got the .entry class via the kramdown IAL.
       assert_includes html, 'class="entry"'
@@ -63,5 +78,59 @@ class MarkdownBuildTest < Minitest::Test
       # Front matter was stripped.
       refute_match(/\A<!DOCTYPE html.*\n---\n/, html)
     end
+  end
+
+  def test_md_embed_strips_page_header_but_keeps_front_matter
+    Dir.mktmpdir do |dir|
+      out = CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md'))
+      md  = File.read(out, encoding: 'UTF-8')
+
+      assert_match(/\A---\nlayout: cv\n/, md,
+                   'jekyll front matter is preserved')
+      refute_includes md, '# Michael Ball'
+      refute_includes md, '{:.contact}'
+      refute_includes md, '{:.bio}'
+
+      # Body content is still there.
+      assert_includes md, '## Education'
+      assert_includes md, '## Positions'
+    end
+  end
+
+  def test_sidebar_fragment_has_downloads_toc_toggle
+    Dir.mktmpdir do |dir|
+      CV::Markdown.build(output: File.join(dir, 'cv.md'))
+      # Hand the sidebar a tiny rendered body so we don't depend on the full
+      # markdown→html round-trip for this test.
+      body = <<~HTML
+        <h2 id="education">Education</h2>
+        <h3 id="degree">Degree</h3>
+        <h2 id="positions">Positions</h2>
+      HTML
+      out = CV::Sidebar.build(output: File.join(dir, 'cv-sidebar.html'),
+                              html_body: body)
+      html = File.read(out, encoding: 'UTF-8')
+
+      assert_includes html, 'class="cv-sidebar"'
+      assert_includes html, 'class="cv-btn cv-btn-primary"'
+      assert_includes html, 'href="cv.pdf"'
+      assert_includes html, 'href="resume.pdf"'
+      assert_includes html, 'href="#education"'
+      assert_includes html, 'href="#degree"'
+      assert_includes html, 'href="#positions"'
+      assert_includes html, 'data-cv-theme-toggle'
+      # No <html>/<body> wrapper — this is a fragment to be included.
+      refute_includes html, '<html'
+      refute_includes html, '<body'
+    end
+  end
+
+  def test_sidebar_accepts_custom_pdf_urls
+    body = '<h2 id="x">X</h2>'
+    html = CV::Sidebar.render(html_body: body,
+                              cv_pdf_url: '/cv-full.pdf',
+                              resume_pdf_url: '/one-page.pdf')
+    assert_includes html, 'href="/cv-full.pdf"'
+    assert_includes html, 'href="/one-page.pdf"'
   end
 end
