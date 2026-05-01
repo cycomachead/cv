@@ -21,17 +21,34 @@ TEX_FILES  := main.tex one-page-resume.tex
 PDFS       := $(TEX_FILES:.tex=.pdf)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
-.PHONY: all md preview pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
+.PHONY: all md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
 
-all: md preview pdf
+all: md preview embed pdf
 
 # ---------------- Markdown (canonical output) ----------------
 md:
 	@$(RUBY) bin/cv md
 
+# Header-stripped Markdown for the Jekyll embed (no name/title/contact block).
+md-embed:
+	@$(RUBY) bin/cv md:embed
+
+# Sidebar fragment (download buttons + TOC + theme toggle) for the Jekyll site.
+sidebar: md
+	@$(RUBY) bin/cv sidebar
+
+# Full embed bundle: cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js.
+embed:
+	@$(RUBY) bin/cv embed
+
 # ---------------- HTML preview ----------------
+# Copies the built PDFs into $(BUILD_DIR)/ as cv.pdf / resume.pdf so the
+# sidebar download buttons resolve when the preview is served from build/.
 preview: md
 	@$(RUBY) bin/cv preview
+	@if [ -f public.pdf ]; then cp -f public.pdf $(BUILD_DIR)/cv.pdf; \
+	elif [ -f main.pdf ]; then cp -f main.pdf $(BUILD_DIR)/cv.pdf; fi
+	@if [ -f one-page-resume.pdf ]; then cp -f one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
 	@echo "Serving $(BUILD_DIR)/cv.html at http://localhost:$(PORT)"
 	@cd $(BUILD_DIR) && $(RUBY) -run -e httpd . -p $(PORT)
 
@@ -55,15 +72,19 @@ pubs-tex:
 	@$(RUBY) bin/cv pubs:tex $(BUILD_DIR)/publications.tex
 
 # ---------------- Deploy bundle ----------------
-# Stage cv.md + the two PDFs in build/deploy/, ready to copy into the
-# cycomachead/cycomachead.github.io repo's cv/ folder. The CI workflow does
-# this directly to the external repo; this target is for local dry-runs.
-deploy-out: md pdf
+# Stage cv-embed.md + sidebar fragment + assets + PDFs in build/deploy/, ready
+# to copy into the cycomachead/cycomachead.github.io repo's cv/ folder. The
+# CI workflow does this directly to the external repo; this target is for
+# local dry-runs.
+deploy-out: md-embed sidebar pdf
 	@mkdir -p $(DEPLOY_DIR)
-	@cp $(BUILD_DIR)/cv.md  $(DEPLOY_DIR)/index.md
-	@cp main.pdf            $(DEPLOY_DIR)/cv.pdf
-	@cp one-page-resume.pdf $(DEPLOY_DIR)/resume.pdf
-	@echo "staged $(DEPLOY_DIR)/{index.md, cv.pdf, resume.pdf}"
+	@cp $(BUILD_DIR)/cv-embed.md                $(DEPLOY_DIR)/index.md
+	@cp $(BUILD_DIR)/cv-sidebar.html            $(DEPLOY_DIR)/cv-sidebar.html
+	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
+	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
+	@cp main.pdf                                $(DEPLOY_DIR)/cv.pdf
+	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
+	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
 # Pull the latest BibTeX export for the DBLP author profile. Manually merge
@@ -85,14 +106,17 @@ clean:
 
 help:
 	@echo "Targets:"
-	@echo "  make            build cv.md, cv.html, and both PDFs"
+	@echo "  make            build cv.md, cv.html, embed bundle, and both PDFs"
 	@echo "  make md         build $(BUILD_DIR)/cv.md from YAML+bib"
+	@echo "  make md-embed   build $(BUILD_DIR)/cv-embed.md (no page header) for Jekyll"
 	@echo "  make preview    build cv.html and serve it on http://localhost:$(PORT)"
+	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
+	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
 	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
 	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
 	@echo "  make pubs-tex   regenerate publications.tex from YAML+bib"
-	@echo "  make deploy-out stage cv.md + PDFs for cycomachead.github.io/cv/"
+	@echo "  make deploy-out stage embed bundle + PDFs for cycomachead.github.io/cv/"
 	@echo "  make test       run the minitest suite"
 	@echo "  make dblp       refresh dblp.bib from DBLP"
 	@echo "  make clean      remove build/ and LaTeX intermediates"

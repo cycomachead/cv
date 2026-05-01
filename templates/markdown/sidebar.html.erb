@@ -1,0 +1,35 @@
+<%# Sidebar fragment shared by:
+    - the standalone preview (templates/markdown/preview.html.erb)
+    - the cv-sidebar.html artifact shipped to the Jekyll deploy
+
+    Locals:
+      cv_pdf_url     URL for the full CV PDF (default: cv.pdf)
+      resume_pdf_url URL for the one-page resume PDF (default: resume.pdf)
+      toc_html       pre-rendered <ol>...</ol> markup for the section TOC
+-%>
+<aside class="cv-sidebar">
+  <div class="cv-downloads">
+    <a class="cv-btn cv-btn-primary" href="<%= cv_pdf_url %>" download>
+      Download CV (PDF)
+    </a>
+    <a class="cv-btn cv-btn-secondary" href="<%= resume_pdf_url %>" download>
+      Download résumé (1 page)
+    </a>
+  </div>
+
+  <nav class="cv-toc" aria-label="Section navigation">
+    <p class="cv-toc-heading">Sections</p>
+<%= toc_html %>
+  </nav>
+
+  <div class="cv-theme-toggle">
+    <span>Theme</span>
+    <button type="button"
+            data-cv-theme-toggle
+            aria-pressed="false"
+            aria-label="Toggle dark mode">
+      <span class="cv-theme-icon" aria-hidden="true">☀</span>
+      <span class="cv-theme-label">Light</span>
+    </button>
+  </div>
+</aside>
