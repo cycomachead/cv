@@ -1,0 +1,31 @@
+<%-
+  # Publication item — one of:
+  #   text:    free-form Markdown prose
+  #   bib:     key from personal.bib
+  #   inline:  authors + title + venue + url + year
+  if item['text']
+    out = h(item['text'])
+  else
+    if item['bib']
+      entry  = bib[item['bib']] or raise "Missing bib key: #{item['bib']}"
+      a, t   = entry.authors, entry.title
+      venue  = item['venue_override'] || entry['booktitle']
+      url    = item['url'] || entry.url
+      year   = entry.year
+    else
+      a, t  = Array(item['authors']), item['title']
+      venue = item['venue']
+      url   = item['url']
+      year  = item['year']
+    end
+    parts  = []
+    parts << authors(a) unless a.empty?
+    title_part = "_#{h(t)}_"
+    title_part += " (#{h(item['kind'])})" if item['kind']
+    parts << title_part
+    parts << "#{h(venue)}#{year ? ", #{year}" : ''}" if venue
+    parts << link(url) if url
+    out = parts.join('. ') + '.'
+  end
+-%>
+<%= out %>

@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Tiny CLI for the dual-publishing system. Usage:
+#   bin/cv md            — render YAML+bib to build/cv.md
+#   bin/cv md:embed      — render header-stripped Markdown for the Jekyll embed
+#   bin/cv preview       — render md and convert to a standalone HTML preview
+#   bin/cv sidebar       — render the cv-sidebar.html include for the Jekyll site
+#   bin/cv embed         — render md:embed + sidebar + copy cv.css/cv-theme.js
+#   bin/cv pubs:tex [out] — render a publications LaTeX fragment
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'cv'
+
+cmd = ARGV.shift || 'md'
+
+case cmd
+when 'md', 'markdown'
+  out = CV::Markdown.build
+  puts "wrote #{out}"
+when 'md:embed'
+  out = CV::Markdown.build_embed
+  puts "wrote #{out}"
+when 'preview'
+  CV::Markdown.build
+  out = CV::Preview.build
+  puts "wrote #{out}"
+when 'sidebar'
+  CV::Markdown.build unless File.file?(CV::Markdown::DEFAULT_OUTPUT)
+  out = CV::Sidebar.build
+  puts "wrote #{out}"
+when 'embed'
+  require 'fileutils'
+  CV::Markdown.build_embed
+  CV::Sidebar.build
+  %w[preview.css cv-theme.js].each do |asset|
+    src  = CV::TEMPLATE_DIR.join('markdown', asset)
+    dest = CV::BUILD_DIR.join(asset == 'preview.css' ? 'cv.css' : asset)
+    FileUtils.cp(src, dest)
+    puts "wrote #{dest}"
+  end
+when 'tex'
+  out = CV::Latex.build
+  puts "wrote #{out}"
+when 'pubs:tex'
+  output = ARGV.shift || (CV::BUILD_DIR.join('publications.tex'))
+  data = CV::Data.load
+  bib  = CV::Bib.load
+  rendered = CV::Renderer.new(format: :latex)
+                         .render('publications.tex',
+                                 data: data, bib: bib,
+                                 locals: { section: { 'title' => 'Writing & Publications' } })
+  require 'fileutils'
+  FileUtils.mkdir_p(File.dirname(output))
+  File.write(output, rendered)
+  puts "wrote #{output}"
+when 'help', '-h', '--help'
+  puts <<~USAGE
+    Usage: bin/cv <command>
+      md                Build the canonical Markdown CV (build/cv.md)
+      md:embed          Build the header-stripped Markdown for the Jekyll embed
+      preview           Build cv.md and a standalone HTML preview (build/cv.html)
+      sidebar           Build the cv-sidebar.html fragment for the Jekyll site
+      embed             md:embed + sidebar + copy cv.css and cv-theme.js
+      tex               Render the full single-file LaTeX CV (build/cv.tex)
+      pubs:tex [path]   Render only the publications LaTeX fragment
+
+    To refresh dblp.bib from DBLP, use `make dblp` (curl one-liner).
+  USAGE
+else
+  warn "Unknown command: #{cmd}"
+  exit 1
+end

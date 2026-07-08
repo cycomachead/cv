@@ -1,0 +1,55 @@
+<%# This fragment regenerates 6-publications/1-conferences.tex (or any one
+    publication group) from data/publications.yml + personal.bib. To use,
+    \input{} the resulting file from main.tex instead of the hand-edited
+    .tex. The hand-edited file is preserved as the source of truth until you
+    opt in. %>
+\section{<%= h(section['title'] || 'Writing & Publications') %>}
+\vspace{6pt}
+
+<% data.publications.each do |group| -%>
+\subsection{<%= h(group['heading']) %>}
+\vspace{5pt}
+<% if group['reverse'] -%>
+\begin{etaremune}
+<% else -%>
+\begin{itemize}
+<% end -%>
+    \setlength\itemsep{1em}
+<% group['items'].each do |item| -%>
+<%
+  if item['text']
+    body = h(item['text'])
+  else
+    if item['bib']
+      entry = bib[item['bib']] or raise "Missing bib key: #{item['bib']}"
+      authors_list = entry.authors
+      title  = entry.title
+      venue  = item['venue_override'] || entry['booktitle']
+      url    = item['url'] || entry.url
+      year   = entry.year
+    else
+      authors_list = Array(item['authors'])
+      title  = item['title']
+      venue  = item['venue']
+      url    = item['url']
+      year   = item['year']
+    end
+
+    body = +''
+    body << "#{authors(authors_list)}.\n    \\newline " unless authors_list.empty?
+    body << h(title)
+    body << " (#{h(item['kind'])})" if item['kind']
+    body << '.'
+    body << "\n    \\newline #{h(venue)}#{year ? ", #{year}" : ''}." if venue
+    body << "\n    \\newline \\href{#{url}}{#{url}}" if url
+  end
+-%>
+    \item{<%= body %>}
+<% end -%>
+<% if group['reverse'] -%>
+\end{etaremune}
+<% else -%>
+\end{itemize}
+<% end -%>
+
+<% end -%>

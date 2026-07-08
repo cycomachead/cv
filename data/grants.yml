@@ -1,0 +1,113 @@
+- when:    "2024–2025"
+  title:   UC Berkeley Instructional Technology Micro-Grant
+  amount:  "$50,000"
+  role:    Lisa Yan, Michael Ball
+  summary: >-
+    Following a successful first year, awarded subsequent funding to
+    continue work with a focus on accessibility and sustainable maintenance
+    of educational tools.
+
+- when:    "2023–2024"
+  title:   UC Berkeley Instructional Technology Micro-Grant
+  amount:  "$50,000"
+  role:    Lisa Yan, Michael Ball
+  summary: >-
+    Year-long pilot through the Vice Provost's Office; coordinated a team of
+    students modernizing educational tools for CS and DS courses.
+    Collaborated closely with Research, Teaching, and Learning to share
+    custom tools with larger campus groups.
+
+- when:    "2021–2022"
+  title:   UC Berkeley Presidential Chair Fellows
+  amount:  "$22,500"
+  role:    Pamela Fox, Michael Ball
+  summary: >-
+    Year-long grant through the Center for Teaching and Learning to add
+    Parsons Problems — interactive puzzles that lower the burden of
+    memorizing syntax — to CS61A and CS88.
+
+- when:    "2020–2023"
+  title:   Hopper-Dean Foundation BJC
+  amount:  "$600,000"
+  role:    Dan Garcia, PI
+  summary: >-
+    Sponsored development of the Beauty and Joy of Computing curriculum.
+    Helped create BJC Sparks, a new functional-first middle-school
+    curriculum, and contributed engineering for the Spanish translation of
+    the high-school CS Principles course and the Snap! programming
+    language.
+
+- when:    "2021–2024"
+  title:   "NSF EAGER, Student Mission Control for the International Space Station (Award #2027260)"
+  amount:  "$298,944"
+  role:    Research Engineer (Dan Garcia, co-PI)
+  summary: >-
+    Funding to support development of an API, website, "Student Mission
+    Control" interface, and curriculum modules centered on data streaming
+    out of the ISS.
+
+- when:    2020
+  title:   UC Berkeley College of Engineering, Course Adaptation and Remote Delivery
+  amount:  "$60,000"
+  role:    Dan Garcia, co-PI
+  summary: >-
+    Question generators and MOOC-like videos and quizzes for remote CS61C,
+    CS10, and CS169A.
+
+- when:    2019
+  title:   "Hopper-Dean Foundation, Accelerating CS Diversity Programs Fund"
+  amount:  "$600,000"
+  role:    Dan Garcia, PI
+  summary: >-
+    The foundation granted $3M to the department to fund diversity
+    initiatives. Summer salary supported the middle-school curriculum,
+    Spanish translation, software development, and staff.
+
+- when:    2016
+  title:   Hopper-Dean Foundation
+  amount:  "$200,000"
+  role:    Researcher (Daniel Garcia, PI)
+  summary: >-
+    Diversity initiatives in CS to support high schools nationwide. The
+    course CS10 / Beauty and Joy of Computing was developed into an AP
+    course, delivered through an edX SPOC.
+
+- when:    2015
+  title:   Google CS Engagement Award
+  amount:  "$5,000"
+  role:    Michael Ball
+  summary: >-
+    Gift to support CS10 and the Beauty and Joy of Computing. Funds were used
+    to develop Snap! enhancements and help fund the Snap! Cloud
+    infrastructure.
+
+- when:    2015
+  title:   Google's 3X in 3 Years
+  amount:  "$900,000"
+  role:    Student Researcher (Dan Garcia)
+  summary: >-
+    Three-year project to grow undergraduate capacity and support diversity
+    via "Scaling Computer Science through Targeted Engagement." Goals
+    included reducing the intro GPA gap, increasing software-engineering
+    enrollment, and tripling women and URM CS majors.
+
+- when:    2014
+  title:   "NSF STEM-C BJC4NYC: Bringing the Beauty and Joy of Computing to the Largest School System in the US"
+  amount:  "$7,874,876"
+  role:    Consultant
+  summary: >-
+    Curricular materials, based on the Beauty and Joy of Computing, for
+    teaching CS Principles at the high-school level using Snap!. Trained
+    100 NYC high-school teachers; reviewed/edited curriculum with EDC;
+    developed BJCx (with auto-grading) as a SPOC; supported teachers
+    online.
+
+- when:    2014
+  title:   edX
+  amount:  "$50,000"
+  role:    Staff
+  summary: >-
+    Development of BJCx, a CS Principles edX MOOC offered as a synchronous
+    SPOC for high schools, a synchronous open MOOC, and an asynchronous
+    self-study course. Supported Snap! cloud integration, autograding, and
+    online support for students and teachers.

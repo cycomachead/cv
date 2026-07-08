@@ -22,9 +22,19 @@
 \usepackage[super]{nth}
 \usepackage{import}
 \usepackage[luatex]{xcolor}
-\usepackage{quoting}
 \PassOptionsToPackage{HTML}{xcolor}
 \PassOptionsToPackage{hyphens}{url}
+
+% Workaround: with TeX Live 2024+, moderncv's \begin{document} hook calls
+% \renewenvironment{quotation}{...}, which now errors against the modern
+% kernel ("Environment 'quotation' undefined"). Pre-define the env if
+% missing so the renew succeeds. Removing the unused `quoting` package
+% above is part of the same fix — it interacts badly with moderncv's
+% redefinition path.
+\makeatletter
+\@ifundefined{quotation}{\newenvironment{quotation}{}{}}{}
+\@ifundefined{quote}{\newenvironment{quote}{}{}}{}
+\makeatother
 % \usepackage{hyperref}
 
 % primary text color
@@ -95,7 +105,9 @@
     \input{6-publications/3-press}
     \input{3-projects}
     \input{7-personal}
-    \input{references}
+    \ifdefined\publicversion\else
+        \input{references}
+    \fi
 
     % \input{bibtex_post}
     

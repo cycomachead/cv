@@ -1,4 +1,8 @@
-name: Build CV PDFs
+name: CI (PDFs + tests)
+
+# Validates every push and PR — builds the PDFs, runs the Ruby test suite,
+# and uploads the renders as artifacts. The actual deploy to
+# cycomachead.github.io/cv lives in deploy.yml and only runs on main.
 
 on:
   push:
@@ -8,16 +12,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-pdfs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write   # needed for the `pdfs` branch publish step
     steps:
       - uses: actions/checkout@v4
 
       # main.tex uses \usepackage{fontspec} + Source Sans Pro, which requires
-      # lualatex (or xelatex). The one-pager only needs pdflatex but we run
-      # both with lualatex for consistency.
+      # lualatex (or xelatex).
       - name: Build full CV (main.tex)
         uses: xu-cheng/latex-action@v3
         with:
@@ -41,21 +42,30 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      # On pushes to main, also publish the latest PDFs to a `pdfs` branch so
-      # you always have a stable URL (raw.githubusercontent.com/.../pdfs/...).
-      # Remove this step if you don't want auto-published builds.
-      - name: Stage PDFs for publish
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          mkdir -p _publish
-          cp main.pdf one-page-resume.pdf _publish/
+  test-and-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Publish PDFs to `pdfs` branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
+      - uses: ruby/setup-ruby@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: pdfs
-          publish_dir: ./_publish
-          keep_files: false
-          commit_message: "Build PDFs from ${{ github.sha }}"
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test
+
+      - name: Render cv.md and HTML preview
+        run: |
+          bundle exec rake site:md
+          bundle exec rake site:preview
+
+      - name: Upload Markdown artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-md
+          path: |
+            build/cv.md
+            build/cv.html
+          if-no-files-found: error
+          retention-days: 30

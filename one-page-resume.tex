@@ -38,6 +38,16 @@
 % \setlength{\footskip}{10pt}
 
 \moderncvstyle{banking} %
+
+% Workaround: with TeX Live 2024+, moderncv's \begin{document} hook calls
+% \renewenvironment{quotation}{...}, which now errors against the modern
+% kernel ("Environment 'quotation' undefined"). Pre-define the env if
+% missing so the renew succeeds.
+\makeatletter
+\@ifundefined{quotation}{\newenvironment{quotation}{}{}}{}
+\@ifundefined{quote}{\newenvironment{quote}{}{}}{}
+\makeatother
+
 % personal data
 \name{Michael}{Ball}
 \title{Software Engineer, Educator}

@@ -1,0 +1,27 @@
+- when:    "2019–2020"
+  title:   UC Berkeley Lecturer Teaching Fellows
+  summary: Year-long project on Parsons Puzzles in intro CS courses.
+
+- when:    2018
+  title:   Best Lightning Talk Award, 49th ACM Technical Symposium on Computer Science Education
+  summary: Awarded for the lightning talk "IRT in 5 Minutes."
+
+- when:    2015
+  title:   Eugene L. Lawler Prize
+  issuer:  UC Berkeley EECS
+  summary: >-
+    The Lawler Prize honors computer science undergraduates from
+    disadvantaged groups, or who have surmounted unusual difficulties in
+    pursuing a degree with demonstrated academic effort. Established by the
+    UC Berkeley Computer Science Division to honor the memory of Professor
+    Eugene L. Lawler.
+  url:     "https://www2.eecs.berkeley.edu/Students/Awards/#11"
+
+- when:    2015
+  title:   EECS Distinguished Graduate Student Instructor Award
+  issuer:  UC Berkeley EECS
+  summary: >-
+    Selected from the top 9% of UC Berkeley EE/CS GSIs and group tutors. The
+    department selects one top EE and one top CS GSI for the award each
+    year.
+  url:     "https://www2.eecs.berkeley.edu/Students/Awards/#13"

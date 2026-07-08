@@ -1,0 +1,238 @@
+<%# Single-file LaTeX CV scaffold. Mirrors main.tex's preamble and emits the
+    body from data/*.yml. Compile with `latexmk -lualatex` (the moderncv
+    setup needs lualatex/xelatex for fontspec). The handcrafted main.tex +
+    *.tex partials remain the source of truth for the printable PDF until
+    you decide to switch over. -%>
+%%%%%%%%%%%%%%%%%% Generated from data/*.yml — edit data, not this file.
+
+\DocumentMetadata{
+  lang        = en,
+  pdfstandard = ua-2,
+  pdfstandard = a-4f,
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE}
+}
+
+\documentclass[12pt, letterpaper, unicode]{moderncv}
+
+\usepackage[scale=0.8]{geometry}
+\usepackage{etaremune}
+\usepackage[super]{nth}
+\usepackage{import}
+\usepackage[luatex]{xcolor}
+\usepackage{xspace}
+\PassOptionsToPackage{HTML}{xcolor}
+\PassOptionsToPackage{hyphens}{url}
+
+% Workaround: with TeX Live 2024+, moderncv's \begin{document} hook calls
+% \renewenvironment{quotation}{...}, which now errors against the modern
+% kernel ("Environment 'quotation' undefined"). Pre-define the env if
+% missing so the renew succeeds.
+\makeatletter
+\@ifundefined{quotation}{\newenvironment{quotation}{}{}}{}
+\@ifundefined{quote}{\newenvironment{quote}{}{}}{}
+\makeatother
+
+\definecolor{color0}{rgb}{0,0,0}
+\definecolor{color1}{HTML}{002676}   % Berkeley Blue (headings)
+\definecolor{color2}{HTML}{46535E}   % Pacific (accents)
+
+\moderncvstyle{banking}
+\usepackage{fontspec}
+\setsansfont{Source Sans Pro}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Stylized words used throughout the document. Mirrors main.tex.
+\newcommand{\me}{\textbf{Ball, Michael}\xspace}
+\newcommand{\firstme}{\textbf{Michael Ball}\xspace}
+\newcommand{\snap}{Snap\textit{!}\xspace}
+\newcommand{\snapcon}{Snap\textit{!}Con\xspace}
+\newcommand{\snapshot}{Snap\textit{!}shot\xspace}
+
+% Personal data
+\name{<%= h(data.basics['name'].split(' ').first) %>}{<%= h(data.basics['name'].split(' ', 2).last) %>}
+\title{<%= h(data.basics['title']) %>}
+\address{<%= h(data.basics['address']) %>}{}
+\email{<%= h(data.basics['email']) %>}
+\homepage{<%= data.basics['homepage'] %>}
+<%- (data.basics['profiles'] || []).each do |p| -%>
+<%- if p['kind'] == 'github' -%>
+\social[github]{<%= h(p['url'].sub(%r{^https?://github\.com/}, '')) %>}
+<%- elsif p['kind'] == 'linkedin' -%>
+\social[linkedin]{<%= h(p['url'].sub(%r{^https?://(?:www\.)?linkedin\.com/in/}, '').chomp('/')) %>}
+<%- end -%>
+<%- end -%>
+
+\begin{document}
+\makecvtitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Education %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Education}
+\vspace{5pt}
+<%- data.education.each do |e| -%>
+\cventry{<%= h(e['when']) %>}{<%= h(e['degree']) %>}{<%= h(e['institution']) %>}{<%= h(e['location']) %>}{<%= e['advisor'] ? "\\small{Advisor: #{h(e['advisor'])}}" : '' %>}{<%= e['thesis'] ? "Thesis: #{h(e['thesis'])}" : '' %>}
+\vspace{5pt}
+<% end -%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Positions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Positions}
+\vspace{6pt}
+<%- data.positions.each do |p| -%>
+\cventry{<%= h(p['when']) %>}{<%= h(p['role']) %>}{<%= h(p['employer']) %>}{<%= h(p['location']) %>}{}{}
+<%- if p['summary'] -%>
+{\vspace{4pt} <%= h(p['summary']) %>}
+<%- end -%>
+<%- if (hl = Array(p['highlights'])).any? %>
+\begin{itemize}\setlength\itemsep{4pt}
+<%- hl.each do |item| -%>
+  \item \small <%= h(item) %>
+<%- end -%>
+\end{itemize}
+<%- end -%>
+\vspace{6pt}
+<% end -%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Research Interests %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Research Interests}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.research_interests.each do |r| -%>
+  \item \textbf{<%= h(r['title']) %>}\newline\small <%= h(r['description']) %>
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Teaching %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Teaching --- UC Berkeley}
+\vspace{6pt}
+
+\subsection{Course Descriptions}
+\vspace{5pt}
+\begin{description}\setlength\itemsep{0.7em}
+<%- data.teaching['courses'].each do |c| -%>
+  \item[<%= h(c['code']) %>] \textit{<%= h(c['title']) %>}<% if c['units'] %> (<%= c['units'] %> units)<% end %>. <%= h(c['description']) %>
+<%- end -%>
+\end{description}
+\vspace{5pt}
+
+\subsection{Teaching Assignments}
+<%- if (notes = Array(data.teaching['notes'])).any? -%>
+\begin{itemize}\setlength\itemsep{0.2em}
+<%- notes.each do |n| -%>
+  \item \small <%= h(n) %>
+<%- end -%>
+\end{itemize}
+<%- end -%>
+\newcommand{\semester}[2]{\item{\textbf{#1}\newline}#2}
+\begin{itemize}\setlength\itemsep{0.7em}
+<%- data.teaching['assignments'].each do |a| -%>
+  \semester{<%= h(a['term']) %>}{<%= h(a['detail']) %>}
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Awards %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Awards}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.awards.each do |a| -%>
+  \item <%= h(a['title']) %>, <%= h(a['when']) %><%= a['issuer'] ? ", #{h(a['issuer'])}" : '' %>
+<%- if a['summary'] -%>
+    \newline\small <%= h(a['summary']) %>
+<%- end -%>
+<%- if a['url'] -%>
+    \newline\small \href{<%= a['url'] %>}{<%= a['url'] %>}
+<%- end -%>
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Grants & Gifts %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Grants and Gifts}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.grants.each do |g| -%>
+  \item{<%= h(g['title']) %> (<%= h(g['when']) %>)<%= g['role']   ? ", #{h(g['role'])}"   : '' %><%= g['amount'] ? ", #{h(g['amount'])}" : '' %>
+<%- if g['summary'] -%>
+    \newline <%= h(g['summary']) %>
+<%- end -%>
+  }
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Students %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Students Supervised}
+\newcommand{\report}[5]{\item{#1: #2 ``#3''\newline\footnotesize{#4}\newline\tiny{#5}}}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.students.each do |s| -%>
+  \report{<%= h(s['when']) %>}{<%= h(s['name']) %>}{<%= h(s['title']) %>}{<%= h(s['advising']) %>}{<%= s['url'] %>}
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Service %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Service}
+\vspace{6pt}
+<%- data.service.each do |group| -%>
+\subsection{<%= h(group['heading']) %>}
+\vspace{5pt}
+<%- group['items'].each do |item| -%>
+\cvline{<%= h(item['when']) %>}{<%= h(item['detail']) %><%= item['note'] ? "\\newline\\small #{h(item['note'])}" : '' %>}
+<%- end -%>
+\vspace{6pt}
+<% end -%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Publications %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<%= partial('publications.tex', section: { 'title' => 'Writing & Publications' }) %>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Press / Media %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Media and News}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.press.each do |p| -%>
+  \item{<%= h(p['outlet']) %>: \textit{<%= h(p['title']) %>}<%= p['date'] ? ". #{h(p['date'])}" : '' %>
+<%- if p['url'] -%>
+    \newline\footnotesize\href{<%= p['url'] %>}{<%= p['url'] %>}
+<%- end -%>
+  }
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Projects %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Academic \& Open Source Software}
+\vspace{6pt}
+<%- data.projects.each do |p| -%>
+\textbf{<%= h(p['name']) %>}\newline
+\small <%= h(p['summary']) %>
+<%- if p['url'] -%>
+\newline\small\href{<%= p['url'] %>}{<%= p['url'] %>}
+<%- end -%>
+
+\vspace{12pt}
+
+<% end -%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Skills %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Technical Skills}
+\vspace{6pt}
+\begin{itemize}\setlength\itemsep{1em}
+<%- data.skills.each do |s| -%>
+  \item{\textbf{<%= h(s['label']) %>}: <%= h(s['detail']) %>}
+<%- end -%>
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% References %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{References}
+\vspace{6pt}
+<%- refs = data.references; refs.each_slice(2) do |a, b| -%>
+\cvlistdoubleitem{
+    <%= h(a['name']) %><%= a['title'] ? "\\newline #{h(a['title'])}" : '' %><%= a['email'] ? "\\newline #{h(a['email'])}" : '' %><%= a['phone'] ? "\\newline #{h(a['phone'])}" : '' %>
+}{
+    <% if b -%><%= h(b['name']) %><%= b['title'] ? "\\newline #{h(b['title'])}" : '' %><%= b['email'] ? "\\newline #{h(b['email'])}" : '' %><%= b['phone'] ? "\\newline #{h(b['phone'])}" : '' %><% end -%>
+}
+\vspace{4pt}
+<% end -%>
+
+\emptysection{}\closesection
+\vfill
+\begin{center}
+    \textit\footnotesize{Last update \today}
+\end{center}
+\end{document}

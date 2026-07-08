@@ -1,0 +1,147 @@
+:root {
+  --berkeley-blue: #002676;
+  --berkeley-blue-dark: #001a52;
+  --pacific: #46535e;
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --muted: #5b6470;
+  --rule: #e3e2dd;
+  --max-width: 720px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Source Sans Pro",
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 2rem);
+}
+
+a {
+  color: var(--berkeley-blue);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+header {
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--pacific);
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(2.25rem, 6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--berkeley-blue);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--pacific);
+}
+
+.bio {
+  margin: 0 0 2.5rem;
+}
+
+.bio p {
+  margin: 0;
+  font-size: 1.075rem;
+  color: #2c2f33;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding: 1.25rem 0;
+  margin: 0 0 3rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.links a {
+  font-weight: 500;
+}
+
+.links a.primary {
+  background: var(--berkeley-blue);
+  color: #fff;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background 120ms ease;
+}
+
+.links a.primary:hover,
+.links a.primary:focus-visible {
+  background: var(--berkeley-blue-dark);
+  text-decoration: none;
+}
+
+footer {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+footer a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --surface: #1c1f24;
+    --text: #e9ecf1;
+    --muted: #9aa3ad;
+    --rule: #2a2e35;
+    --berkeley-blue: #6f8dd1;
+    --berkeley-blue-dark: #8aa6e0;
+    --pacific: #aab3bd;
+  }
+
+  .bio p {
+    color: #d6d9de;
+  }
+
+  .links a.primary {
+    color: #0d1117;
+  }
+}

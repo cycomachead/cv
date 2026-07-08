@@ -5,19 +5,37 @@
 *.blg
 *.fdb_latexmk
 *.fls
-*.lof
+*.idx
+*.ilg
+*.ind
 *.log
+*.lof
 *.lot
+*.nav
 *.out
 *.run.xml
+*.snm
 *.synctex.gz
 *.toc
+*.vrb
 *.xdv
 
-# Generated PDFs (built by CI; uncomment to keep PDFs out of git entirely)
-# main.pdf
-# one-page-resume.pdf
+# Generated PDFs
+main.pdf
+public.pdf
+cv.pdf
+one-page-resume.pdf
 
-# Editor / OS noise
+# Pages build output
+_site/
+
+# OS / editor
 .DS_Store
 .vscode/
+
+# Ruby site generator outputs
+/build/
+/dblp.bib
+/.bundle/
+/vendor/bundle/
+Gemfile.lock
