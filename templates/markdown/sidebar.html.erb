@@ -8,6 +8,12 @@
       toc_html       pre-rendered <ol>...</ol> markup for the section TOC
 -%>
 <aside class="cv-sidebar">
+  <%# First focusable element on the page: lets keyboard/screen-reader users
+      jump past the download buttons + TOC. The content container must carry
+      id="cv-main" (the preview shell's <main> does; the Jekyll layout should
+      give its content wrapper the same id). -%>
+  <a class="cv-skip-link" href="#cv-main">Skip to CV content</a>
+
   <div class="cv-downloads">
     <a class="cv-btn cv-btn-primary" href="<%= cv_pdf_url %>" download>
       Download CV (PDF)
@@ -22,7 +28,9 @@
 <%= toc_html %>
   </nav>
 
-  <div class="cv-theme-toggle">
+  <%# `hidden` until cv-theme.js reveals it — without JS the button is inert,
+      so don't render a control that does nothing. -%>
+  <div class="cv-theme-toggle" hidden>
     <span>Theme</span>
     <button type="button"
             data-cv-theme-toggle

@@ -124,7 +124,7 @@ templates/markdown/          # cv.md.erb + 1 partial + preview shell + preview.c
 templates/latex/             # cv.tex.erb (full scaffold) + publications.tex.erb (fragment)
 test/                        # minitest suite (`make test`)
 *.tex, 6-publications/       # existing moderncv documents (drive the PDFs)
-site/                        # static landing page (legacy; still served by deploy.yml)
+site/                        # static landing page (legacy; not part of the deploy)
 .github/workflows/           # CI (build-cv.yml) and deploy (deploy.yml)
 ```
 
@@ -140,12 +140,15 @@ Two workflows:
   [cycomachead/cycomachead.github.io](https://github.com/cycomachead/cycomachead.github.io)
   repo at `cv/`:
 
-  | Source           | Destination in cycomachead.github.io           |
-  |------------------|-------------------------------------------------|
-  | `build/cv.md`    | `cv/index.md` (consumed by Jekyll)              |
-  | `public.pdf`     | `cv/cv.pdf` (default download — no references)  |
-  | `main.pdf`       | `cv/cv-full.pdf`                                |
-  | `one-page-resume.pdf` | `cv/resume.pdf`                            |
+  | Source                  | Destination in cycomachead.github.io       |
+  |-------------------------|--------------------------------------------|
+  | `build/cv-embed.md`     | `cv/index.md` (consumed by Jekyll)         |
+  | `build/cv-sidebar.html` | `cv/cv-sidebar.html` (Jekyll include)      |
+  | `build/cv.css`          | `cv/cv.css`                                |
+  | `build/cv-theme.js`     | `cv/cv-theme.js`                           |
+  | `public.pdf`            | `cv/cv.pdf` (default download — no references) |
+  | `main.pdf`              | `cv/cv-full.pdf`                           |
+  | `one-page-resume.pdf`   | `cv/resume.pdf`                            |
 
   ### One-time setup
 
@@ -165,7 +168,7 @@ Two workflows:
 ## Testing
 
 ```sh
-make test                   # 26 tests — bib parser, macros, data,
+make test                   # minitest suite — bib parser, macros, data,
                             # renderer, markdown build + preview
 ```
 

@@ -58,11 +58,16 @@ module CV
     def build_toc(html_body)
       nav = +"    <ol>\n"
       open_h2 = open_h3 = false
+      close_h2 = lambda do
+        nav << "        </ol>\n" if open_h3
+        # Indent the </li> only when it follows a nested list; otherwise it
+        # closes the <a> line directly (no stray whitespace inside the item).
+        nav << (open_h3 ? "      </li>\n" : "</li>\n") if open_h2
+      end
       html_body.scan(%r{<h([23])\s+id="([^"]+)"[^>]*>(.*?)</h\1>}m).each do |level, id, label|
         text = label.gsub(/<[^>]+>/, '').strip
         if level == '2'
-          nav << "        </ol>\n" if open_h3
-          nav << "      </li>\n"   if open_h2
+          close_h2.call
           nav << %(      <li><a href="##{id}">#{text}</a>)
           open_h2 = true
           open_h3 = false
@@ -74,8 +79,7 @@ module CV
           nav << %(          <li><a href="##{id}">#{text}</a></li>\n)
         end
       end
-      nav << "        </ol>\n" if open_h3
-      nav << "      </li>\n"   if open_h2
+      close_h2.call
       nav << "    </ol>\n"
       nav
     end
@@ -98,8 +102,7 @@ module CV
       md = md.sub(/\A---\n.*?\n---\n+/m, '')
       ::Kramdown::Document.new(
         md,
-        input: 'GFM', auto_ids: true,
-        smart_quotes: %w[apos rsquo apos rsquo]
+        input: 'GFM', auto_ids: true
       ).to_html
     end
   end
