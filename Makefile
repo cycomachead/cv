@@ -14,6 +14,7 @@ LATEXMK   ?= latexmk
 LATEX_OPTS = -lualatex -interaction=nonstopmode -halt-on-error
 RUBY      ?= ruby
 RAKE      ?= rake
+BUNDLE    ?= bundle
 PORT      ?= 8000
 
 BUILD_DIR  := build
@@ -21,9 +22,16 @@ TEX_FILES  := main.tex one-page-resume.tex
 PDFS       := $(TEX_FILES:.tex=.pdf)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
-.PHONY: all md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
+.PHONY: all install md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
 
 all: md preview embed pdf
+
+# ---------------- Setup ----------------
+# Install the Ruby gem dependencies (bibtex-ruby, kramdown, and the dev/test
+# gems) via Bundler. Run this once after cloning. PDF builds additionally
+# need lualatex + the moderncv/fontspec packages, installed outside Bundler.
+install:
+	@$(BUNDLE) install
 
 # ---------------- Markdown (canonical output) ----------------
 md:
@@ -106,6 +114,7 @@ clean:
 
 help:
 	@echo "Targets:"
+	@echo "  make install    install Ruby gem dependencies via Bundler"
 	@echo "  make            build cv.md, cv.html, embed bundle, and both PDFs"
 	@echo "  make md         build $(BUILD_DIR)/cv.md from YAML+bib"
 	@echo "  make md-embed   build $(BUILD_DIR)/cv-embed.md (no page header) for Jekyll"
