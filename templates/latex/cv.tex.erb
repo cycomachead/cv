@@ -39,7 +39,11 @@
 
 \moderncvstyle{banking}
 \usepackage{fontspec}
-\setsansfont{Source Sans Pro}
+% TeX Live's sourcesanspro package now ships the renamed "Source Sans 3"
+% fonts; fall back to the old name for environments that still have it.
+\IfFontExistsTF{Source Sans 3}
+  {\setsansfont{Source Sans 3}}
+  {\setsansfont{Source Sans Pro}}
 \renewcommand{\familydefault}{\sfdefault}
 
 % Stylized words used throughout the document. Mirrors main.tex.

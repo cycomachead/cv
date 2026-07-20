@@ -17,10 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # main.tex uses \usepackage{fontspec} + Source Sans Pro, which requires
-      # lualatex (or xelatex). The fonts ship with TeX Live itself (the
-      # sourcesanspro package), so no extra system font packages are needed —
-      # the Debian-style fonts-* names don't exist in the action's Alpine image.
+      # main.tex uses \usepackage{fontspec} + Source Sans 3 (né Source Sans
+      # Pro), which requires lualatex (or xelatex). The fonts ship with TeX
+      # Live itself (the sourcesanspro package), so no extra system font
+      # packages are needed — and the Debian-style fonts-* names don't exist
+      # in the action's Alpine image anyway.
       - name: Build full CV (main.tex)
         uses: xu-cheng/latex-action@v3
         with:

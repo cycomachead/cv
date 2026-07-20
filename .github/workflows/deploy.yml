@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # ---------- 1. Build PDFs from LaTeX ----------
-      # Source Sans Pro ships with TeX Live itself (the sourcesanspro
+      # The Source Sans 3 fonts ship with TeX Live itself (the sourcesanspro
       # package), so no extra system font packages are needed — the
       # Debian-style fonts-* names don't exist in the action's Alpine image.
       - name: Build full CV (main.tex)
