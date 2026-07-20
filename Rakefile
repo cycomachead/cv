@@ -55,10 +55,16 @@ namespace :site do
     FileUtils.cp(CV::Sidebar::DEFAULT_OUTPUT,           deploy.join('cv-sidebar.html'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'preview.css'), deploy.join('cv.css'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'), deploy.join('cv-theme.js'))
-    %w[main.pdf one-page-resume.pdf].each do |pdf|
+    # Mirror the CI mapping (deploy.yml): public.pdf is the default download
+    # (falls back to main.pdf locally), main.pdf ships as cv-full.pdf.
+    { 'public.pdf' => 'cv.pdf', 'main.pdf' => 'cv-full.pdf',
+      'one-page-resume.pdf' => 'resume.pdf' }.each do |pdf, dest|
       src = CV::ROOT.join(pdf)
       next unless src.exist?
-      FileUtils.cp(src, deploy.join(pdf == 'main.pdf' ? 'cv.pdf' : 'resume.pdf'))
+      FileUtils.cp(src, deploy.join(dest))
+    end
+    if !deploy.join('cv.pdf').exist? && deploy.join('cv-full.pdf').exist?
+      FileUtils.cp(deploy.join('cv-full.pdf'), deploy.join('cv.pdf'))
     end
     puts "staged #{deploy}"
   end

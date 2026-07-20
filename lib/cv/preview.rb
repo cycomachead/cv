@@ -22,10 +22,12 @@ module CV
       md = File.read(input, encoding: 'UTF-8')
       md = md.sub(/\A---\n.*?\n---\n+/m, '') # strip Jekyll front matter
 
+      # Default smart quotes (lsquo/rsquo/ldquo/rdquo) — matches what the
+      # deployed Jekyll kramdown produces, and keeps opening/closing quotes
+      # paired (the old apos/rsquo mix rendered 'like this’).
       html_body = ::Kramdown::Document.new(
         md,
-        input: 'GFM', auto_ids: true,
-        smart_quotes: %w[apos rsquo apos rsquo]
+        input: 'GFM', auto_ids: true
       ).to_html
 
       sidebar = CV::Sidebar.render(html_body: html_body,
@@ -38,11 +40,13 @@ module CV
       script  = File.read(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'),
                           encoding: 'UTF-8')
 
-      html = shell.sub('{{TITLE}}',   'Michael Ball — CV')
-                  .sub('{{CSS}}',     css)
-                  .sub('{{SIDEBAR}}', sidebar)
-                  .sub('{{BODY}}',    html_body)
-                  .sub('{{SCRIPT}}',  script)
+      # Block form so `\\`/`\&` sequences in the content are inserted
+      # literally instead of being parsed as backreferences.
+      html = shell.sub('{{TITLE}}')   { 'Michael Ball — CV' }
+                  .sub('{{CSS}}')     { css }
+                  .sub('{{SIDEBAR}}') { sidebar }
+                  .sub('{{BODY}}')    { html_body }
+                  .sub('{{SCRIPT}}')  { script }
 
       FileUtils.mkdir_p(File.dirname(output))
       File.write(output, html)

@@ -20,14 +20,23 @@
       if (label) label.textContent = theme === 'dark' ? 'Dark' : 'Light';
       if (icon)  icon.textContent  = theme === 'dark' ? '☾' : '☀';
       btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      // The toggle ships `hidden` (it's inert without JS) — reveal it now.
+      var wrap = btn.closest('.cv-theme-toggle');
+      if (wrap) wrap.hidden = false;
     });
   }
 
-  function preferredTheme() {
+  function storedTheme() {
     try {
       var stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'dark' || stored === 'light') return stored;
     } catch (_) { /* localStorage may be disabled */ }
+    return null;
+  }
+
+  function preferredTheme() {
+    var stored = storedTheme();
+    if (stored) return stored;
     return window.matchMedia &&
            window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark' : 'light';
@@ -47,6 +56,16 @@
         try { localStorage.setItem(STORAGE_KEY, next); } catch (_) {}
       });
     });
+
+    // Follow live OS theme changes until the user makes an explicit choice.
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function (e) {
+        if (!storedTheme()) apply(e.matches ? 'dark' : 'light');
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
   }
 
   if (document.readyState === 'loading') {

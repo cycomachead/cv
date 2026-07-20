@@ -108,9 +108,11 @@ deploy-out: md-embed sidebar pdf
 	@cp $(BUILD_DIR)/cv-sidebar.html            $(DEPLOY_DIR)/cv-sidebar.html
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
-	@cp main.pdf                                $(DEPLOY_DIR)/cv.pdf
+	@if [ -f public.pdf ]; then cp public.pdf $(DEPLOY_DIR)/cv.pdf; \
+	else cp main.pdf $(DEPLOY_DIR)/cv.pdf; fi
+	@cp main.pdf                                $(DEPLOY_DIR)/cv-full.pdf
 	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
-	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, resume.pdf}"
+	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
 # Pull the latest BibTeX export for the DBLP author profile. Manually merge
