@@ -14,6 +14,7 @@ LATEXMK   ?= latexmk
 LATEX_OPTS = -lualatex -interaction=nonstopmode -halt-on-error
 RUBY      ?= ruby
 RAKE      ?= rake
+BUNDLE    ?= bundle
 PORT      ?= 8000
 
 BUILD_DIR  := build
@@ -21,9 +22,34 @@ TEX_FILES  := main.tex one-page-resume.tex
 PDFS       := $(TEX_FILES:.tex=.pdf)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
-.PHONY: all md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
+.PHONY: all install gems check-latex md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
 
 all: md preview embed pdf
+
+# ---------------- Setup ----------------
+# One-shot setup after cloning: install the Ruby gems and verify the LaTeX
+# toolchain the PDF targets need. LaTeX isn't a Bundler dependency, so we
+# can't install it here (it's a multi-GB, platform-specific, sudo-requiring
+# TeX distribution) — instead we check for it and print install guidance.
+install: gems check-latex
+
+# Ruby gem dependencies (bibtex-ruby, kramdown, and the dev/test gems).
+gems:
+	@$(BUNDLE) install
+
+# Verify lualatex + latexmk are on PATH for the PDF targets. Non-fatal: the
+# Markdown/HTML workflow works without LaTeX, so we warn rather than fail.
+check-latex:
+	@if command -v $(LATEXMK) >/dev/null 2>&1 && command -v lualatex >/dev/null 2>&1; then \
+		echo "✓ LaTeX toolchain found ($(LATEXMK) + lualatex) — PDF targets ready."; \
+	else \
+		echo "⚠ LaTeX toolchain missing — 'make pdf' won't work until you install it."; \
+		echo "  Need: lualatex + latexmk, with the moderncv/fontspec packages"; \
+		echo "        and Source Sans Pro. Install a TeX distribution, e.g.:"; \
+		echo "    macOS:  brew install --cask mactex"; \
+		echo "    Debian: sudo apt-get install latexmk texlive-luatex \\"; \
+		echo "            texlive-latex-extra texlive-fonts-extra"; \
+	fi
 
 # ---------------- Markdown (canonical output) ----------------
 md:
@@ -82,9 +108,11 @@ deploy-out: md-embed sidebar pdf
 	@cp $(BUILD_DIR)/cv-sidebar.html            $(DEPLOY_DIR)/cv-sidebar.html
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
-	@cp main.pdf                                $(DEPLOY_DIR)/cv.pdf
+	@if [ -f public.pdf ]; then cp public.pdf $(DEPLOY_DIR)/cv.pdf; \
+	else cp main.pdf $(DEPLOY_DIR)/cv.pdf; fi
+	@cp main.pdf                                $(DEPLOY_DIR)/cv-full.pdf
 	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
-	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, resume.pdf}"
+	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
 # Pull the latest BibTeX export for the DBLP author profile. Manually merge
@@ -106,6 +134,7 @@ clean:
 
 help:
 	@echo "Targets:"
+	@echo "  make install    install Ruby gems + check the LaTeX toolchain"
 	@echo "  make            build cv.md, cv.html, embed bundle, and both PDFs"
 	@echo "  make md         build $(BUILD_DIR)/cv.md from YAML+bib"
 	@echo "  make md-embed   build $(BUILD_DIR)/cv-embed.md (no page header) for Jekyll"

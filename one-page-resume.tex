@@ -1,9 +1,26 @@
 %% ModernCV one-page resume for Michael Ball
-\documentclass[11pt,letter,sans]{moderncv}
+\DocumentMetadata{
+  lang        = en,
+  pdfstandard = ua-2,
+  pdfstandard = a-4f, %or a-4
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE} 
+}
 
-% moderncv themes
-\moderncvstyle{casual}
-% style options: 'casual', 'classic', 'banking', 'oldstyle' and 'fancy'
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{HTML}{xcolor}
+\documentclass[10pt, letterpaper, sans]{moderncv}
+% possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
+
+% adjust the page margins, roughly 1"
+\usepackage[scale=0.9]{geometry}
+\recomputelengths
+% character encoding
+
+\usepackage{etaremune}
+% \usepackage[super]{nth}
+\usepackage{import}
+\usepackage[luatex]{xcolor}
 
 % Color setup matches main.tex so both documents render with identical Berkeley
 % palette. moderncv reads \color1 (headings) and \color2 (accents) directly;
@@ -13,9 +30,18 @@
 \definecolor{color1}{HTML}{002676}               % Berkeley Blue (headings)
 \definecolor{color2}{HTML}{46535E}               % Berkeley Pacific (accents)
 
-\usepackage[scale=0.9]{geometry}
 \usepackage{fontawesome5}
-\setlength{\footskip}{18pt}
+\usepackage{fontspec}
+% \usepackage{quota3tion}
+% https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
+% TeX Live's sourcesanspro package now ships the renamed "Source Sans 3"
+% fonts; fall back to the old name for environments that still have it.
+\IfFontExistsTF{Source Sans 3}
+  {\setsansfont{Source Sans 3}}
+  {\setsansfont{Source Sans Pro}}
+% \setlength{\footskip}{10pt}
+
+\moderncvstyle{banking} %
 
 % Workaround: with TeX Live 2024+, moderncv's \begin{document} hook calls
 % \renewenvironment{quotation}{...}, which now errors against the modern
@@ -28,7 +54,7 @@
 
 % personal data
 \name{Michael}{Ball}
-\title{Software Engineer \& Educator}
+\title{Software Engineer, Educator}
 \address{San Francisco, CA}{}
 \phone[mobile]{(909) 993-3988}
 \email{ball@berkeley.edu}
@@ -36,54 +62,54 @@
 \social[github]{cycomachead}
 
 \begin{document}
-\makecvtitle
-
-\section{Professional Experience}
-\cventry{July 2025--Present}{Continuing Lecturer}{UC Berkeley EECS \& Data Science}{Berkeley, CA}{}{}
-
-\cventry{July 2019--June 2025}{Lecturer}{UC Berkeley EECS \& Data Science}{Berkeley, CA}{}{
-\begin{itemize}
-\item Teach Data Science (DATA C88C, 500+ students/term), Software Engineering (CS169A/L), and CS Pedagogy (CS302); recruit, train, and manage 10--30 teaching assistants and tutors per semester
-\item Co-Director, EECS Summer Instruction (2022--2026): oversee $\sim$10 courses and a \$100--250K operating budget per session, including hiring, payroll, and curriculum approval
-\item Principal/co-investigator on \$150K+ in instructional-technology grants funding accessibility, autograding, and curriculum-modernization projects
-\item Member, Undergraduate Study Committee (2019--2024); Student Grievances Committee (2020--2023)
-\end{itemize}}
-
-\cventry{2016--2021}{Software Engineer}{Gradescope (acquired by Turnitin, 2018)}{Berkeley, CA}{}{
-\begin{itemize}
-\item Early engineer at a sub-15-person edtech startup through acquisition by Turnitin; transitioned to part-time in 2019 to focus on lecturer role
-\item Architected web-accessibility infrastructure to meet WCAG 2.0/2.1; built automated front-end accessibility testing and trained Turnitin's wider engineering organization
-\item Designed AWS-hosted data pipelines for product analytics, onboarding, and growth experimentation
-\item Contributed to autograding infrastructure design and partnered with the design team on new platform features
-\end{itemize}}
-
-\section{Software Projects}
-\cventry{}{Snap\textit{!} \normalfont\small\textemdash\ \texttt{snap.berkeley.edu}}{}{}{}{
-Co-architect of the open-source cloud platform powering this blocks-based visual programming language used by 500K+ educators and students worldwide; system serves 5M+ stored projects. Contribute to the core JavaScript IDE and own project-storage, sharing, and authentication services.
-}
-
-\cventry{}{Flextensions \normalfont\small\textemdash\ \texttt{github.com/berkeley-cdss/flextensions}}{}{}{}{
-Technical lead and architect of a Rails web application that automates assignment-extension requests, approvals, and Canvas LMS integration. Scaled from pilot to 10,000+ student enrollments across two semesters; designed deployment infrastructure and mentored 12+ undergraduate engineers shipping production code.
-}
-
-\cventry{}{Beauty and Joy of Computing (BJC) \normalfont\small\textemdash\ \texttt{bjc.berkeley.edu}}{}{}{}{
-AP Computer Science Principles curriculum reaching tens of thousands of students annually. Maintain technical infrastructure, drive curriculum development, and provide engineering consulting across the open-source toolchain.
-}
-
-\section{Awards \& Grants}
-\cventry{2023--2025}{UC Berkeley Instructional Technology Grants}{}{}{}{\$100,000 across two cycles to modernize educational tools for CS and Data Science courses}
-\cventry{2021--2022}{UC Berkeley Presidential Chair Fellows}{}{}{}{\$22,500 to introduce Parsons Problems into CS61A and CS88}
-\cventry{2019--2020}{UC Berkeley Lecturer Teaching Fellows}{}{}{}{Year-long project on Parsons Puzzles in intro CS courses}
-\cventry{2015}{EECS Distinguished Graduate Student Instructor Award}{UC Berkeley}{}{}{Selected from top 9\% of UC Berkeley EECS GSIs}
-\cventry{2015}{Eugene L. Lawler Prize}{UC Berkeley EECS}{}{}{For academic effort and surmounting unusual difficulties pursuing a CS degree}
-
-\section{Technical Skills}
-\cvitem{Languages}{JavaScript, Ruby, Python, SQL, Bash, HTML, CSS, Snap\textit{!}}
-\cvitem{Tools}{Rails, React, AWS, Heroku, Terraform, PostgreSQL, Git, accessibility testing}
-\cvitem{Practice}{System architecture, technical mentorship, web accessibility (WCAG 2.x), DevOps}
-
-\section{Education}
-\cventry{2015--2016}{M.S. Computer Science}{UC Berkeley, College of Engineering}{}{}{}
-\cventry{2011--2015}{B.A. Computer Science}{UC Berkeley, College of Letters \& Sciences}{}{}{}
+    \makecvtitle
+    
+    \section{Professional Experience}
+    \cventry{July 2025--Present}{Continuing Lecturer}{UC Berkeley EECS \& Data Science}{Berkeley, CA}{}{}
+    
+    \cventry{July 2019--June 2025}{Lecturer}{UC Berkeley EECS \& Data Science}{Berkeley, CA}{}{
+    \begin{itemize}
+    \item Teach Data Science (DATA C88C, 500+ students/term), Software Engineering (CS169A/L), and CS Pedagogy (CS302); recruit, train, and manage 10--30 teaching assistants and tutors per semester
+    \item Co-Director, EECS Summer Instruction (2022--2026): oversee $\sim$10 courses and a \$100--250K operating budget per session, including hiring, payroll, and curriculum approval
+    \item Principal/co-investigator on \$150K+ in instructional-technology grants funding accessibility, autograding, and curriculum-modernization projects
+    \item Member, Undergraduate Study Committee (2019--2024); Student Grievances Committee (2020--2023)
+    \end{itemize}}
+    
+    \cventry{2016--2021}{Software Engineer}{Gradescope (acquired by Turnitin, 2018)}{Oakland, CA}{}{
+    \begin{itemize}
+    \item Early engineer at a sub-15-person ed-tech startup through acquisition by Turnitin; transitioned to part-time in 2019 to focus on lecturer role
+    \item Architected web-accessibility infrastructure to meet WCAG 2.0/2.1; built automated front-end accessibility testing and trained Turnitin's wider engineering organization
+    \item Designed AWS-hosted data pipelines for product analytics, onboarding, and growth experimentation
+    \item Contributed to autograding infrastructure design and partnered with the design team on new platform features
+    \end{itemize}}
+    
+    \section{Software Projects}
+    \cventry{}{Snap\textit{!} \normalfont\small\textemdash\ \texttt{snap.berkeley.edu}}{}{}{}{
+    Co-architect of the open-source cloud platform powering this blocks-based visual programming language used by 500K+ educators and students worldwide; system serves 5M+ stored projects. Contribute to the core JavaScript IDE and own project-storage, sharing, and authentication services.
+    }
+    
+    \cventry{}{Flextensions \normalfont\small\textemdash\ \texttt{github.com/berkeley-cdss/flextensions}}{}{}{}{
+    Technical lead and architect of a Rails web application that automates assignment-extension requests, approvals, and Canvas LMS integration. Scaled from pilot to 10,000+ student enrollments across two semesters; designed deployment infrastructure and mentored 12+ undergraduate engineers shipping production code.
+    }
+    
+    \cventry{}{Beauty and Joy of Computing (BJC) \normalfont\small\textemdash\ \texttt{bjc.berkeley.edu}}{}{}{}{
+    AP Computer Science Principles curriculum reaching tens of thousands of students annually. Maintain technical infrastructure, drive curriculum development, and provide engineering consulting across the open-source toolchain.
+    }
+    
+    % \section{Awards \& Grants}
+    % \cventry{2023--2025}{UC Berkeley Instructional Technology Grants}{}{}{}{\$100,000 across two cycles to modernize educational tools for CS and Data Science courses}
+    % \cventry{2021--2022}{UC Berkeley Presidential Chair Fellows}{}{}{}{\$22,500 to introduce Parsons Problems into CS61A and CS88}
+    % \cventry{2019--2020}{UC Berkeley Lecturer Teaching Fellows}{}{}{}{Year-long project on Parsons Puzzles in intro CS courses}
+    % \cventry{2015}{EECS Distinguished Graduate Student Instructor Award}{UC Berkeley}{}{}{Selected from top 9\% of UC Berkeley EECS GSIs}
+    % \cventry{2015}{Eugene L. Lawler Prize}{UC Berkeley EECS}{}{}{For academic effort and surmounting unusual difficulties pursuing a CS degree}
+    
+    \section{Technical Skills}
+    \cvitem{Languages}{JavaScript, Ruby, Python, SQL, Bash, HTML, CSS, Snap\textit{!}}
+    \cvitem{Tools}{Rails, React, AWS, Heroku, Terraform, PostgreSQL, Git, accessibility testing}
+    \cvitem{Practices}{System architecture, technical mentorship, web accessibility (WCAG 2.1, 2.2 A/AA/AAA), DevOps}
+    
+    \section{Education}
+    \cventry{2015--2016}{M.S. Computer Science}{UC Berkeley, College of Engineering}{}{}{}
+    \cventry{2011--2015}{B.A. Computer Science}{UC Berkeley, College of Letters \& Sciences}{}{}{}
 
 \end{document}

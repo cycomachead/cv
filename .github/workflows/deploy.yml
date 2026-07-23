@@ -39,6 +39,27 @@ jobs:
           root_file: public.tex
           latexmk_use_lualatex: true
 
+      # Surface the full LaTeX logs when a compile fails — the action's
+      # console output truncates luaotfload/fontspec details.
+      - name: Print LaTeX logs on failure
+        if: failure()
+        run: |
+          for f in *.log; do
+            [ -e "$f" ] || continue
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Upload LaTeX logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-logs
+          path: "*.log"
+          if-no-files-found: ignore
+          retention-days: 7
+
       # ---------- 2. Build cv.md from YAML+bib ----------
       - uses: ruby/setup-ruby@v1
         with:

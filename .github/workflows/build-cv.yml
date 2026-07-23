@@ -34,12 +34,42 @@ jobs:
           root_file: one-page-resume.tex
           latexmk_use_lualatex: true
 
+      # public.tex is deployed as the default cv.pdf download — build it here
+      # too so a PR can't break it and only fail later in deploy.yml.
+      - name: Build public CV
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: public.tex
+          latexmk_use_lualatex: true
+
+      # Surface the full LaTeX logs when a compile fails — the action's
+      # console output truncates luaotfload/fontspec details.
+      - name: Print LaTeX logs on failure
+        if: failure()
+        run: |
+          for f in *.log; do
+            [ -e "$f" ] || continue
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Upload LaTeX logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-logs
+          path: "*.log"
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Upload PDFs as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: cv-pdfs
           path: |
             main.pdf
+            public.pdf
             one-page-resume.pdf
           if-no-files-found: error
           retention-days: 90
