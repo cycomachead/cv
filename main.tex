@@ -51,7 +51,11 @@
 \usepackage{xspace}
 \usepackage{fontspec}
 % https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
-\setsansfont{Source Sans Pro}
+% TeX Live's sourcesanspro package now ships the renamed "Source Sans 3"
+% fonts; fall back to the old name for environments that still have it.
+\IfFontExistsTF{Source Sans 3}
+  {\setsansfont{Source Sans 3}}
+  {\setsansfont{Source Sans Pro}}
 % \setmainfont{Inter}
 % \usepackage[sfdefault,thin]{inter}  %% Option 'sfdefault' only if the base font of the document is to be sans serif
 \renewcommand{\familydefault}{\sfdefault}

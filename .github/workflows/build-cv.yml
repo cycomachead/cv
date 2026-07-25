@@ -17,14 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # main.tex uses \usepackage{fontspec} + Source Sans Pro, which requires
-      # lualatex (or xelatex).
+      # main.tex uses \usepackage{fontspec} + Source Sans 3 (né Source Sans
+      # Pro), which requires lualatex (or xelatex). The fonts ship with TeX
+      # Live itself (the sourcesanspro package), so no extra system font
+      # packages are needed — and the Debian-style fonts-* names don't exist
+      # in the action's Alpine image anyway.
       - name: Build full CV (main.tex)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           latexmk_use_lualatex: true
-          extra_system_packages: "fonts-sourcecodepro fonts-sourcesanspro"
 
       - name: Build one-page resume
         uses: xu-cheng/latex-action@v3
@@ -39,7 +41,27 @@ jobs:
         with:
           root_file: public.tex
           latexmk_use_lualatex: true
-          extra_system_packages: "fonts-sourcecodepro fonts-sourcesanspro"
+
+      # Surface the full LaTeX logs when a compile fails — the action's
+      # console output truncates luaotfload/fontspec details.
+      - name: Print LaTeX logs on failure
+        if: failure()
+        run: |
+          for f in *.log; do
+            [ -e "$f" ] || continue
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Upload LaTeX logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-logs
+          path: "*.log"
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload PDFs as workflow artifact
         uses: actions/upload-artifact@v4
