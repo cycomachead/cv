@@ -51,37 +51,45 @@ jobs:
         run: bundle exec rake site:embed
 
       # ---------- 3. Stage the files for the external repo ----------
-      # The Jekyll site at cycomachead.github.io/cv/ consumes:
-      #   index.md            — markdown body, no in-page header (the site
-      #                         layout supplies its own page title)
-      #   cv-sidebar.html     — sidebar fragment with download buttons +
-      #                         section TOC + dark mode toggle
-      #   cv.css, cv-theme.js — the styles + script the sidebar/body need
-      #   cv.pdf, resume.pdf  — the download targets
+      # The staged tree mirrors where each file lands in cycomachead.github.io
+      # so the whole bundle deploys in a single commit (one Jekyll rebuild):
+      #
+      #   cv/index.md            — markdown body, no in-page header (the site
+      #                            cv layout supplies its own page title)
+      #   cv/cv-sidebar.html     — sidebar fragment with download buttons +
+      #                            section TOC + dark mode toggle
+      #   cv/cv.css, cv/cv-theme.js — the styles + script the sidebar/body need
+      #   cv/cv-full.pdf, cv/resume.pdf — the secondary download targets
+      #   michael-ball-cv.pdf    — the public CV at the site root, the canonical
+      #                            download linked from /cv and served at
+      #                            mball.co/michael-ball-cv.pdf
       - name: Stage deploy bundle
         run: |
           set -euo pipefail
-          mkdir -p _deploy
-          cp build/cv-embed.md         _deploy/index.md
-          cp build/cv-sidebar.html     _deploy/cv-sidebar.html
-          cp build/cv.css              _deploy/cv.css
-          cp build/cv-theme.js         _deploy/cv-theme.js
-          cp public.pdf                _deploy/cv.pdf
-          cp main.pdf                  _deploy/cv-full.pdf
-          cp one-page-resume.pdf       _deploy/resume.pdf
-          ls -la _deploy
+          mkdir -p _deploy/cv
+          cp build/cv-embed.md         _deploy/cv/index.md
+          cp build/cv-sidebar.html     _deploy/cv/cv-sidebar.html
+          cp build/cv.css              _deploy/cv/cv.css
+          cp build/cv-theme.js         _deploy/cv/cv-theme.js
+          cp main.pdf                  _deploy/cv/cv-full.pdf
+          cp one-page-resume.pdf       _deploy/cv/resume.pdf
+          cp public.pdf                _deploy/michael-ball-cv.pdf
+          find _deploy -type f | sort
 
       # ---------- 4. Push to cycomachead/cycomachead.github.io ----------
       # Requires a PAT (CYCOMACHEAD_GH_PAGES_TOKEN) with `contents: write` on
       # the target repo, stored as a repository secret. See README.md.
-      - name: Deploy to cycomachead.github.io/cv
+      # keep_files preserves the rest of the site (the Jekyll source that lives
+      # on that repo's main branch); the deploy-cv concurrency group serialises
+      # runs. Pushing to main triggers the site's own Jekyll deploy workflow.
+      - name: Deploy to cycomachead.github.io
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token:      ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
           external_repository: cycomachead/cycomachead.github.io
           publish_branch:      main
           publish_dir:         ./_deploy
-          destination_dir:     cv
+          destination_dir:     .
           keep_files:          true   # preserve the rest of cycomachead.github.io
           commit_message:      "cv: build from cycomachead/cv@${{ github.sha }}"
           user_name:           "github-actions[bot]"

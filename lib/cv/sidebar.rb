@@ -16,7 +16,10 @@ module CV
     DEFAULT_OUTPUT = CV::BUILD_DIR.join('cv-sidebar.html')
     TEMPLATE       = CV::TEMPLATE_DIR.join('markdown', 'sidebar.html.erb')
 
-    DEFAULT_CV_PDF_URL     = 'cv.pdf'
+    # The public CV PDF is published to the site root as michael-ball-cv.pdf
+    # (see deploy.yml), so the download button links there absolutely. The
+    # one-page résumé stays inside the /cv/ bundle and is linked relatively.
+    DEFAULT_CV_PDF_URL     = '/michael-ball-cv.pdf'
     DEFAULT_RESUME_PDF_URL = 'resume.pdf'
 
     module_function
