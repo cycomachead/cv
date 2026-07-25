@@ -16,6 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # ---------- 0. Preflight: the deploy token must exist ----------
+      # Without CYCOMACHEAD_GH_PAGES_TOKEN the final push to
+      # cycomachead.github.io silently no-ops, so the /cv page + the root
+      # michael-ball-cv.pdf never land and mball.co/cv 404s even though the
+      # build is green. Fail fast with an actionable message instead. See the
+      # "One-time setup" section of README.md.
+      - name: Verify deploy token is configured
+        env:
+          DEPLOY_TOKEN: ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "::error::CYCOMACHEAD_GH_PAGES_TOKEN is not set. The CV cannot be" \
+                 "deployed to cycomachead.github.io, so mball.co/cv will 404." \
+                 "Add a fine-grained PAT (Contents: Read and write on" \
+                 "cycomachead/cycomachead.github.io) as a repo secret — see README.md."
+            exit 1
+          fi
+
       # ---------- 1. Build PDFs from LaTeX ----------
       # The Source Sans 3 fonts ship with TeX Live itself (the sourcesanspro
       # package), so no extra system font packages are needed — the
@@ -99,20 +117,46 @@ jobs:
           find _deploy -type f | sort
 
       # ---------- 4. Push to cycomachead/cycomachead.github.io ----------
+      # We deploy INTO the Jekyll *source* branch (main) of the site repo,
+      # which GitHub builds via its own Actions workflow. So the push must
+      # touch ONLY the CV bundle (cv/ + the root PDF) and leave everything
+      # else — crucially .github/workflows/jekyll.yml — untouched.
+      #
+      # We do NOT use peaceiris/actions-gh-pages here: it's built to publish
+      # *built output* to a gh-pages branch and, against a source branch, its
+      # defaults drop a .nojekyll file (which disables Jekyll) and its sync
+      # removed the site's jekyll.yml build workflow — leaving mball.co/cv a
+      # 404 because Pages stopped building. This surgical clone/copy/commit
+      # only ever stages `cv/` and `michael-ball-cv.pdf`, so it can never
+      # clobber the rest of the site.
+      #
       # Requires a PAT (CYCOMACHEAD_GH_PAGES_TOKEN) with `contents: write` on
-      # the target repo, stored as a repository secret. See README.md.
-      # keep_files preserves the rest of the site (the Jekyll source that lives
-      # on that repo's main branch); the deploy-cv concurrency group serialises
-      # runs. Pushing to main triggers the site's own Jekyll deploy workflow.
+      # the target repo. Because it never writes under .github/workflows/, the
+      # token does NOT need the `workflows` permission. See README.md.
+      # Pushing to main triggers the site's own Jekyll deploy workflow.
       - name: Deploy to cycomachead.github.io
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          personal_token:      ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
-          external_repository: cycomachead/cycomachead.github.io
-          publish_branch:      main
-          publish_dir:         ./_deploy
-          destination_dir:     .
-          keep_files:          true   # preserve the rest of cycomachead.github.io
-          commit_message:      "cv: build from cycomachead/cv@${{ github.sha }}"
-          user_name:           "github-actions[bot]"
-          user_email:          "41898282+github-actions[bot]@users.noreply.github.com"
+        env:
+          DEPLOY_TOKEN: ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 \
+            "https://x-access-token:${DEPLOY_TOKEN}@github.com/cycomachead/cycomachead.github.io.git" \
+            site
+
+          # Sync only the CV bundle. --delete prunes stale files, but scoped to
+          # cv/ so it can't affect anything outside that directory.
+          rsync -a --delete _deploy/cv/ site/cv/
+          cp _deploy/michael-ball-cv.pdf site/michael-ball-cv.pdf
+
+          cd site
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cv michael-ball-cv.pdf
+
+          if git diff --cached --quiet; then
+            echo "No CV changes to deploy."
+            exit 0
+          fi
+
+          git commit -m "cv: build from cycomachead/cv@${GITHUB_SHA}"
+          git push origin HEAD:main

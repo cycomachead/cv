@@ -155,16 +155,23 @@ Two workflows:
 
   The `cv-sidebar.html` "Download CV (PDF)" button links to the root
   `/michael-ball-cv.pdf`; the résumé button links to the sibling
-  `resume.pdf`. The whole bundle (the `cv/` page files and the root PDF) is
-  pushed in a single `actions-gh-pages` commit with `keep_files`, so it
-  doesn't clobber the rest of the site's Jekyll source.
+  `resume.pdf`. The deploy clones the site repo and rewrites **only** `cv/`
+  (via `rsync --delete` scoped to that directory) and the root
+  `michael-ball-cv.pdf`, then commits and pushes to `main` in a single
+  commit. It deliberately does **not** use `actions-gh-pages`: that action is
+  meant to publish built output to a `gh-pages` branch, and against the
+  Jekyll *source* branch it dropped a `.nojekyll` file and removed the site's
+  `jekyll.yml` build workflow — which stopped GitHub Pages from building and
+  404'd `mball.co/cv`. The surgical push touches nothing outside the CV
+  bundle, so it can't clobber the site's Jekyll source or its workflows.
 
   ### One-time setup
 
   The deploy job needs a Personal Access Token to push to the external repo.
 
   1. Create a fine-grained PAT scoped to `cycomachead/cycomachead.github.io`
-     with **Contents: Read and write** permission.
+     with **Contents: Read and write** permission. (No `Workflows`
+     permission is needed — the deploy never writes under `.github/`.)
   2. In `cycomachead/cv` → Settings → Secrets and variables → Actions →
      New repository secret, name it `CYCOMACHEAD_GH_PAGES_TOKEN`.
   3. The deploy commits `cv/` into the target repo; the Jekyll site there
