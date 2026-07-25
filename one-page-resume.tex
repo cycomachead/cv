@@ -30,7 +30,9 @@
 \definecolor{color1}{HTML}{002676}               % Berkeley Blue (headings)
 \definecolor{color2}{HTML}{46535E}               % Berkeley Pacific (accents)
 
-\usepackage{fontawesome5}
+% NB: do not load fontawesome5 here — moderncv's icon setup loads
+% fontawesome6, which errors if v5 is already present. No \fa* commands
+% are used directly in this document anyway.
 \usepackage{fontspec}
 % \usepackage{quota3tion}
 % https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
