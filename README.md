@@ -138,7 +138,10 @@ Two workflows:
 - **`deploy.yml`** runs on pushes to `main`. Builds the PDFs, renders
   `cv.md`, and pushes them into the
   [cycomachead/cycomachead.github.io](https://github.com/cycomachead/cycomachead.github.io)
-  repo at `cv/`:
+  repo. The rendered CV page lands at `cv/` (served at
+  [mball.co/cv](https://mball.co/cv)) and the public PDF lands at the site
+  root (served at
+  [mball.co/michael-ball-cv.pdf](https://mball.co/michael-ball-cv.pdf)):
 
   | Source                  | Destination in cycomachead.github.io       |
   |-------------------------|--------------------------------------------|
@@ -146,9 +149,15 @@ Two workflows:
   | `build/cv-sidebar.html` | `cv/cv-sidebar.html` (Jekyll include)      |
   | `build/cv.css`          | `cv/cv.css`                                |
   | `build/cv-theme.js`     | `cv/cv-theme.js`                           |
-  | `public.pdf`            | `cv/cv.pdf` (default download — no references) |
+  | `public.pdf`            | `michael-ball-cv.pdf` (site root — the public download, no references) |
   | `main.pdf`              | `cv/cv-full.pdf`                           |
   | `one-page-resume.pdf`   | `cv/resume.pdf`                            |
+
+  The `cv-sidebar.html` "Download CV (PDF)" button links to the root
+  `/michael-ball-cv.pdf`; the résumé button links to the sibling
+  `resume.pdf`. The whole bundle (the `cv/` page files and the root PDF) is
+  pushed in a single `actions-gh-pages` commit with `keep_files`, so it
+  doesn't clobber the rest of the site's Jekyll source.
 
   ### One-time setup
 
@@ -158,9 +167,10 @@ Two workflows:
      with **Contents: Read and write** permission.
   2. In `cycomachead/cv` → Settings → Secrets and variables → Actions →
      New repository secret, name it `CYCOMACHEAD_GH_PAGES_TOKEN`.
-  3. The first deploy will commit `cv/` into the target repo; the Jekyll
-     site there should have a `_layouts/cv.html` layout matching the
-     `layout: cv` front matter emitted by the Markdown.
+  3. The deploy commits `cv/` into the target repo; the Jekyll site there
+     has a `_layouts/cv.html` layout matching the `layout: cv` front matter
+     emitted by the Markdown (it includes `cv-sidebar.html` and loads
+     `cv.css` + `cv-theme.js`).
 
   Want to skip a deploy? Push to `main` with `[skip ci]` in the commit
   message, or trigger via `workflow_dispatch`.

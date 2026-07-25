@@ -113,7 +113,7 @@ class MarkdownBuildTest < Minitest::Test
 
       assert_includes html, 'class="cv-sidebar"'
       assert_includes html, 'class="cv-btn cv-btn-primary"'
-      assert_includes html, 'href="cv.pdf"'
+      assert_includes html, 'href="/michael-ball-cv.pdf"'
       assert_includes html, 'href="resume.pdf"'
       assert_includes html, 'href="#education"'
       assert_includes html, 'href="#degree"'
