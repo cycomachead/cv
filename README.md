@@ -82,7 +82,18 @@ across Markdown, HTML, and LaTeX:
   left-sidebar nav from the rendered `<h2>`/`<h3>` headings. The
   deployed Jekyll site can replicate this in its own layout — the
   generated `cv.md` has stable `id` anchors thanks to kramdown's
-  `auto_ids`.
+  `auto_ids`. `cv-nav.js` is a scroll spy over those anchors: it adds
+  `.is-active` + `aria-current` to the TOC link for whichever section is
+  under the top of the viewport, and keeps that link scrolled into view in
+  the sidebar.
+- **Heading font**: `preview.css` `@import`s Source Serif 4 from Google
+  Fonts and applies it to `.cv-content h1`–`h6` via `--cv-heading-font`.
+  Body copy stays on the system sans stack.
+- **References**: the Markdown output is the *public* web CV, so its
+  References section is only ever "References available upon request".
+  `data/references.yml` and `references.tex` (the real contact details) feed
+  the private `main.pdf` build; `public.pdf` swaps in
+  `references-public.tex`, which carries the same placeholder.
 
 ## Refreshing publications from DBLP
 
@@ -121,6 +132,7 @@ data/                        # YAML content (the only place to edit prose)
 personal.bib                 # citation database (manual + future DBLP imports)
 lib/cv/                      # Ruby: macros, bib (bibtex-ruby shim), data, renderer, markdown, latex, preview
 templates/markdown/          # cv.md.erb + 1 partial + preview shell + preview.css
+                             #   + sidebar.html.erb, cv-theme.js, cv-nav.js
 templates/latex/             # cv.tex.erb (full scaffold) + publications.tex.erb (fragment)
 test/                        # minitest suite (`make test`)
 *.tex, 6-publications/       # existing moderncv documents (drive the PDFs)
@@ -149,7 +161,8 @@ Two workflows:
   | `build/cv-sidebar.html` | `cv/cv-sidebar.html` (Jekyll include)      |
   | `build/cv.css`          | `cv/cv.css`                                |
   | `build/cv-theme.js`     | `cv/cv-theme.js`                           |
-  | `public.pdf`            | `michael-ball-cv.pdf` (site root — the public download, no references) |
+  | `build/cv-nav.js`       | `cv/cv-nav.js` (TOC scroll spy)            |
+  | `public.pdf`            | `michael-ball-cv.pdf` (site root — the public download; references withheld) |
   | `main.pdf`              | `cv/cv-full.pdf`                           |
   | `one-page-resume.pdf`   | `cv/resume.pdf`                            |
 
@@ -177,7 +190,7 @@ Two workflows:
   3. The deploy commits `cv/` into the target repo; the Jekyll site there
      has a `_layouts/cv.html` layout matching the `layout: cv` front matter
      emitted by the Markdown (it includes `cv-sidebar.html` and loads
-     `cv.css` + `cv-theme.js`).
+     `cv.css` + `cv-theme.js` + `cv-nav.js`).
 
   Want to skip a deploy? Push to `main` with `[skip ci]` in the commit
   message, or trigger via `workflow_dispatch`.

@@ -98,7 +98,8 @@ jobs:
       #                            cv layout supplies its own page title)
       #   cv/cv-sidebar.html     — sidebar fragment with download buttons +
       #                            section TOC + dark mode toggle
-      #   cv/cv.css, cv/cv-theme.js — the styles + script the sidebar/body need
+      #   cv/cv.css, cv/cv-theme.js, cv/cv-nav.js — the styles, the dark-mode
+      #                            toggle, and the TOC scroll spy
       #   cv/cv-full.pdf, cv/resume.pdf — the secondary download targets
       #   michael-ball-cv.pdf    — the public CV at the site root, the canonical
       #                            download linked from /cv and served at
@@ -111,6 +112,7 @@ jobs:
           cp build/cv-sidebar.html     _deploy/cv/cv-sidebar.html
           cp build/cv.css              _deploy/cv/cv.css
           cp build/cv-theme.js         _deploy/cv/cv-theme.js
+          cp build/cv-nav.js           _deploy/cv/cv-nav.js
           cp main.pdf                  _deploy/cv/cv-full.pdf
           cp one-page-resume.pdf       _deploy/cv/resume.pdf
           cp public.pdf                _deploy/michael-ball-cv.pdf

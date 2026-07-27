@@ -109,7 +109,9 @@
     \input{6-publications/3-press}
     \input{3-projects}
     \input{7-personal}
-    \ifdefined\publicversion\else
+    \ifdefined\publicversion
+        \input{references-public}
+    \else
         \input{references}
     \fi
 
