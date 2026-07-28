@@ -2,7 +2,7 @@
 # we render that to:
 #   - build/cv.md     — canonical Markdown (drop into the Jekyll site)
 #   - build/cv.html   — standalone HTML preview (kramdown + minimal CSS)
-#   - main.pdf, one-page-resume.pdf — LaTeX → PDF via lualatex
+#   - latex/{main,public,one-page-resume}.pdf — LaTeX → PDF via lualatex
 #
 # `make help` lists every target. Common flows:
 #   make            — build cv.md + cv.html + PDFs
@@ -18,8 +18,15 @@ BUNDLE    ?= bundle
 PORT      ?= 8000
 
 BUILD_DIR  := build
-TEX_FILES  := main.tex one-page-resume.tex
-PDFS       := $(TEX_FILES:.tex=.pdf)
+# Handcrafted moderncv sources all live under latex/ (see latex/README.md).
+# latexmk runs *inside* that directory so the \input{1-education} style
+# relative paths in main.tex resolve; the PDFs therefore land in latex/ too.
+TEX_DIR    := latex
+TEX_FILES  := main.tex public.tex one-page-resume.tex
+PDFS       := $(addprefix $(TEX_DIR)/,$(TEX_FILES:.tex=.pdf))
+# main.tex/public.tex \input{} every section file, so a PDF is stale whenever
+# *any* source under latex/ changed — not just its own root document.
+TEX_SOURCES := $(wildcard $(TEX_DIR)/*.tex) $(wildcard $(TEX_DIR)/6-publications/*.tex)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
 .PHONY: all install gems check-latex md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
@@ -72,20 +79,24 @@ embed:
 # sidebar download buttons resolve when the preview is served from build/.
 preview: md
 	@$(RUBY) bin/cv preview
-	@if [ -f public.pdf ]; then cp -f public.pdf $(BUILD_DIR)/cv.pdf; \
-	elif [ -f main.pdf ]; then cp -f main.pdf $(BUILD_DIR)/cv.pdf; fi
-	@if [ -f one-page-resume.pdf ]; then cp -f one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
+	@if [ -f $(TEX_DIR)/public.pdf ]; then cp -f $(TEX_DIR)/public.pdf $(BUILD_DIR)/cv.pdf; \
+	elif [ -f $(TEX_DIR)/main.pdf ]; then cp -f $(TEX_DIR)/main.pdf $(BUILD_DIR)/cv.pdf; fi
+	@if [ -f $(TEX_DIR)/one-page-resume.pdf ]; then cp -f $(TEX_DIR)/one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
 	@echo "Serving $(BUILD_DIR)/cv.html at http://localhost:$(PORT)"
 	@cd $(BUILD_DIR) && $(RUBY) -run -e httpd . -p $(PORT)
 
 # ---------------- LaTeX → PDF ----------------
+# Builds latex/{main,public,one-page-resume}.pdf — the same three documents CI
+# builds. `cd $(TEX_DIR)` matters: main.tex \input{}s its siblings by bare
+# name, so latexmk has to run with latex/ as the working directory.
 pdf: $(PDFS)
-%.pdf: %.tex
-	$(LATEXMK) $(LATEX_OPTS) $<
+$(TEX_DIR)/%.pdf: $(TEX_DIR)/%.tex $(TEX_SOURCES)
+	cd $(TEX_DIR) && $(LATEXMK) $(LATEX_OPTS) $(notdir $<)
 
-# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited main.tex
-# + 1-education.tex etc. remain the source of truth for the printable PDF
-# until you decide to switch over; this is a parallel, regenerable target.
+# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited
+# latex/main.tex + latex/1-education.tex etc. remain the source of truth for
+# the printable PDF until you decide to switch over; this is a parallel,
+# regenerable target.
 tex:
 	@$(RUBY) bin/cv tex
 
@@ -93,7 +104,7 @@ cv-pdf: tex
 	$(LATEXMK) $(LATEX_OPTS) -output-directory=$(BUILD_DIR) $(BUILD_DIR)/cv.tex
 
 # Just the publications LaTeX fragment — useful if you only want to swap
-# the publications section into main.tex.
+# the publications section into latex/main.tex.
 pubs-tex:
 	@$(RUBY) bin/cv pubs:tex $(BUILD_DIR)/publications.tex
 
@@ -109,10 +120,10 @@ deploy-out: md-embed sidebar pdf
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
 	@cp templates/markdown/cv-nav.js            $(DEPLOY_DIR)/cv-nav.js
-	@if [ -f public.pdf ]; then cp public.pdf $(DEPLOY_DIR)/cv.pdf; \
-	else cp main.pdf $(DEPLOY_DIR)/cv.pdf; fi
-	@cp main.pdf                                $(DEPLOY_DIR)/cv-full.pdf
-	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
+	@if [ -f $(TEX_DIR)/public.pdf ]; then cp $(TEX_DIR)/public.pdf $(DEPLOY_DIR)/cv.pdf; \
+	else cp $(TEX_DIR)/main.pdf $(DEPLOY_DIR)/cv.pdf; fi
+	@cp $(TEX_DIR)/main.pdf                     $(DEPLOY_DIR)/cv-full.pdf
+	@cp $(TEX_DIR)/one-page-resume.pdf          $(DEPLOY_DIR)/resume.pdf
 	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv-nav.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
@@ -130,7 +141,7 @@ test:
 
 # ---------------- Housekeeping ----------------
 clean:
-	$(LATEXMK) -C
+	cd $(TEX_DIR) && $(LATEXMK) -C $(TEX_FILES)
 	rm -rf $(BUILD_DIR)
 
 help:
@@ -143,6 +154,7 @@ help:
 	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
 	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js + cv-nav.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
+	@echo "                  sources + docs live in $(TEX_DIR)/ (see $(TEX_DIR)/README.md)"
 	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
 	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
 	@echo "  make pubs-tex   regenerate publications.tex from YAML+bib"

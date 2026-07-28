@@ -1,0 +1,16 @@
+% https://tex.stackexchange.com/a/303229
+
+% INACTIVE — main.tex only \input{}s this from a commented-out line. See the
+% note in bibtex_preamble.tex and README.md. If you ever re-enable it, the
+% \bibliography{personal} below needs to become \bibliography{../personal}:
+% personal.bib lives at the repo root, one level up from here.
+\section{Test Papers}
+
+\vspace{6pt}
+\nocite{*}
+\bibliographystyle{unsrtdin}
+
+\makeatletter
+\def\@biblabel#1\hfill{[#1]}
+\makeatother
+\bibliography{personal}

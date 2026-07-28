@@ -8,6 +8,9 @@ module CV
   TEMPLATE_DIR = ROOT.join('templates')
   BUILD_DIR    = ROOT.join('build')
   BIB_FILE     = ROOT.join('personal.bib')
+  # Handcrafted moderncv sources *and* the PDFs latexmk builds from them.
+  # See latex/README.md.
+  LATEX_DIR    = ROOT.join('latex')
 
   autoload :Macros,   'cv/macros'
   autoload :Bib,      'cv/bib'

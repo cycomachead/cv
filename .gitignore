@@ -20,11 +20,12 @@
 *.vrb
 *.xdv
 
-# Generated PDFs
-main.pdf
-public.pdf
+# Generated PDFs. latexmk runs inside latex/ (see latex/README.md), so the
+# three handcrafted documents build there; cv.pdf is the YAML-scaffolded one.
+/latex/main.pdf
+/latex/public.pdf
+/latex/one-page-resume.pdf
 cv.pdf
-one-page-resume.pdf
 
 # Pages build output
 _site/

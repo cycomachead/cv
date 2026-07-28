@@ -60,9 +60,10 @@ namespace :site do
     # published to the site root as michael-ball-cv.pdf (falls back to
     # main.pdf locally); main.pdf ships as cv-full.pdf, the résumé as
     # resume.pdf. Both cv-full.pdf and resume.pdf live in the /cv/ bundle.
+    # latexmk runs inside latex/, so that's where the PDFs are written.
     { 'public.pdf' => 'michael-ball-cv.pdf', 'main.pdf' => 'cv-full.pdf',
       'one-page-resume.pdf' => 'resume.pdf' }.each do |pdf, dest|
-      src = CV::ROOT.join(pdf)
+      src = CV::LATEX_DIR.join(pdf)
       next unless src.exist?
       FileUtils.cp(src, deploy.join(dest))
     end

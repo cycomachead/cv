@@ -6,8 +6,9 @@ Source for Michael Ball's CV. One YAML data set drives three outputs:
   [cycomachead.github.io/cv](https://cycomachead.github.io/cv/)
 - **HTML preview** (`build/cv.html`) — kramdown-rendered standalone for local
   review; mirrors what the deployed Jekyll site will produce
-- **LaTeX → PDF** (`main.pdf`, `one-page-resume.pdf`) — handcrafted moderncv
-  templates (the existing `*.tex` files), kept for the printable CV
+- **LaTeX → PDF** (`latex/main.pdf`, `latex/public.pdf`,
+  `latex/one-page-resume.pdf`) — handcrafted moderncv documents, all under
+  [`latex/`](latex/README.md), kept for the printable CV
 
 The Markdown and LaTeX outputs share publications: `data/publications.yml`
 references keys in `personal.bib` so a single source generates both.
@@ -30,7 +31,10 @@ gems we depend on:
   Jekyll uses, so the local preview matches the deployed site.
 
 PDF builds need `lualatex` (`latexmk -lualatex`) and the
-`moderncv` / `fontspec` packages with Source Sans Pro available.
+`moderncv` / `fontspec` packages with Source Sans Pro available. `make pdf`
+runs latexmk inside `latex/`, so the PDFs land there —
+see [`latex/README.md`](latex/README.md) for the document set, its macros, and
+its preamble workarounds.
 
 ## Authoring
 
@@ -91,9 +95,9 @@ across Markdown, HTML, and LaTeX:
   Body copy stays on the system sans stack.
 - **References**: the Markdown output is the *public* web CV, so its
   References section is only ever "References available upon request".
-  `data/references.yml` and `references.tex` (the real contact details) feed
-  the private `main.pdf` build; `public.pdf` swaps in
-  `references-public.tex`, which carries the same placeholder.
+  `data/references.yml` and `latex/references.tex` (the real contact details)
+  feed the private `latex/main.pdf` build; `latex/public.pdf` swaps in
+  `latex/references-public.tex`, which carries the same placeholder.
 
 ## Refreshing publications from DBLP
 
@@ -105,21 +109,34 @@ make dblp DBLP_URL=<other>     # override the profile URL
 Manually merge interesting entries into `personal.bib`. We don't pull
 `dblp.bib` directly into the build because DBLP keys are unstable.
 
-## Regenerating the LaTeX CV from YAML
+## The two LaTeX paths
 
-There are two LaTeX paths:
+1. **`latex/`** — handcrafted moderncv documents. These build the published
+   PDFs and are *not* generated from YAML. Full documentation, including the
+   `\input{}` order, the shared macros, and the public/private references
+   switch, lives in [`latex/README.md`](latex/README.md).
 
-```sh
-make tex            # build/cv.tex — single-file scaffold from data/*.yml + personal.bib
-make cv-pdf         # build/cv.pdf — same, then compile via lualatex
-make pubs-tex       # build/publications.tex — just the publications subsection
-```
+   ```sh
+   make pdf        # latex/{main,public,one-page-resume}.pdf
+   ```
 
-The scaffold (`templates/latex/cv.tex.erb`) mirrors the moderncv preamble
-in `main.tex` and emits `\cventry`, `\cvline`, etc. for every section
-from YAML. Treat it as a starting point — the handcrafted `main.tex` and
-`6-publications/1-conferences.tex` remain the source of truth for the
-printable PDF until you decide to swap over.
+2. **`templates/latex/cv.tex.erb`** — a regenerable scaffold rendered from the
+   same YAML that drives the Markdown:
+
+   ```sh
+   make tex            # build/cv.tex — single-file scaffold from data/*.yml + personal.bib
+   make cv-pdf         # build/cv.pdf — same, then compile via lualatex
+   make pubs-tex       # build/publications.tex — just the publications subsection
+   ```
+
+   The scaffold mirrors the moderncv preamble in `latex/main.tex` and emits
+   `\cventry`, `\cvline`, etc. for every section from YAML. Treat it as a
+   starting point — it is not wired into any build or deploy. The handcrafted
+   `latex/main.tex` and `latex/6-publications/1-conferences.tex` remain the
+   source of truth for the printable PDF until you decide to swap over.
+
+Because the two paths are independent, a content change made only in
+`data/*.yml` reaches the web CV but not the PDFs, and vice versa.
 
 Special-character escaping (`&`, `%`, `$`, `#`, `_`) happens automatically
 in `lib/cv/macros.rb#to_latex`, so a grant amount like `$50,000` or a
@@ -135,7 +152,9 @@ templates/markdown/          # cv.md.erb + 1 partial + preview shell + preview.c
                              #   + sidebar.html.erb, cv-theme.js, cv-nav.js
 templates/latex/             # cv.tex.erb (full scaffold) + publications.tex.erb (fragment)
 test/                        # minitest suite (`make test`)
-*.tex, 6-publications/       # existing moderncv documents (drive the PDFs)
+latex/                       # handcrafted moderncv documents — drive the PDFs.
+                             #   main/public/one-page-resume roots + section
+                             #   files + 6-publications/. See latex/README.md.
 site/                        # static landing page (legacy; not part of the deploy)
 .github/workflows/           # CI (build-cv.yml) and deploy (deploy.yml)
 ```
@@ -162,9 +181,9 @@ Two workflows:
   | `build/cv.css`          | `cv/cv.css`                                |
   | `build/cv-theme.js`     | `cv/cv-theme.js`                           |
   | `build/cv-nav.js`       | `cv/cv-nav.js` (TOC scroll spy)            |
-  | `public.pdf`            | `michael-ball-cv.pdf` (site root — the public download; references withheld) |
-  | `main.pdf`              | `cv/cv-full.pdf`                           |
-  | `one-page-resume.pdf`   | `cv/resume.pdf`                            |
+  | `latex/public.pdf`      | `michael-ball-cv.pdf` (site root — the public download; references withheld) |
+  | `latex/main.pdf`        | `cv/cv-full.pdf`                           |
+  | `latex/one-page-resume.pdf` | `cv/resume.pdf`                        |
 
   The `cv-sidebar.html` "Download CV (PDF)" button links to the root
   `/michael-ball-cv.pdf`; the résumé button links to the sibling

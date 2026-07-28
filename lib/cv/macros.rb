@@ -13,7 +13,7 @@ module CV
 
     # Stylized words. The Markdown form uses *…* (italic) so kramdown renders
     # it as <em>!</em>; the HTML form is the same after conversion. The LaTeX
-    # form mirrors the existing \snap / \snapcon macros in main.tex so both
+    # form mirrors the existing \snap / \snapcon macros in latex/main.tex so both
     # documents stay visually consistent.
     # The Markdown form embeds raw <em> HTML rather than `*!*` because
     # kramdown won't re-emphasize an asterisk pair already inside an italic

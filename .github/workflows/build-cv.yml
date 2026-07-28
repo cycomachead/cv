@@ -17,20 +17,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # All handcrafted LaTeX lives in latex/ (see latex/README.md), and
+      # main.tex \input{}s its sections by bare name — so latexmk has to run
+      # with latex/ as the working directory. The PDFs land there too.
+      #
       # main.tex uses \usepackage{fontspec} + Source Sans 3 (né Source Sans
       # Pro), which requires lualatex (or xelatex). The fonts ship with TeX
       # Live itself (the sourcesanspro package), so no extra system font
       # packages are needed — and the Debian-style fonts-* names don't exist
       # in the action's Alpine image anyway.
-      - name: Build full CV (main.tex)
+      - name: Build full CV (latex/main.tex)
         uses: xu-cheng/latex-action@v3
         with:
+          working_directory: latex
           root_file: main.tex
           latexmk_use_lualatex: true
 
       - name: Build one-page resume
         uses: xu-cheng/latex-action@v3
         with:
+          working_directory: latex
           root_file: one-page-resume.tex
           latexmk_use_lualatex: true
 
@@ -39,6 +45,7 @@ jobs:
       - name: Build public CV
         uses: xu-cheng/latex-action@v3
         with:
+          working_directory: latex
           root_file: public.tex
           latexmk_use_lualatex: true
 
@@ -47,7 +54,7 @@ jobs:
       - name: Print LaTeX logs on failure
         if: failure()
         run: |
-          for f in *.log; do
+          for f in latex/*.log; do
             [ -e "$f" ] || continue
             echo "::group::$f"
             cat "$f"
@@ -59,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: "*.log"
+          path: "latex/*.log"
           if-no-files-found: ignore
           retention-days: 7
 
@@ -68,9 +75,9 @@ jobs:
         with:
           name: cv-pdfs
           path: |
-            main.pdf
-            public.pdf
-            one-page-resume.pdf
+            latex/main.pdf
+            latex/public.pdf
+            latex/one-page-resume.pdf
           if-no-files-found: error
           retention-days: 90
 
