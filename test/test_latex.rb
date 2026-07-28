@@ -38,6 +38,37 @@ class LatexBuildTest < Minitest::Test
     end
   end
 
+  # A \href label is ordinary horizontal-mode text, so LaTeX specials in it must
+  # be escaped or the build aborts ("You can't use `macro parameter character
+  # #'"). The URL argument stays verbatim — hyperref wants it that way.
+  def test_escapes_href_labels_but_not_urls
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      # EECS award anchors: raw # in the URL, escaped # in the label.
+      assert_includes tex, '\href{https://www2.eecs.berkeley.edu/Students/Awards/#11}' \
+                           '{https://www2.eecs.berkeley.edu/Students/Awards/\#11}'
+      # Underscores in a publication URL get the same treatment.
+      assert_includes tex, 'full\_pdfs'
+      refute_match(/\\href\{[^}]*\}\{[^}]*[^\\]#/, tex,
+                   'no unescaped # should survive in an \href label')
+    end
+  end
+
+  def test_referee_phones_are_redacted_by_default
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      # The numbers are wrapped, not inlined: \refphone expands to nothing
+      # unless \unredacted is defined.
+      CV::Data.load.references.filter_map { |r| r['phone'] }.each do |phone|
+        assert_includes tex, "\\refphone{#{phone}}"
+        refute_includes tex, "\\newline #{phone}"
+      end
+      assert_includes tex, '\newcommand{\refphone}[1]{}'
+    end
+  end
+
   def test_includes_publications_partial
     Dir.mktmpdir do |dir|
       tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),

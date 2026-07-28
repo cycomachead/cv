@@ -6,6 +6,7 @@
     preceding paragraph; preview.css and the deployed Jekyll layout target
     `.entry` to make role/title lines visually distinct from the body. -%>
 <%- show_header = defined?(page_header) ? page_header : true -%>
+<%- is_public = defined?(public_version) ? public_version : false -%>
 <%- if jekyll_front_matter -%>
 ---
 layout: cv
@@ -186,6 +187,9 @@ Thesis: _<%= h(e['thesis']) %>_
 
 ## References
 
+<%# Referees' phone numbers are other people's personal data, so the public
+    build omits them — the counterpart of \refphone in main.tex. The full
+    local build/cv.md keeps them, like `make unredacted` does for the PDF. -%>
 <%- data.references.each do |r| -%>
 **<%= h(r['name']) %>**
 <%= h(r['title']) if r['title'] %>
@@ -193,7 +197,7 @@ Thesis: _<%= h(e['thesis']) %>_
 <%- if r['email'] -%>
 <%= link("mailto:#{r['email']}", r['email']) %>
 <%- end -%>
-<%- if r['phone'] %>
+<%- if r['phone'] && !is_public %>
 <%= h(r['phone']) %>
 <%- end %>
 

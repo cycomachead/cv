@@ -25,6 +25,8 @@ main.pdf
 public.pdf
 cv.pdf
 one-page-resume.pdf
+# Contains referees' phone numbers — never commit or publish this one.
+unredacted.pdf
 
 # Pages build output
 _site/

@@ -1,0 +1,8 @@
+% Wrapper that builds main.tex WITH referees' phone numbers.
+%
+% Every published PDF omits them: main.pdf ships as cv-full.pdf and public.pdf
+% ships as michael-ball-cv.pdf, both to mball.co/cv. This build is for private
+% use only — `unredacted.pdf` is gitignored, and neither CI workflow builds or
+% deploys it. Run it with `make unredacted`.
+\def\unredacted{1}
+\input{main}

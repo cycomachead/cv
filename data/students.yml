@@ -1,6 +1,10 @@
 - when:     May 2026
   name:     Rebecca Dang
+  title:    >-
+    Beyond the Autograder: Improving Feedback on CS Student Metacognition
+    via the Assignment Snapshots Tool
   advising: Co-advised with Lisa Yan
+  url:      https://www2.eecs.berkeley.edu/Pubs/TechRpts/2026/EECS-2026-196.html
 
 - when:     May 2025
   name:     Edwin Vargas-Navarro

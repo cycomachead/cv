@@ -13,16 +13,16 @@
 - heading: Invited Talks, Workshops & Lectures
   id:      invited
   items:
-    - title:  "Faberllull: Educational Programming Languages and Robotics IX"
+    - title:  "Faberllull: Robotics and Programming for Education 2026"
       kind:   Invited Resident
       venue:  Olot, Spain
       year:   2026
-      url:    "https://faberllull.cat/ca/residencia.cfm?id=45467"
-    - title:  "Faberllull: Educational Programming Languages and Robotics VIII"
+      url:    "https://faberllull.cat/en/residencia.cfm?id=45467"
+    - title:  "Faberllull: Robotics and Programming for Education 2025"
       kind:   Invited Resident
       venue:  Olot, Spain
       year:   2025
-      url:    "https://faberllull.cat/en/residencia.cfm?id=43646"
+      url:    "https://faberllull.cat/en/residencia.cfm?id=44743"
     - title:  "Faberllull: Educational Programming Languages and Robotics VII"
       kind:   Invited Resident
       venue:  Olot, Spain
@@ -97,7 +97,7 @@
       venue:   SIGCSE 2026
       year:    2026
       url:     "https://doi.org/10.1145/3770761.3777056"
-    - authors: ["Garcia, Daniel", "Mönig, Jens", "Hügle, Jadga", "Fries, Mary", "Kang, Jane M.", "Dastur, Delnavaz", "Phelps, Victoria", "Bettencourt, Bryant", "Ball, Michael", "Mock, Lauren"]
+    - authors: ["Garcia, Daniel", "Mönig, Jens", "Hügle, Jadga", "Fries, Mary", "Kang, Jane M.", "Dastur, Della", "Phelps, Victoria", "Bettencourt, Bryant", "Ball, Michael", "Mock, Lauren"]
       title:   "A Hands-on and Interactive Introduction to the Fundamentals of Artificial Intelligence using Snap!"
       kind:    Tutorial
       venue:   SIGCSE 2026

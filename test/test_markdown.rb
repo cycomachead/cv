@@ -97,6 +97,34 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
+  # build_embed is what gets deployed to the public site, so it must not carry
+  # referees' phone numbers. Their names, titles, and emails still appear; the
+  # full local build keeps the phone numbers too.
+  def test_md_embed_redacts_referee_phone_numbers
+    Dir.mktmpdir do |dir|
+      full  = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
+                        encoding: 'UTF-8')
+      embed = File.read(CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md')),
+                        encoding: 'UTF-8')
+
+      assert_includes full,  '## References'
+      assert_includes embed, '## References'
+
+      phones = CV::Data.load.references.filter_map { |r| r['phone'] }
+      refute_empty phones, 'fixture should have at least one referee phone'
+      phones.each do |p|
+        assert_includes full,   p
+        refute_includes embed,  p
+      end
+
+      # Names and emails are still published.
+      CV::Data.load.references.each do |r|
+        assert_includes embed, r['name']
+        assert_includes embed, r['email'] if r['email']
+      end
+    end
+  end
+
   def test_sidebar_fragment_has_downloads_toc_toggle
     Dir.mktmpdir do |dir|
       CV::Markdown.build(output: File.join(dir, 'cv.md'))

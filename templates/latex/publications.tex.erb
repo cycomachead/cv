@@ -41,7 +41,7 @@
     body << " (#{h(item['kind'])})" if item['kind']
     body << '.'
     body << "\n    \\newline #{h(venue)}#{year ? ", #{year}" : ''}." if venue
-    body << "\n    \\newline \\href{#{url}}{#{url}}" if url
+    body << "\n    \\newline #{link(url, url)}" if url
   end
 -%>
     \item{<%= body %>}

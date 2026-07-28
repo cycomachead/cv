@@ -2,10 +2,10 @@
   summary: >-
     Snap! is a blocks-based visual language designed to make teaching
     computer science easy while exposing hard concepts like lambdas,
-    recursion, and web APIs. I contribute to the core IDE and
-    collaboratively designed, built, and maintain the Snap! cloud-based
-    project infrastructure, which currently supports more than 5 million
-    projects and 500,000 users.
+    recursion, and web APIs. I contribute to the core IDE, and I
+    collaboratively designed and built, and continue to maintain, the
+    Snap!Cloud project infrastructure, which currently supports more than
+    10 million projects and 1 million users.
   url:     https://snap.berkeley.edu
 
 - name:    The Beauty and Joy of Computing
