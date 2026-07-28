@@ -79,8 +79,9 @@ Thesis: _<%= h(e['thesis']) %>_
 
 ### Course Descriptions
 
+<%# Courses with a public site get the URL appended after the description. -%>
 <%- data.teaching['courses'].each do |c| -%>
-- **<%= h(c['code']) %>** — _<%= h(c['title']) %>_<% if c['units'] %> (<%= c['units'] %> <%= c['units'].to_s.strip == '1' ? 'unit' : 'units' %>)<% end %>. <%= h(c['description']) %>
+- **<%= h(c['code']) %>** — _<%= h(c['title']) %>_<% if c['units'] %> (<%= c['units'] %> <%= c['units'].to_s.strip == '1' ? 'unit' : 'units' %>)<% end %>. <%= h(c['description']) %><% if c['url'] %> <%= link(c['url']) %><% end %>
 <%- end %>
 
 ### Teaching Assignments
@@ -186,15 +187,8 @@ Thesis: _<%= h(e['thesis']) %>_
 
 ## References
 
-<%- data.references.each do |r| -%>
-**<%= h(r['name']) %>**
-<%= h(r['title']) if r['title'] %>
-{:.entry}
-<%- if r['email'] -%>
-<%= link("mailto:#{r['email']}", r['email']) %>
-<%- end -%>
-<%- if r['phone'] %>
-<%= h(r['phone']) %>
-<%- end %>
-
-<% end -%>
+<%# The Markdown output is the public web CV (mball.co/cv), so the referees'
+    names, emails, and phone numbers never appear here — data/references.yml
+    only feeds the private LaTeX build (main.tex without \publicversion). -%>
+References available upon request.
+{:.references-note}

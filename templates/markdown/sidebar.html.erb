@@ -14,12 +14,14 @@
       give its content wrapper the same id). -%>
   <a class="cv-skip-link" href="#cv-main">Skip to CV content</a>
 
+  <%# The full CV is the primary download; the 1-page résumé is a quiet text
+      link underneath it rather than a second button competing for attention. -%>
   <div class="cv-downloads">
     <a class="cv-btn cv-btn-primary" href="<%= cv_pdf_url %>" download>
       Download CV (PDF)
     </a>
-    <a class="cv-btn cv-btn-secondary" href="<%= resume_pdf_url %>" download>
-      Download résumé (1 page)
+    <a class="cv-download-alt" href="<%= resume_pdf_url %>" download>
+      1-page résumé
     </a>
   </div>
 

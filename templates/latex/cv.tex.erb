@@ -113,7 +113,7 @@
 \vspace{5pt}
 \begin{description}\setlength\itemsep{0.7em}
 <%- data.teaching['courses'].each do |c| -%>
-  \item[<%= h(c['code']) %>] \textit{<%= h(c['title']) %>}<% if c['units'] %> (<%= c['units'] %> units)<% end %>. <%= h(c['description']) %>
+  \item[<%= h(c['code']) %>] \textit{<%= h(c['title']) %>}<% if c['units'] %> (<%= c['units'] %> units)<% end %>. <%= h(c['description']) %><% if c['url'] %> \small{<%= link(c['url']) %>}<% end %>
 <%- end -%>
 \end{description}
 \vspace{5pt}

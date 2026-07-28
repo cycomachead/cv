@@ -39,6 +39,8 @@ module CV
                           encoding: 'UTF-8')
       script  = File.read(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'),
                           encoding: 'UTF-8')
+      nav_js  = File.read(CV::TEMPLATE_DIR.join('markdown', 'cv-nav.js'),
+                          encoding: 'UTF-8')
 
       # Block form so `\\`/`\&` sequences in the content are inserted
       # literally instead of being parsed as backreferences.
@@ -47,6 +49,7 @@ module CV
                   .sub('{{SIDEBAR}}') { sidebar }
                   .sub('{{BODY}}')    { html_body }
                   .sub('{{SCRIPT}}')  { script }
+                  .sub('{{NAV_SCRIPT}}') { nav_js }
 
       FileUtils.mkdir_p(File.dirname(output))
       File.write(output, html)
