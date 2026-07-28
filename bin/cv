@@ -6,7 +6,7 @@
 #   bin/cv md:embed      — render header-stripped Markdown for the Jekyll embed
 #   bin/cv preview       — render md and convert to a standalone HTML preview
 #   bin/cv sidebar       — render the cv-sidebar.html include for the Jekyll site
-#   bin/cv embed         — render md:embed + sidebar + copy cv.css/cv-theme.js
+#   bin/cv embed         — render md:embed + sidebar + copy cv.css/cv-theme.js/cv-nav.js
 #   bin/cv pubs:tex [out] — render a publications LaTeX fragment
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
@@ -33,7 +33,7 @@ when 'embed'
   require 'fileutils'
   CV::Markdown.build_embed
   CV::Sidebar.build
-  %w[preview.css cv-theme.js].each do |asset|
+  %w[preview.css cv-theme.js cv-nav.js].each do |asset|
     src  = CV::TEMPLATE_DIR.join('markdown', asset)
     dest = CV::BUILD_DIR.join(asset == 'preview.css' ? 'cv.css' : asset)
     FileUtils.cp(src, dest)
@@ -61,7 +61,7 @@ when 'help', '-h', '--help'
       md:embed          Build the header-stripped Markdown for the Jekyll embed
       preview           Build cv.md and a standalone HTML preview (build/cv.html)
       sidebar           Build the cv-sidebar.html fragment for the Jekyll site
-      embed             md:embed + sidebar + copy cv.css and cv-theme.js
+      embed             md:embed + sidebar + copy cv.css, cv-theme.js, cv-nav.js
       tex               Render the full single-file LaTeX CV (build/cv.tex)
       pubs:tex [path]   Render only the publications LaTeX fragment
 

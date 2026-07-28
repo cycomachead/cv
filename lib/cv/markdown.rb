@@ -13,16 +13,14 @@ module CV
 
     module_function
 
-    def build(output: DEFAULT_OUTPUT, jekyll: true, page_header: true,
-              public_version: false, data: nil, bib: nil)
+    def build(output: DEFAULT_OUTPUT, jekyll: true, page_header: true, data: nil, bib: nil)
       data ||= CV::Data.load
       bib  ||= CV::Bib.load
       renderer = CV::Renderer.new(format: :markdown)
 
       body = renderer.render('cv', data: data, bib: bib,
                                    locals: { jekyll_front_matter: jekyll,
-                                             page_header:        page_header,
-                                             public_version:     public_version })
+                                             page_header:        page_header })
       FileUtils.mkdir_p(File.dirname(output))
       File.write(output, body)
       output
@@ -33,11 +31,10 @@ module CV
     # site-level page header, and the CV-specific download buttons + TOC
     # live in the sidebar include rather than the markdown.
     #
-    # This is the build that gets published, so it is also the public one —
-    # referees' phone numbers are redacted from the References section.
+    # Referee contact details need no gate here: the Markdown output is public
+    # either way, so cv.md.erb never emits them at all.
     def build_embed(output: EMBED_DEFAULT_OUTPUT, data: nil, bib: nil)
-      build(output: output, jekyll: true, page_header: false,
-            public_version: true, data: data, bib: bib)
+      build(output: output, jekyll: true, page_header: false, data: data, bib: bib)
     end
   end
 end

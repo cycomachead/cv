@@ -37,9 +37,9 @@ namespace :site do
     puts "wrote #{out}"
   end
 
-  desc 'Build the embed bundle: cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js'
+  desc 'Build the embed bundle: cv-embed.md + cv-sidebar.html + cv.css + the scripts'
   task embed: %i[md_embed sidebar] do
-    %w[preview.css cv-theme.js].each do |asset|
+    %w[preview.css cv-theme.js cv-nav.js].each do |asset|
       src  = CV::TEMPLATE_DIR.join('markdown', asset)
       dest = CV::BUILD_DIR.join(asset == 'preview.css' ? 'cv.css' : asset)
       FileUtils.cp(src, dest)
@@ -55,6 +55,7 @@ namespace :site do
     FileUtils.cp(CV::Sidebar::DEFAULT_OUTPUT,           deploy.join('cv-sidebar.html'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'preview.css'), deploy.join('cv.css'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'), deploy.join('cv-theme.js'))
+    FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-nav.js'),   deploy.join('cv-nav.js'))
     # Mirror the CI mapping (deploy.yml): public.pdf is the public download,
     # published to the site root as michael-ball-cv.pdf (falls back to
     # main.pdf locally); main.pdf ships as cv-full.pdf, the résumé as

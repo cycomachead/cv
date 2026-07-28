@@ -61,16 +61,20 @@ class MarkdownBuildTest < Minitest::Test
       assert_includes html, 'class="cv-downloads"'
       assert_includes html, 'cv-btn cv-btn-primary'
       assert_includes html, 'Download CV (PDF)'
-      assert_includes html, 'cv-btn cv-btn-secondary'
-      assert_includes html, '1 page'
+      # The résumé is a de-emphasised text link, not a second button.
+      assert_includes html, 'class="cv-download-alt"'
+      assert_includes html, '1-page résumé'
+      refute_includes html, 'cv-btn-secondary'
       assert_includes html, 'class="cv-toc"'
       assert_includes html, 'data-cv-theme-toggle'
       assert_includes html, 'href="#education"'
       assert_includes html, 'href="#course-descriptions"'
 
-      # Theme toggle script is inlined.
+      # Theme toggle + scroll spy scripts are inlined.
       assert_includes html, "STORAGE_KEY = 'cv-theme'"
       assert_includes html, 'data-cv-theme-toggle'
+      assert_includes html, "var ACTIVE = 'is-active';"
+      refute_includes html, '{{NAV_SCRIPT}}'
 
       # Entry paragraphs got the .entry class via the kramdown IAL.
       assert_includes html, 'class="entry"'
@@ -97,30 +101,53 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
-  # build_embed is what gets deployed to the public site, so it must not carry
-  # referees' phone numbers. Their names, titles, and emails still appear; the
-  # full local build keeps the phone numbers too.
-  def test_md_embed_redacts_referee_phone_numbers
+  def test_md_links_course_sites_after_descriptions
     Dir.mktmpdir do |dir|
-      full  = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
-                        encoding: 'UTF-8')
-      embed = File.read(CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md')),
-                        encoding: 'UTF-8')
-
-      assert_includes full,  '## References'
-      assert_includes embed, '## References'
-
-      phones = CV::Data.load.references.filter_map { |r| r['phone'] }
-      refute_empty phones, 'fixture should have at least one referee phone'
-      phones.each do |p|
-        assert_includes full,   p
-        refute_includes embed,  p
+      md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
+                     encoding: 'UTF-8')
+      { 'CS 10'                => 'cs10.org',
+        'CS 88 / DATA C88C'    => 'c88c.org',
+        'CS 169A'              => 'saasbook.info',
+        'DATA 101 / CS C187'   => 'data101.org' }.each do |code, host|
+        line = md.lines.find { |l| l.start_with?("- **#{code}**") }
+        refute_nil line, "no course line for #{code}"
+        assert_match(/\[#{Regexp.escape(host)}\]\(https:\/\/#{Regexp.escape(host)}\)\s*\z/,
+                     line.strip, "#{code} should end with a link to #{host}")
       end
+    end
+  end
 
-      # Names and emails are still published.
-      CV::Data.load.references.each do |r|
-        assert_includes embed, r['name']
-        assert_includes embed, r['email'] if r['email']
+  def test_md_withholds_referee_contact_details
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
+                     encoding: 'UTF-8')
+      section = md[/^## References$.*/m]
+      refute_nil section, 'References section is missing'
+      assert_includes section, 'References available upon request.'
+      # The web CV is public — no referee names, emails, or phone numbers.
+      # (Names are checked only inside the section: Daniel Garcia also shows
+      # up legitimately as the M.S. thesis advisor.)
+      CV::Data.load.references.each do |ref|
+        refute_includes section, ref['name']
+        refute_includes md, ref['email']
+        refute_includes md, ref['phone'] if ref['phone']
+      end
+    end
+  end
+
+  # The embed is what actually deploys, so assert it independently rather than
+  # relying on it sharing a code path with the full build.
+  def test_md_embed_withholds_referee_contact_details
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md')),
+                     encoding: 'UTF-8')
+      section = md[/^## References$.*/m]
+      refute_nil section, 'References section is missing'
+      assert_includes section, 'References available upon request.'
+      CV::Data.load.references.each do |ref|
+        refute_includes section, ref['name']
+        refute_includes md, ref['email']
+        refute_includes md, ref['phone'] if ref['phone']
       end
     end
   end

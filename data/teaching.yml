@@ -5,30 +5,35 @@ courses:
     description: >-
       Non-majors introduction to computer science. Hands-on, project-based
       course taught using Snap! and Python.
+    url: https://cs10.org
   - code: CS 88 / DATA C88C
     title: Computational Structures for Data Science
     units: 3
     description: >-
       CS1-or-1.5 course for data science majors, based on Sussman's SICP and
       taught in Python.
+    url: https://c88c.org
   - code: CS 169
     title: Engineering Software as a Service
     units: 4
     description: >-
       The original software engineering course, later split into CS169A and
       CS169L.
+    url: https://saasbook.info
   - code: CS 169A
     title: Engineering Software as a Service
     units: 4
     description: >-
       Upper-division course on modern software engineering through RESTful
       design, HTTP, and team projects.
+    url: https://saasbook.info
   - code: CS 169L
     title: Software Engineering Team Project
     units: 4
     description: >-
       Follow-up to CS 169A; teams build a semester-long project for a campus
       organization or local nonprofit.
+    url: https://saasbook.info
   - code: CS W186
     title: Introduction to Databases
     units: 4
@@ -57,7 +62,7 @@ courses:
       we teach large postsecondary computing courses, surveying current
       instructional practices and prototyping assignments that foster
       critical thinking.
-      [https://berkeley-cs294-189.github.io](https://berkeley-cs294-189.github.io)
+    url: https://berkeley-cs294-189.github.io
   - code: CS 302
     title: Designing Computer Science Education
     units: 3
@@ -75,6 +80,7 @@ courses:
       Upper-division course putting databases into practice. Topics include
       SQL, window functions, indexing, design, ETL, NoSQL, and graph
       databases.
+    url: https://data101.org
 
 notes:
   - "* denotes courses that were co-taught."

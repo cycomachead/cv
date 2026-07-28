@@ -94,10 +94,11 @@
 \newcommand{\bjc}{The Beauty and Joy of Computing\xspace}
 
 % Referees' phone numbers are personal data belonging to other people, so they
-% are withheld from every PDF we publish — main.pdf (shipped as cv-full.pdf)
-% and public.pdf both land on mball.co/cv. The numbers stay in references.tex
-% so `make unredacted` can still produce a complete copy on demand; that build
-% is gitignored and is not produced or deployed by CI.
+% are withheld from every PDF we publish. public.pdf swaps the whole section
+% out for references-public.tex, but main.pdf still ships publicly as
+% cv-full.pdf, so it needs this second gate. The numbers stay in references.tex
+% so `make unredacted` can produce a complete copy on demand; that build is
+% gitignored and is not produced or deployed by CI.
 \ifdefined\unredacted
     \newcommand{\refphone}[1]{\newline #1}
 \else
@@ -119,7 +120,9 @@
     \input{6-publications/3-press}
     \input{3-projects}
     \input{7-personal}
-    \ifdefined\publicversion\else
+    \ifdefined\publicversion
+        \input{references-public}
+    \else
         \input{references}
     \fi
 

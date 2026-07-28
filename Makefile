@@ -63,7 +63,7 @@ md-embed:
 sidebar: md
 	@$(RUBY) bin/cv sidebar
 
-# Full embed bundle: cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js.
+# Full embed bundle: cv-embed.md + cv-sidebar.html + cv.css + the scripts.
 embed:
 	@$(RUBY) bin/cv embed
 
@@ -113,11 +113,12 @@ deploy-out: md-embed sidebar pdf
 	@cp $(BUILD_DIR)/cv-sidebar.html            $(DEPLOY_DIR)/cv-sidebar.html
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
+	@cp templates/markdown/cv-nav.js            $(DEPLOY_DIR)/cv-nav.js
 	@if [ -f public.pdf ]; then cp public.pdf $(DEPLOY_DIR)/cv.pdf; \
 	else cp main.pdf $(DEPLOY_DIR)/cv.pdf; fi
 	@cp main.pdf                                $(DEPLOY_DIR)/cv-full.pdf
 	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
-	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv.pdf, cv-full.pdf, resume.pdf}"
+	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv-nav.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
 # Pull the latest BibTeX export for the DBLP author profile. Manually merge
@@ -145,7 +146,7 @@ help:
 	@echo "  make md-embed   build $(BUILD_DIR)/cv-embed.md (no page header) for Jekyll"
 	@echo "  make preview    build cv.html and serve it on http://localhost:$(PORT)"
 	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
-	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js"
+	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js + cv-nav.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
 	@echo "  make unredacted build unredacted.pdf — full CV incl. referees' phone"
 	@echo "                  numbers. Private: gitignored, never deployed."
