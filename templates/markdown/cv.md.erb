@@ -189,6 +189,7 @@ Thesis: _<%= h(e['thesis']) %>_
 
 <%# The Markdown output is the public web CV (mball.co/cv), so the referees'
     names, emails, and phone numbers never appear here — data/references.yml
-    only feeds the private LaTeX build (main.tex without \publicversion). -%>
+    feeds only the LaTeX builds, where \refphone additionally strips the phone
+    numbers from every PDF we publish. -%>
 References available upon request.
 {:.references-note}

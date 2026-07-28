@@ -55,6 +55,14 @@ courses:
     description: >-
       Pedagogy course for teaching assistants on course-course collaborations
       and current computing-education pedagogy.
+  - code: CS 294-189
+    title: Designing CS Education at Scale
+    description: >-
+      Graduate course in which small teams design, evaluate, and document how
+      we teach large postsecondary computing courses, surveying current
+      instructional practices and prototyping assignments that foster
+      critical thinking.
+    url: https://berkeley-cs294-189.github.io
   - code: CS 302
     title: Designing Computer Science Education
     units: 3
@@ -82,31 +90,31 @@ notes:
 
 assignments:
   - term: Summer 2026
-    detail: Co-Director EECS Summer Program (10 courses)
+    detail: Faculty Co-Director, EECS Summer Program (10 courses)
   - term: Spring 2026
     detail: DATA C88C (500 students, 14 staff), CS 169L* (18 students, 2 staff), CS 302* (8 students, 1 staff)
   - term: Fall 2025
     detail: DATA C88C (550 students, 13 staff), CS 169A (140 students, 3 staff), CS 294-189* (16 students, 0 staff)
   - term: Summer 2025
-    detail: Co-Director EECS Summer Program (10 courses)
+    detail: Faculty Co-Director, EECS Summer Program (10 courses)
   - term: Spring 2025
     detail: DATA C88C (550 students, 14 staff), CS 169L* (18 students, 3 staff), CS 302* (25 students, 1 staff)
   - term: Fall 2024
     detail: DATA 101* (450 students, 12 staff), CS 169A (280 students, 5 staff)
   - term: Summer 2024
-    detail: Co-Organizer EECS Summer Program (11 courses)
+    detail: Faculty Co-Director, EECS Summer Program (11 courses)
   - term: Spring 2024
     detail: DATA C88C (500 students, 14 staff), CS 169L* (16 students, 2 staff), CS 302* (20 students, 0 staff)
   - term: Fall 2023
     detail: DATA C88C (460 students, 10 staff), CS 169A* (270 students, 6 staff)
   - term: Summer 2023
-    detail: Organizer EECS Summer Program (10 courses)
+    detail: Faculty Director, EECS Summer Program (10 courses)
   - term: Spring 2023
     detail: DATA C88C (500 students, 15 staff), CS 169L* (20 students, 1 TA), CS 302 (24 students, 0 staff)
   - term: Fall 2022
     detail: CS 88 (450 students, 14 staff), CS 169A* (240 students, 7 staff), CS 195/H195* (300 students, 1 TA)
   - term: Summer 2022
-    detail: Co-Organizer EECS Summer Program (10 courses)
+    detail: Faculty Co-Director, EECS Summer Program (10 courses)
   - term: Spring 2022
     detail: CS 88 (420 students, 12 staff), CS 10 (150 students, 6 staff), CS 302* (25 students, 1 reader)
   - term: Fall 2021

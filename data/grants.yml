@@ -1,3 +1,10 @@
+- when:    2026
+  title:   SAP, Snap!Cloud Operations
+  amount:  "$250,000"
+  summary: >-
+    A ten-year gift funding the ongoing operations of the Snap!Cloud, the
+    project storage and sharing infrastructure behind Snap!.
+
 - when:    "2024–2025"
   title:   UC Berkeley Instructional Technology Micro-Grant
   amount:  "$50,000"
@@ -26,6 +33,15 @@
     Parsons Problems — interactive puzzles that lower the burden of
     memorizing syntax — to CS61A and CS88.
 
+- when:    "2021–2024"
+  title:   "NSF EAGER, Student Mission Control for the International Space Station (Award #2027260)"
+  amount:  "$298,944"
+  role:    Research Engineer (Dan Garcia, co-PI)
+  summary: >-
+    Funding to support development of an API, website, "Student Mission
+    Control" interface, and curriculum modules centered on data streaming
+    out of the ISS.
+
 - when:    "2020–2023"
   title:   Hopper-Dean Foundation BJC
   amount:  "$600,000"
@@ -36,15 +52,6 @@
     curriculum, and contributed engineering for the Spanish translation of
     the high-school CS Principles course and the Snap! programming
     language.
-
-- when:    "2021–2024"
-  title:   "NSF EAGER, Student Mission Control for the International Space Station (Award #2027260)"
-  amount:  "$298,944"
-  role:    Research Engineer (Dan Garcia, co-PI)
-  summary: >-
-    Funding to support development of an API, website, "Student Mission
-    Control" interface, and curriculum modules centered on data streaming
-    out of the ISS.
 
 - when:    2020
   title:   UC Berkeley College of Engineering, Course Adaptation and Remote Delivery
@@ -78,7 +85,7 @@
   role:    Michael Ball
   summary: >-
     Gift to support CS10 and the Beauty and Joy of Computing. Funds were used
-    to develop Snap! enhancements and help fund the Snap! Cloud
+    to develop Snap! enhancements and help fund the Snap!Cloud
     infrastructure.
 
 - when:    2015

@@ -1,12 +1,14 @@
 \section{Students Supervised}
 
-\newcommand{\report}[5]{\item{#1: #2 "{#3}"\newline\footnotesize{#4}\newline\tiny{#5}}}
+% #3 (thesis title) is optional — omit the quotes entirely when it's empty,
+% otherwise entries without a recorded title render as a dangling `""`.
+\newcommand{\report}[5]{\item{#1: #2\if\relax\detokenize{#3}\relax\else\ ``{#3}''\fi\newline\footnotesize{#4}\newline\tiny{#5}}}
 
 \vspace{6pt}
 \begin{itemize}
   \setlength\itemsep{1em}
 
-    \report{May 2026}{Rebecca Dang}{}{Co-advised with Lisa Yan}{}
+    \report{May 2026}{Rebecca Dang}{Beyond the Autograder: Improving Feedback on CS Student Metacognition via the Assignment Snapshots Tool}{Co-advised with Lisa Yan}{https://www2.eecs.berkeley.edu/Pubs/TechRpts/2026/EECS-2026-196.html}
     
     \report{May 2025}{Edwin Vargas-Navarro}{}{Co-advised with Lisa Yan}{}
 
@@ -15,7 +17,7 @@
     \report{May 2020}{Mansi Shah}{Exploring the Use of Parsons Problems for Learning a New Programming Language}{\nth{2} Reader; advised by Dan Garcia}{https://www2.eecs.berkeley.edu/Pubs/TechRpts/2020/EECS-2020-88.html}
 
     \report{May 2020}{Harikaran Subbaraj}
-{Using Dataflow for Machine Learning Inference}{\nth{2} reader; advised by Joey Gonzalez}{http://www2.eecs.berkeley.edu/Pubs/TechRpts/2020/EECS-2020-75.html}
+{Using Dataflow for Machine Learning Inference}{\nth{2} Reader; advised by Joey Gonzalez}{http://www2.eecs.berkeley.edu/Pubs/TechRpts/2020/EECS-2020-75.html}
 \end{itemize}
 
 \vspace{3pt}

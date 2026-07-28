@@ -22,7 +22,7 @@ TEX_FILES  := main.tex one-page-resume.tex
 PDFS       := $(TEX_FILES:.tex=.pdf)
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
-.PHONY: all install gems check-latex md md-embed embed preview sidebar pdf tex cv-pdf pubs-tex deploy-out test dblp clean help
+.PHONY: all install gems check-latex md md-embed embed preview sidebar pdf unredacted tex cv-pdf pubs-tex deploy-out test dblp clean help
 
 all: md preview embed pdf
 
@@ -82,6 +82,11 @@ preview: md
 pdf: $(PDFS)
 %.pdf: %.tex
 	$(LATEXMK) $(LATEX_OPTS) $<
+
+# Private build of the full CV that keeps referees' phone numbers. Every
+# published PDF redacts them (see \refphone in main.tex); unredacted.pdf is
+# gitignored and neither CI workflow builds or deploys it. Don't share it.
+unredacted: unredacted.pdf
 
 # Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited main.tex
 # + 1-education.tex etc. remain the source of truth for the printable PDF
@@ -143,6 +148,8 @@ help:
 	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
 	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js + cv-nav.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
+	@echo "  make unredacted build unredacted.pdf — full CV incl. referees' phone"
+	@echo "                  numbers. Private: gitignored, never deployed."
 	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
 	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
 	@echo "  make pubs-tex   regenerate publications.tex from YAML+bib"

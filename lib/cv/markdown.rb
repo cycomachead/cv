@@ -30,6 +30,9 @@ module CV
     # name/title/contact/bio block. The deployed page already has its own
     # site-level page header, and the CV-specific download buttons + TOC
     # live in the sidebar include rather than the markdown.
+    #
+    # Referee contact details need no gate here: the Markdown output is public
+    # either way, so cv.md.erb never emits them at all.
     def build_embed(output: EMBED_DEFAULT_OUTPUT, data: nil, bib: nil)
       build(output: output, jekyll: true, page_header: false, data: data, bib: bib)
     end

@@ -41,14 +41,23 @@ module CV
       end
 
       # Auto-link a bare URL appropriately for the output format.
+      #
+      # For LaTeX the *label* is ordinary horizontal-mode text, so it has to be
+      # escaped — a URL fragment like `.../Awards/#11` otherwise reaches the
+      # typesetter as a macro parameter character and aborts the build. The URL
+      # argument is left verbatim, which is what hyperref wants.
       def link(url, label = nil)
         return '' if url.nil? || url.empty?
         label ||= url.sub(%r{^https?://}, '')
         case @format
         when :markdown then "[#{label}](#{url})"
-        when :latex    then "\\href{#{url}}{#{label}}"
+        when :latex    then "\\href{#{url}}{#{escape_latex(label)}}"
         else "<a href=\"#{url}\">#{label}</a>"
         end
+      end
+
+      def escape_latex(text)
+        text.to_s.gsub(/[&%$#_]/, CV::Macros::LATEX_ESCAPES)
       end
 
       # Render a partial template by name (relative to the same format dir).

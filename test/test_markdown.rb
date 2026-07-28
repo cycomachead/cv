@@ -135,6 +135,23 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
+  # The embed is what actually deploys, so assert it independently rather than
+  # relying on it sharing a code path with the full build.
+  def test_md_embed_withholds_referee_contact_details
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md')),
+                     encoding: 'UTF-8')
+      section = md[/^## References$.*/m]
+      refute_nil section, 'References section is missing'
+      assert_includes section, 'References available upon request.'
+      CV::Data.load.references.each do |ref|
+        refute_includes section, ref['name']
+        refute_includes md, ref['email']
+        refute_includes md, ref['phone'] if ref['phone']
+      end
+    end
+  end
+
   def test_sidebar_fragment_has_downloads_toc_toggle
     Dir.mktmpdir do |dir|
       CV::Markdown.build(output: File.join(dir, 'cv.md'))

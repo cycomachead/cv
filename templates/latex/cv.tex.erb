@@ -52,6 +52,15 @@
 \newcommand{\snap}{Snap\textit{!}\xspace}
 \newcommand{\snapcon}{Snap\textit{!}Con\xspace}
 \newcommand{\snapshot}{Snap\textit{!}shot\xspace}
+\newcommand{\snapcloud}{Snap\textit{!}Cloud\xspace}
+
+% Mirrors main.tex: referees' phone numbers only render when \unredacted is
+% defined, so a PDF built from this file omits them by default.
+\ifdefined\unredacted
+    \newcommand{\refphone}[1]{\newline #1}
+\else
+    \newcommand{\refphone}[1]{}
+\fi
 
 % Personal data
 \name{<%= h(data.basics['name'].split(' ').first) %>}{<%= h(data.basics['name'].split(' ', 2).last) %>}
@@ -143,7 +152,7 @@
     \newline\small <%= h(a['summary']) %>
 <%- end -%>
 <%- if a['url'] -%>
-    \newline\small \href{<%= a['url'] %>}{<%= a['url'] %>}
+    \newline\small <%= link(a['url'], a['url']) %>
 <%- end -%>
 <%- end -%>
 \end{itemize}
@@ -163,7 +172,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% Students %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Students Supervised}
-\newcommand{\report}[5]{\item{#1: #2 ``#3''\newline\footnotesize{#4}\newline\tiny{#5}}}
+% #3 (thesis title) is optional — omit the quotes entirely when it's empty,
+% otherwise entries without a recorded title render as a dangling ``''.
+\newcommand{\report}[5]{\item{#1: #2\if\relax\detokenize{#3}\relax\else\ ``#3''\fi\newline\footnotesize{#4}\newline\tiny{#5}}}
 \vspace{6pt}
 \begin{itemize}\setlength\itemsep{1em}
 <%- data.students.each do |s| -%>
@@ -193,7 +204,7 @@
 <%- data.press.each do |p| -%>
   \item{<%= h(p['outlet']) %>: \textit{<%= h(p['title']) %>}<%= p['date'] ? ". #{h(p['date'])}" : '' %>
 <%- if p['url'] -%>
-    \newline\footnotesize\href{<%= p['url'] %>}{<%= p['url'] %>}
+    \newline\footnotesize <%= link(p['url'], p['url']) %>
 <%- end -%>
   }
 <%- end -%>
@@ -206,7 +217,7 @@
 \textbf{<%= h(p['name']) %>}\newline
 \small <%= h(p['summary']) %>
 <%- if p['url'] -%>
-\newline\small\href{<%= p['url'] %>}{<%= p['url'] %>}
+\newline\small <%= link(p['url'], p['url']) %>
 <%- end -%>
 
 \vspace{12pt}
@@ -227,9 +238,9 @@
 \vspace{6pt}
 <%- refs = data.references; refs.each_slice(2) do |a, b| -%>
 \cvlistdoubleitem{
-    <%= h(a['name']) %><%= a['title'] ? "\\newline #{h(a['title'])}" : '' %><%= a['email'] ? "\\newline #{h(a['email'])}" : '' %><%= a['phone'] ? "\\newline #{h(a['phone'])}" : '' %>
+    <%= h(a['name']) %><%= a['title'] ? "\\newline #{h(a['title'])}" : '' %><%= a['email'] ? "\\newline #{h(a['email'])}" : '' %><%= a['phone'] ? "\\refphone{#{h(a['phone'])}}" : '' %>
 }{
-    <% if b -%><%= h(b['name']) %><%= b['title'] ? "\\newline #{h(b['title'])}" : '' %><%= b['email'] ? "\\newline #{h(b['email'])}" : '' %><%= b['phone'] ? "\\newline #{h(b['phone'])}" : '' %><% end -%>
+    <% if b -%><%= h(b['name']) %><%= b['title'] ? "\\newline #{h(b['title'])}" : '' %><%= b['email'] ? "\\newline #{h(b['email'])}" : '' %><%= b['phone'] ? "\\refphone{#{h(b['phone'])}}" : '' %><% end -%>
 }
 \vspace{4pt}
 <% end -%>
