@@ -1,7 +1,7 @@
-<%# Single-file LaTeX CV scaffold. Mirrors main.tex's preamble and emits the
+<%# Single-file LaTeX CV scaffold. Mirrors latex/main.tex's preamble and emits the
     body from data/*.yml. Compile with `latexmk -lualatex` (the moderncv
-    setup needs lualatex/xelatex for fontspec). The handcrafted main.tex +
-    *.tex partials remain the source of truth for the printable PDF until
+    setup needs lualatex/xelatex for fontspec). The handcrafted latex/*.tex
+    files remain the source of truth for the printable PDF until
     you decide to switch over. -%>
 %%%%%%%%%%%%%%%%%% Generated from data/*.yml — edit data, not this file.
 
@@ -46,7 +46,7 @@
   {\setsansfont{Source Sans Pro}}
 \renewcommand{\familydefault}{\sfdefault}
 
-% Stylized words used throughout the document. Mirrors main.tex.
+% Stylized words used throughout the document. Mirrors latex/main.tex.
 \newcommand{\me}{\textbf{Ball, Michael}\xspace}
 \newcommand{\firstme}{\textbf{Michael Ball}\xspace}
 \newcommand{\snap}{Snap\textit{!}\xspace}
@@ -54,7 +54,7 @@
 \newcommand{\snapshot}{Snap\textit{!}shot\xspace}
 \newcommand{\snapcloud}{Snap\textit{!}Cloud\xspace}
 
-% Mirrors main.tex: referees' phone numbers only render when \unredacted is
+% Mirrors latex/main.tex: referees' phone numbers only render when \unredacted is
 % defined, so a PDF built from this file omits them by default.
 \ifdefined\unredacted
     \newcommand{\refphone}[1]{\newline #1}

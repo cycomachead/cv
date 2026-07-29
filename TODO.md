@@ -4,27 +4,28 @@
 - [ ] Add UC Open 2026 entry (placeholder exists)
 - [ ] Add UC Berkeley Teaching and Learning Conf. poster: Vargas-Navarro, Edwin et al. on Flextensions
 - [ ] Add Student-Organized AI Event talk (April 25, 2025; UC Berkeley) — title/URL needed
-- [ ] Add Daily Cal interviews and additional CSEdPodcast appearances (URLs in `6-publications/3-press.tex`)
+- [ ] Add Daily Cal interviews and additional CSEdPodcast appearances (URLs in `latex/6-publications-press.tex`)
 - [ ] Verify SIGCSE 2024 SIGCSE Online Posters & Lightning Talks Program Chair role
 - [ ] Add PCF (Presidential Chair Fellows) grant description text
 - [ ] Add Snap!Con descriptions
-- [ ] Rewrite BJC project section in `3-projects.tex`
-- [ ] Identify additional software projects to list in `3-projects.tex` (notes mention seating-tool, berkeley-class-site)
+- [ ] Rewrite BJC project section in `latex/3-projects.tex`
+- [ ] Identify additional software projects to list in `latex/3-projects.tex` (notes mention seating-tool, berkeley-class-site)
 
 # Still open from the 2026-07 audit
 
 - [ ] Thesis title for Edwin Vargas-Navarro (May 2025) is still missing in
-      `data/students.yml` / `students.tex`. (Rebecca Dang's is filled in.)
+      `data/students.yml` / `latex/students.tex`. (Rebecca Dang's is filled in.)
 
 ## Decisions from that audit, for future reference
 
 - **Contact details.** Michael's own mobile number appears on both PDFs and not
   on the website (`data/basics.yml` has no `phone`, so the HTML CV never renders
   one). Referees' phone numbers are redacted everywhere we publish: `\refphone`
-  in `main.tex` drops them from main.pdf/cv-full.pdf, public.pdf omits the
+  in `latex/main.tex` drops them from latex/main.pdf/cv-full.pdf;
+  latex/public.pdf omits the
   References section entirely, and the Jekyll embed keeps referee names, titles,
   and emails but not phones. `make unredacted` builds a private complete copy;
-  `unredacted.pdf` is gitignored and neither CI workflow touches it.
+  `latex/unredacted.pdf` is gitignored and neither CI workflow touches it.
 - **Summer instruction role.** Uniformly "Faculty Co-Director", except Summer
   2023 which is "Faculty Director" — the old wording there ("Coordinator" /
   "Organizer") had no "Co-". The one-page résumé bullet reads "Faculty

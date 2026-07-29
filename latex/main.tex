@@ -75,7 +75,7 @@
 % \social[twitter]{\_mball\_}                  
 \social[github]{cycomachead}   
 
-% \input{bibtex_preamble.tex}
+% \input{bibtex_preamble}
 
 % Frequent Coauthors
 \newcommand{\me}{\textbf{Ball, Michael}\xspace}
@@ -94,8 +94,8 @@
 \newcommand{\bjc}{The Beauty and Joy of Computing\xspace}
 
 % Referees' phone numbers are personal data belonging to other people, so they
-% are withheld from every PDF we publish. public.pdf swaps the whole section
-% out for references-public.tex, but main.pdf still ships publicly as
+% are withheld from every PDF we publish. latex/public.pdf swaps the whole
+% section out for references-public.tex, but latex/main.pdf still ships as
 % cv-full.pdf, so it needs this second gate. The numbers stay in references.tex
 % so `make unredacted` can produce a complete copy on demand; that build is
 % gitignored and is not produced or deployed by CI.
@@ -115,9 +115,9 @@
     \input{research-interests}
     \input{students}
     \input{6-service}
-    \input{6-publications/1-conferences}
-    \input{6-publications/2-other-writing}
-    \input{6-publications/3-press}
+    \input{6-publications-conferences}
+    \input{6-publications-other-writing}
+    \input{6-publications-press}
     \input{3-projects}
     \input{7-personal}
     \ifdefined\publicversion
