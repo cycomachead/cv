@@ -8,7 +8,7 @@ module CV
   # with `latexmk -lualatex build/cv.tex` (the moderncv setup needs lualatex
   # because of fontspec).
   #
-  # The handcrafted main.tex + 1-education.tex etc. remain the source of
+  # The handcrafted latex/main.tex + its partials remain the source of
   # truth for the printable PDF until you decide to switch over.
   module Latex
     DEFAULT_OUTPUT = CV::BUILD_DIR.join('cv.tex')

@@ -100,7 +100,7 @@ For the chosen section, do this:
 
 4. **Cross-check external sources** when relevant (ask Michael first if he wants to):
    - `make dblp` — refreshes `dblp.bib` for new conference papers indexed at DBLP. Diff against `personal.bib` and surface unmatched entries as candidates.
-   - `git log -- 6-publications/` and `personal.bib` for items that might already exist in BibTeX but haven't been linked from `data/publications.yml`.
+   - `git log -- latex/6-publications-*.tex` and `personal.bib` for items that might already exist in BibTeX but haven't been linked from `data/publications.yml`.
    - `TODO.md` lines tagged with the current section.
 
 ### 4. Edit
@@ -126,7 +126,7 @@ Once Michael confirms a new entry:
 ## What this skill does NOT do
 
 - Style or formatting overhauls (e.g., "make all author names First-Last") — those are tracked separately in `TODO.md`'s style section.
-- LaTeX template edits in `templates/latex/` or in the legacy `*.tex` files — out of scope for an interview-based update pass.
+- LaTeX template edits in `templates/latex/` or in the handcrafted `latex/*.tex` files — out of scope for an interview-based update pass.
 - Inventing co-authors, DOIs, dates, amounts, or URLs from memory or web searches without confirmation.
 
 ## Quick reference: file → ask about

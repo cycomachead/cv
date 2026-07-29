@@ -38,23 +38,26 @@ jobs:
       # The Source Sans 3 fonts ship with TeX Live itself (the sourcesanspro
       # package), so no extra system font packages are needed — the
       # Debian-style fonts-* names don't exist in the action's Alpine image.
-      - name: Build full CV (main.tex)
+      - name: Build full CV (latex/main.tex)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
+          root_file: latex/main.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
       - name: Build one-page resume
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: one-page-resume.tex
+          root_file: latex/one-page-resume.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
-      # public.tex is a wrapper that excludes references for the public site.
+      # latex/public.tex is a wrapper that excludes references for the public site.
       - name: Build public CV
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: public.tex
+          root_file: latex/public.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
       # Surface the full LaTeX logs when a compile fails — the action's
@@ -62,7 +65,7 @@ jobs:
       - name: Print LaTeX logs on failure
         if: failure()
         run: |
-          for f in *.log; do
+          for f in latex/*.log; do
             [ -e "$f" ] || continue
             echo "::group::$f"
             cat "$f"
@@ -74,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: "*.log"
+          path: "latex/*.log"
           if-no-files-found: ignore
           retention-days: 7
 
@@ -113,9 +116,9 @@ jobs:
           cp build/cv.css              _deploy/cv/cv.css
           cp build/cv-theme.js         _deploy/cv/cv-theme.js
           cp build/cv-nav.js           _deploy/cv/cv-nav.js
-          cp main.pdf                  _deploy/cv/cv-full.pdf
-          cp one-page-resume.pdf       _deploy/cv/resume.pdf
-          cp public.pdf                _deploy/michael-ball-cv.pdf
+          cp latex/main.pdf            _deploy/cv/cv-full.pdf
+          cp latex/one-page-resume.pdf _deploy/cv/resume.pdf
+          cp latex/public.pdf          _deploy/michael-ball-cv.pdf
           find _deploy -type f | sort
 
       # ---------- 4. Push to cycomachead/cycomachead.github.io ----------

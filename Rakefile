@@ -56,13 +56,13 @@ namespace :site do
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'preview.css'), deploy.join('cv.css'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-theme.js'), deploy.join('cv-theme.js'))
     FileUtils.cp(CV::TEMPLATE_DIR.join('markdown', 'cv-nav.js'),   deploy.join('cv-nav.js'))
-    # Mirror the CI mapping (deploy.yml): public.pdf is the public download,
+    # Mirror the CI mapping (deploy.yml): latex/public.pdf is the public download,
     # published to the site root as michael-ball-cv.pdf (falls back to
-    # main.pdf locally); main.pdf ships as cv-full.pdf, the résumé as
-    # resume.pdf. Both cv-full.pdf and resume.pdf live in the /cv/ bundle.
+    # latex/main.pdf locally); latex/main.pdf ships as cv-full.pdf, the résumé
+    # as resume.pdf. Both cv-full.pdf and resume.pdf live in the /cv/ bundle.
     { 'public.pdf' => 'michael-ball-cv.pdf', 'main.pdf' => 'cv-full.pdf',
       'one-page-resume.pdf' => 'resume.pdf' }.each do |pdf, dest|
-      src = CV::ROOT.join(pdf)
+      src = CV::ROOT.join('latex', pdf)
       next unless src.exist?
       FileUtils.cp(src, deploy.join(dest))
     end

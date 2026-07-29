@@ -1,8 +1,8 @@
-# Dual-publishing CV. The single authored source is data/*.yml + personal.bib;
-# we render that to:
+# Dual-publishing CV. YAML drives the web and generated scaffold; handcrafted
+# LaTeX drives the production PDFs:
 #   - build/cv.md     — canonical Markdown (drop into the Jekyll site)
 #   - build/cv.html   — standalone HTML preview (kramdown + minimal CSS)
-#   - main.pdf, one-page-resume.pdf — LaTeX → PDF via lualatex
+#   - latex/*.pdf — handcrafted LaTeX → PDF via lualatex
 #
 # `make help` lists every target. Common flows:
 #   make            — build cv.md + cv.html + PDFs
@@ -18,8 +18,10 @@ BUNDLE    ?= bundle
 PORT      ?= 8000
 
 BUILD_DIR  := build
-TEX_FILES  := main.tex one-page-resume.tex
-PDFS       := $(TEX_FILES:.tex=.pdf)
+LATEX_DIR  := latex
+TEX_FILES  := main.tex public.tex one-page-resume.tex
+LATEX_SOURCES := $(wildcard $(LATEX_DIR)/*.tex)
+PDFS       := $(addprefix $(LATEX_DIR)/,$(TEX_FILES:.tex=.pdf))
 DEPLOY_DIR := $(BUILD_DIR)/deploy
 
 .PHONY: all install gems check-latex md md-embed embed preview sidebar pdf unredacted tex cv-pdf pubs-tex deploy-out test dblp clean help
@@ -72,24 +74,25 @@ embed:
 # sidebar download buttons resolve when the preview is served from build/.
 preview: md
 	@$(RUBY) bin/cv preview
-	@if [ -f public.pdf ]; then cp -f public.pdf $(BUILD_DIR)/cv.pdf; \
-	elif [ -f main.pdf ]; then cp -f main.pdf $(BUILD_DIR)/cv.pdf; fi
-	@if [ -f one-page-resume.pdf ]; then cp -f one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
+	@if [ -f $(LATEX_DIR)/public.pdf ]; then cp -f $(LATEX_DIR)/public.pdf $(BUILD_DIR)/cv.pdf; \
+	elif [ -f $(LATEX_DIR)/main.pdf ]; then cp -f $(LATEX_DIR)/main.pdf $(BUILD_DIR)/cv.pdf; fi
+	@if [ -f $(LATEX_DIR)/one-page-resume.pdf ]; then cp -f $(LATEX_DIR)/one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
 	@echo "Serving $(BUILD_DIR)/cv.html at http://localhost:$(PORT)"
 	@cd $(BUILD_DIR) && $(RUBY) -run -e httpd . -p $(PORT)
 
 # ---------------- LaTeX → PDF ----------------
 pdf: $(PDFS)
-%.pdf: %.tex
-	$(LATEXMK) $(LATEX_OPTS) $<
+$(LATEX_DIR)/%.pdf: $(LATEX_SOURCES)
+	cd $(LATEX_DIR) && $(LATEXMK) $(LATEX_OPTS) $*.tex
 
 # Private build of the full CV that keeps referees' phone numbers. Every
-# published PDF redacts them (see \refphone in main.tex); unredacted.pdf is
-# gitignored and neither CI workflow builds or deploys it. Don't share it.
-unredacted: unredacted.pdf
+# published PDF redacts them (see \refphone in latex/main.tex);
+# latex/unredacted.pdf is gitignored and neither CI workflow builds or deploys
+# it. Don't share it.
+unredacted: $(LATEX_DIR)/unredacted.pdf
 
-# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited main.tex
-# + 1-education.tex etc. remain the source of truth for the printable PDF
+# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited
+# latex/main.tex + its partials remain the source of truth for the printable PDF
 # until you decide to switch over; this is a parallel, regenerable target.
 tex:
 	@$(RUBY) bin/cv tex
@@ -98,7 +101,7 @@ cv-pdf: tex
 	$(LATEXMK) $(LATEX_OPTS) -output-directory=$(BUILD_DIR) $(BUILD_DIR)/cv.tex
 
 # Just the publications LaTeX fragment — useful if you only want to swap
-# the publications section into main.tex.
+# the publications section into latex/main.tex.
 pubs-tex:
 	@$(RUBY) bin/cv pubs:tex $(BUILD_DIR)/publications.tex
 
@@ -114,10 +117,9 @@ deploy-out: md-embed sidebar pdf
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
 	@cp templates/markdown/cv-nav.js            $(DEPLOY_DIR)/cv-nav.js
-	@if [ -f public.pdf ]; then cp public.pdf $(DEPLOY_DIR)/cv.pdf; \
-	else cp main.pdf $(DEPLOY_DIR)/cv.pdf; fi
-	@cp main.pdf                                $(DEPLOY_DIR)/cv-full.pdf
-	@cp one-page-resume.pdf                     $(DEPLOY_DIR)/resume.pdf
+	@cp $(LATEX_DIR)/public.pdf                  $(DEPLOY_DIR)/cv.pdf
+	@cp $(LATEX_DIR)/main.pdf                    $(DEPLOY_DIR)/cv-full.pdf
+	@cp $(LATEX_DIR)/one-page-resume.pdf         $(DEPLOY_DIR)/resume.pdf
 	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv-nav.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
 # ---------------- DBLP refresh ----------------
@@ -135,20 +137,20 @@ test:
 
 # ---------------- Housekeeping ----------------
 clean:
-	$(LATEXMK) -C
+	cd $(LATEX_DIR) && $(LATEXMK) -C
 	rm -rf $(BUILD_DIR)
 
 help:
 	@echo "Targets:"
 	@echo "  make install    install Ruby gems + check the LaTeX toolchain"
-	@echo "  make            build cv.md, cv.html, embed bundle, and both PDFs"
+	@echo "  make            build cv.md, cv.html, embed bundle, and published PDFs"
 	@echo "  make md         build $(BUILD_DIR)/cv.md from YAML+bib"
 	@echo "  make md-embed   build $(BUILD_DIR)/cv-embed.md (no page header) for Jekyll"
 	@echo "  make preview    build cv.html and serve it on http://localhost:$(PORT)"
 	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
 	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js + cv-nav.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
-	@echo "  make unredacted build unredacted.pdf — full CV incl. referees' phone"
+	@echo "  make unredacted build latex/unredacted.pdf — full CV incl. referees' phone"
 	@echo "                  numbers. Private: gitignored, never deployed."
 	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
 	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
