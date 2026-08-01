@@ -1,8 +1,11 @@
-# Dual-publishing CV. YAML drives the web and generated scaffold; handcrafted
-# LaTeX drives the production PDFs:
-#   - build/cv.md     — canonical Markdown (drop into the Jekyll site)
-#   - build/cv.html   — standalone HTML preview (kramdown + minimal CSS)
-#   - latex/*.pdf — handcrafted LaTeX → PDF via lualatex
+# Single-source CV. data/*.yml + personal.bib drive every output:
+#   - build/cv.md         — canonical Markdown (drop into the Jekyll site)
+#   - build/cv.html       — standalone HTML preview (kramdown + minimal CSS)
+#   - build/cv-full.pdf   — full CV (referee phones redacted)
+#   - build/cv-public.pdf — public CV (no references) — the site-root download
+#   - latex/one-page-resume.pdf — the standalone résumé, still hand-written
+#
+# The section files under latex/ are retired; see latex/README.md.
 #
 # `make help` lists every target. Common flows:
 #   make            — build cv.md + cv.html + PDFs
@@ -19,10 +22,17 @@ PORT      ?= 8000
 
 BUILD_DIR  := build
 LATEX_DIR  := latex
-TEX_FILES  := main.tex public.tex one-page-resume.tex
-LATEX_SOURCES := $(wildcard $(LATEX_DIR)/*.tex)
-PDFS       := $(addprefix $(LATEX_DIR)/,$(TEX_FILES:.tex=.pdf))
 DEPLOY_DIR := $(BUILD_DIR)/deploy
+
+# Everything the generated LaTeX is derived from.
+TEX_INPUTS := $(wildcard data/*.yml) personal.bib $(wildcard templates/latex/*.erb) \
+              $(wildcard lib/cv/*.rb)
+# Generated document body + the variant wrappers that \input it.
+GEN_TEX    := $(BUILD_DIR)/cv.tex $(BUILD_DIR)/cv-full.tex \
+              $(BUILD_DIR)/cv-public.tex $(BUILD_DIR)/cv-unredacted.tex
+# The published set: full CV, public CV, and the hand-written one-page résumé.
+PDFS       := $(BUILD_DIR)/cv-full.pdf $(BUILD_DIR)/cv-public.pdf \
+              $(LATEX_DIR)/one-page-resume.pdf
 
 .PHONY: all install gems check-latex md md-embed embed preview sidebar pdf unredacted tex cv-pdf pubs-tex deploy-out test dblp clean help
 
@@ -74,34 +84,41 @@ embed:
 # sidebar download buttons resolve when the preview is served from build/.
 preview: md
 	@$(RUBY) bin/cv preview
-	@if [ -f $(LATEX_DIR)/public.pdf ]; then cp -f $(LATEX_DIR)/public.pdf $(BUILD_DIR)/cv.pdf; \
-	elif [ -f $(LATEX_DIR)/main.pdf ]; then cp -f $(LATEX_DIR)/main.pdf $(BUILD_DIR)/cv.pdf; fi
+	@if [ -f $(BUILD_DIR)/cv-public.pdf ]; then cp -f $(BUILD_DIR)/cv-public.pdf $(BUILD_DIR)/cv.pdf; \
+	elif [ -f $(BUILD_DIR)/cv-full.pdf ]; then cp -f $(BUILD_DIR)/cv-full.pdf $(BUILD_DIR)/cv.pdf; fi
 	@if [ -f $(LATEX_DIR)/one-page-resume.pdf ]; then cp -f $(LATEX_DIR)/one-page-resume.pdf $(BUILD_DIR)/resume.pdf; fi
 	@echo "Serving $(BUILD_DIR)/cv.html at http://localhost:$(PORT)"
 	@cd $(BUILD_DIR) && $(RUBY) -run -e httpd . -p $(PORT)
 
 # ---------------- LaTeX → PDF ----------------
+# All PDFs are generated from data/*.yml. `bin/cv tex` writes the document body
+# (cv.tex) plus the cv-full / cv-public / cv-unredacted wrappers; latexmk runs
+# from inside build/ so each wrapper's \input{cv} resolves.
 pdf: $(PDFS)
-$(LATEX_DIR)/%.pdf: $(LATEX_SOURCES)
-	cd $(LATEX_DIR) && $(LATEXMK) $(LATEX_OPTS) $*.tex
 
-# Private build of the full CV that keeps referees' phone numbers. Every
-# published PDF redacts them (see \refphone in latex/main.tex);
-# latex/unredacted.pdf is gitignored and neither CI workflow builds or deploys
-# it. Don't share it.
-unredacted: $(LATEX_DIR)/unredacted.pdf
-
-# Single-file LaTeX CV scaffolded from data/*.yml. The hand-edited
-# latex/main.tex + its partials remain the source of truth for the printable PDF
-# until you decide to switch over; this is a parallel, regenerable target.
-tex:
+tex: $(GEN_TEX)
+$(GEN_TEX) &: $(TEX_INPUTS)
 	@$(RUBY) bin/cv tex
 
-cv-pdf: tex
-	$(LATEXMK) $(LATEX_OPTS) -output-directory=$(BUILD_DIR) $(BUILD_DIR)/cv.tex
+$(BUILD_DIR)/%.pdf: $(BUILD_DIR)/%.tex $(BUILD_DIR)/cv.tex
+	cd $(BUILD_DIR) && $(LATEXMK) $(LATEX_OPTS) $*.tex
 
-# Just the publications LaTeX fragment — useful if you only want to swap
-# the publications section into latex/main.tex.
+# The one-page résumé is a genuinely different document with no YAML source,
+# so it stays hand-written.
+$(LATEX_DIR)/one-page-resume.pdf: $(LATEX_DIR)/one-page-resume.tex
+	cd $(LATEX_DIR) && $(LATEXMK) $(LATEX_OPTS) one-page-resume.tex
+
+# Private build of the full CV that keeps referees' phone numbers. Every
+# published PDF redacts them (see \refphone in templates/latex/cv.tex.erb);
+# build/cv-unredacted.pdf is gitignored and neither CI workflow builds or
+# deploys it. Don't share it.
+unredacted: $(BUILD_DIR)/cv-unredacted.pdf
+
+# Back-compat alias — cv-full.pdf is the full CV.
+cv-pdf: $(BUILD_DIR)/cv-full.pdf
+
+# Just the publications LaTeX fragment — useful for pasting the publication
+# list into a separate document (a grant bio-sketch, a departmental form).
 pubs-tex:
 	@$(RUBY) bin/cv pubs:tex $(BUILD_DIR)/publications.tex
 
@@ -117,8 +134,8 @@ deploy-out: md-embed sidebar pdf
 	@cp templates/markdown/preview.css          $(DEPLOY_DIR)/cv.css
 	@cp templates/markdown/cv-theme.js          $(DEPLOY_DIR)/cv-theme.js
 	@cp templates/markdown/cv-nav.js            $(DEPLOY_DIR)/cv-nav.js
-	@cp $(LATEX_DIR)/public.pdf                  $(DEPLOY_DIR)/cv.pdf
-	@cp $(LATEX_DIR)/main.pdf                    $(DEPLOY_DIR)/cv-full.pdf
+	@cp $(BUILD_DIR)/cv-public.pdf               $(DEPLOY_DIR)/cv.pdf
+	@cp $(BUILD_DIR)/cv-full.pdf                 $(DEPLOY_DIR)/cv-full.pdf
 	@cp $(LATEX_DIR)/one-page-resume.pdf         $(DEPLOY_DIR)/resume.pdf
 	@echo "staged $(DEPLOY_DIR)/{index.md, cv-sidebar.html, cv.css, cv-theme.js, cv-nav.js, cv.pdf, cv-full.pdf, resume.pdf}"
 
@@ -137,7 +154,7 @@ test:
 
 # ---------------- Housekeeping ----------------
 clean:
-	cd $(LATEX_DIR) && $(LATEXMK) -C
+	cd $(LATEX_DIR) && $(LATEXMK) -C one-page-resume.tex
 	rm -rf $(BUILD_DIR)
 
 help:
@@ -150,10 +167,10 @@ help:
 	@echo "  make sidebar    build $(BUILD_DIR)/cv-sidebar.html (Jekyll include)"
 	@echo "  make embed      cv-embed.md + cv-sidebar.html + cv.css + cv-theme.js + cv-nav.js"
 	@echo "  make pdf        build $(PDFS) via latexmk (requires lualatex)"
-	@echo "  make unredacted build latex/unredacted.pdf — full CV incl. referees' phone"
-	@echo "                  numbers. Private: gitignored, never deployed."
-	@echo "  make tex        scaffold $(BUILD_DIR)/cv.tex from YAML+bib"
-	@echo "  make cv-pdf     scaffold + compile $(BUILD_DIR)/cv.pdf"
+	@echo "  make unredacted build $(BUILD_DIR)/cv-unredacted.pdf — full CV incl. referees'"
+	@echo "                  phone numbers. Private: gitignored, never deployed."
+	@echo "  make tex        render $(BUILD_DIR)/cv.tex (+ variant wrappers) from YAML+bib"
+	@echo "  make cv-pdf     alias for $(BUILD_DIR)/cv-full.pdf"
 	@echo "  make pubs-tex   regenerate publications.tex from YAML+bib"
 	@echo "  make deploy-out stage embed bundle + PDFs for cycomachead.github.io/cv/"
 	@echo "  make test       run the minitest suite"

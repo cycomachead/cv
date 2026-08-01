@@ -30,8 +30,15 @@ module CV
         v.nil? || v.to_s.empty? ? nil : clean(v.to_s)
       end
 
+      # ACM's exported records tag non-archival items with a trailing
+      # "(Abstract Only)". It's an artifact of the DL export, not part of the
+      # work's title, and the CV never wants to publish it — so drop it here,
+      # once, for every output. A trailing colon left behind by
+      # "…Curriculum: (Abstract Only)" goes with it.
+      ABSTRACT_ONLY = /\s*:?\s*\(\s*Abstract\s+Only\s*\)\s*\z/i
+
       def title
-        clean(@entry.title.to_s)
+        clean(@entry.title.to_s).sub(ABSTRACT_ONLY, '')
       end
 
       def authors

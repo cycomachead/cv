@@ -77,4 +77,79 @@ class LatexBuildTest < Minitest::Test
       assert_includes tex, '\subsection{Conference and Workshop Presentations}'
     end
   end
+
+  # The PDFs are built from the wrappers, not from cv.tex directly, so a
+  # missing wrapper breaks `make pdf` and the deploy.
+  def test_writes_variant_wrappers_next_to_the_body
+    Dir.mktmpdir do |dir|
+      CV::Latex.build(output: File.join(dir, 'cv.tex'))
+
+      full = File.read(File.join(dir, 'cv-full.tex'), encoding: 'UTF-8')
+      assert_includes full, '\input{cv}'
+      refute_includes full, '\def\publicversion'
+      refute_includes full, '\def\unredacted'
+
+      public_tex = File.read(File.join(dir, 'cv-public.tex'), encoding: 'UTF-8')
+      assert_includes public_tex, '\def\publicversion{1}'
+      assert_includes public_tex, '\input{cv}'
+
+      unredacted = File.read(File.join(dir, 'cv-unredacted.tex'), encoding: 'UTF-8')
+      assert_includes unredacted, '\def\unredacted{1}'
+      assert_includes unredacted, '\input{cv}'
+    end
+  end
+
+  # public.pdf is served at the site root, so it must not carry referee
+  # contact details at all — not even redacted ones.
+  def test_public_variant_replaces_the_referee_list
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      assert_includes tex, '\ifdefined\publicversion'
+      assert_includes tex, '\cvitem{}{References available upon request.}'
+    end
+  end
+
+  # moderncv can render ORCID and LinkedIn, but LinkedIn is web-only by
+  # decision; the faculty page / DBLP / Snap! links have no \social type.
+  def test_emits_only_the_supported_profile_socials
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      assert_includes tex, '\social[github]{cycomachead}'
+      assert_includes tex, '\social[orcid]{0000-0002-7036-3902}'
+      refute_includes tex, '\social[linkedin]'
+    end
+  end
+
+  # The phone number lives on the PDF only; templates/markdown/cv.md.erb
+  # deliberately never renders it.
+  def test_phone_is_rendered_on_the_pdf
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      assert_includes tex, "\\phone[mobile]{#{CV::Data.load.basics['phone']}}"
+    end
+  end
+
+  # The handcrafted documents bolded the author's own name via the \me macro;
+  # the generated ones must too, and only his.
+  def test_bolds_own_name_in_author_lists
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      assert_includes tex, '\textbf{Ball, Michael}; Garcia, Daniel'
+      refute_includes tex, '\textbf{Garcia, Daniel}'
+    end
+  end
+
+  # `date:` carries the precise conference date; `year:` is the fallback.
+  def test_publication_dates_are_preferred_over_bare_years
+    Dir.mktmpdir do |dir|
+      tex = File.read(CV::Latex.build(output: File.join(dir, 'cv.tex')),
+                      encoding: 'UTF-8')
+      assert_includes tex, 'Olot, Spain, May 6–13, 2026.'
+      refute_includes tex, 'Olot, Spain, 2026.'
+    end
+  end
 end

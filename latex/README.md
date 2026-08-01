@@ -1,36 +1,38 @@
-# Handcrafted LaTeX documents
-
-This directory contains all hand-maintained LaTeX source for the printable CV
-and résumé.
+# LaTeX documents
 
 ## Status
 
-There are currently two LaTeX paths in this repository:
+**Only `one-page-resume.tex` is live.** Every other `.tex` file here is
+**retired** — each one carries a `% RETIRED` header on line 1. They are kept
+for reference (the original hand-written wording is often longer than what the
+YAML carries), but they no longer feed any published PDF. Editing them changes
+nothing.
 
 | Path | Status | Output |
 |---|---|---|
-| `latex/*.tex` | Production source for the PDFs published by CI | `latex/main.pdf`, `latex/public.pdf`, `latex/one-page-resume.pdf` |
-| `templates/latex/*.erb` | Experimental, generated from `data/*.yml` and `personal.bib` | `build/cv.tex`, `build/cv.pdf` |
+| `templates/latex/*.erb` + `data/*.yml` | Source for the published CV PDFs | `build/cv-full.pdf`, `build/cv-public.pdf` |
+| `latex/one-page-resume.tex` | Live, hand-written — no YAML source | `latex/one-page-resume.pdf` |
+| everything else in `latex/` | Retired; reference only | — |
 
-The generated document is useful as a scaffold, but it does not replace this
-directory yet. Changes to YAML do not automatically update the handcrafted
-documents, so content that must appear in a published PDF may need a matching
-edit here.
+To change the CV, edit `data/*.yml`. See the repository
+[README](../README.md#the-latex--pdf-path).
 
-`personal.bib` remains at the repository root because it is shared by the YAML
-renderer and the optional BibTeX helpers in this directory.
+`personal.bib` lives at the repository root because it is shared by the
+Markdown and LaTeX renderers.
 
 ## Entry points
 
-- `main.tex` builds the full CV. Referee phone numbers are redacted by default.
-- `public.tex` wraps `main.tex` and replaces the references section with
-  “References available upon request.” This becomes the primary public
-  download.
-- `one-page-resume.tex` builds the standalone résumé.
-- `unredacted.tex` wraps `main.tex` and includes referee phone numbers. Its PDF
-  is private, gitignored, and never built or deployed by CI.
-- The numbered files and named section files are fragments included by
-  `main.tex`; they are not standalone documents.
+The generated document body is `build/cv.tex`, with three wrappers that
+`\input` it:
+
+- `build/cv-full.tex` — the full CV. Referee phone numbers are redacted by
+  default via `\refphone`.
+- `build/cv-public.tex` — defines `\publicversion`, which replaces the
+  references section with “References available upon request.” This is the
+  primary public download.
+- `build/cv-unredacted.tex` — defines `\unredacted` and includes referee phone
+  numbers. Its PDF is private, gitignored, and never built or deployed by CI.
+- `latex/one-page-resume.tex` builds the standalone résumé.
 
 ## Build
 
@@ -39,7 +41,7 @@ and options:
 
 ```sh
 make pdf          # public CV, full redacted CV, and one-page résumé
-make unredacted   # private latex/unredacted.pdf
+make unredacted   # private build/cv-unredacted.pdf
 make check-latex  # check for latexmk and lualatex
 ```
 
@@ -47,12 +49,11 @@ The build requires `latexmk`, LuaLaTeX, `moderncv`, `fontspec`, and Source Sans
 3 (or the older Source Sans Pro name). Generated PDFs and LaTeX intermediates
 remain inside this directory and are ignored by Git.
 
-To exercise the generated YAML path instead, use `make tex` or `make cv-pdf`;
-those commands write under `build/`.
+`make tex` renders the LaTeX without compiling it.
 
 ## Privacy
 
-Do not publish `latex/unredacted.pdf`. It includes third-party contact
-information from `references.tex`. Both CV PDFs deployed by CI redact those
-phone numbers: `public.pdf` omits the referee list, and `main.pdf` suppresses
-the numbers through `\refphone`.
+Do not publish `build/cv-unredacted.pdf`. It includes third-party contact
+information from `data/references.yml`. Both CV PDFs deployed by CI redact
+those phone numbers: `cv-public.pdf` omits the referee list entirely, and
+`cv-full.pdf` suppresses the numbers through `\refphone`.

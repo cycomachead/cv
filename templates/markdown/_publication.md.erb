@@ -23,7 +23,10 @@
     title_part = "_#{h(t)}_"
     title_part += " (#{h(item['kind'])})" if item['kind']
     parts << title_part
-    parts << "#{h(venue)}#{year ? ", #{year}" : ''}" if venue
+    # `date` is the precise "May 6–13, 2026" / "March 2024" string when we have
+    # one; `year` is the fallback for entries recorded only to the year.
+    when_ = item['date'] || year
+    parts << "#{h(venue)}#{when_ ? ", #{h(when_)}" : ''}" if venue
     parts << link(url) if url
     out = parts.join('. ') + '.'
   end

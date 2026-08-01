@@ -17,31 +17,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # latex/main.tex uses \usepackage{fontspec} + Source Sans 3 (né Source Sans
-      # Pro), which requires lualatex (or xelatex). The fonts ship with TeX
-      # Live itself (the sourcesanspro package), so no extra system font
-      # packages are needed — and the Debian-style fonts-* names don't exist
-      # in the action's Alpine image anyway.
-      - name: Build full CV (latex/main.tex)
+      # The CV PDFs are generated from data/*.yml, so Ruby has to run before
+      # LaTeX: `rake tex:build` writes build/cv.tex plus the cv-full /
+      # cv-public / cv-unredacted wrappers that \input it.
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Render LaTeX from YAML
+        run: bundle exec rake tex:build
+
+      # The generated document uses \usepackage{fontspec} + Source Sans 3 (né
+      # Source Sans Pro), which requires lualatex (or xelatex). The fonts ship
+      # with TeX Live itself (the sourcesanspro package), so no extra system
+      # font packages are needed — and the Debian-style fonts-* names don't
+      # exist in the action's Alpine image anyway.
+      - name: Build full CV
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: latex/main.tex
+          root_file: build/cv-full.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
+      # cv-public.pdf is deployed as the site-root download — build it here too
+      # so a PR can't break it and only fail later in deploy.yml.
+      - name: Build public CV
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: build/cv-public.tex
+          work_in_root_file_dir: true
+          latexmk_use_lualatex: true
+
+      # The one-page résumé has no YAML source and stays hand-written.
       - name: Build one-page resume
         uses: xu-cheng/latex-action@v3
         with:
           root_file: latex/one-page-resume.tex
-          work_in_root_file_dir: true
-          latexmk_use_lualatex: true
-
-      # latex/public.tex is deployed as the default cv.pdf download — build it here
-      # too so a PR can't break it and only fail later in deploy.yml.
-      - name: Build public CV
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: latex/public.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
@@ -50,7 +62,7 @@ jobs:
       - name: Print LaTeX logs on failure
         if: failure()
         run: |
-          for f in latex/*.log; do
+          for f in build/*.log latex/*.log; do
             [ -e "$f" ] || continue
             echo "::group::$f"
             cat "$f"
@@ -62,7 +74,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: "latex/*.log"
+          path: |
+            build/*.log
+            latex/*.log
           if-no-files-found: ignore
           retention-days: 7
 
@@ -71,8 +85,8 @@ jobs:
         with:
           name: cv-pdfs
           path: |
-            latex/main.pdf
-            latex/public.pdf
+            build/cv-full.pdf
+            build/cv-public.pdf
             latex/one-page-resume.pdf
           if-no-files-found: error
           retention-days: 90

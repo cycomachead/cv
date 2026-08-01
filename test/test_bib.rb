@@ -17,6 +17,18 @@ class BibTest < Minitest::Test
       title = "A Title",
       year = 2020,
     }
+
+    @inproceedings{abstract_only_2018,
+      title  = {Some {Talk} ({Abstract} {Only})},
+      author = {Ball, Michael},
+      year   = {2018},
+    }
+
+    @inproceedings{abstract_only_colon_2016,
+      title  = {Some {Workshop}: ({Abstract} {Only})},
+      author = {Ball, Michael},
+      year   = {2016},
+    }
   BIB
 
   def setup
@@ -24,8 +36,26 @@ class BibTest < Minitest::Test
   end
 
   def test_parses_entries
-    assert_equal 2, @bib.entries.size
-    assert_equal %w[ball_test_2024 plain_2020], @bib.keys
+    assert_equal 4, @bib.entries.size
+    assert_equal %w[ball_test_2024 plain_2020 abstract_only_2018
+                    abstract_only_colon_2016], @bib.keys
+  end
+
+  # ACM tags non-archival items "(Abstract Only)" in its DL export. That's an
+  # export artifact, not part of the title, and never gets published.
+  def test_strips_acm_abstract_only_tag_from_title
+    assert_equal 'Some Talk', @bib['abstract_only_2018'].title
+  end
+
+  def test_strips_abstract_only_tag_with_dangling_colon
+    assert_equal 'Some Workshop', @bib['abstract_only_colon_2016'].title
+  end
+
+  def test_no_published_bib_entry_leaks_the_abstract_only_tag
+    titles = CV::Bib.load.entries.map(&:title)
+    assert titles.any?, 'expected personal.bib to contain entries'
+    refute(titles.any? { |t| t.match?(/abstract\s+only/i) },
+           'an (Abstract Only) tag survived into a rendered title')
   end
 
   def test_lookup_by_key

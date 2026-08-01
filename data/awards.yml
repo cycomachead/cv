@@ -15,6 +15,17 @@
     pursuing a degree with demonstrated academic effort. Established by the
     UC Berkeley Computer Science Division to honor the memory of Professor
     Eugene L. Lawler.
+  # Long form, from the handcrafted latex/5-awards.tex. Swap it into
+  # `summary:` above if the fuller wording is ever wanted.
+  # summary: >-
+  #   The Lawler Prize honors computer science undergraduates from
+  #   disadvantaged groups (such as the disabled community and ethnic
+  #   minorities) or a person who has surmounted unusual difficulties in
+  #   pursuing a degree with demonstrated academic effort. This prize was
+  #   established by the UC Berkeley Computer Science Division to honor the
+  #   memory of colleague, Professor Eugene L. Lawler, who was an
+  #   internationally recognized expert in mathematical theories of scheduling
+  #   and resource allocation.
   url:     "https://www2.eecs.berkeley.edu/Students/Awards/#11"
 
 - when:    2015
@@ -24,4 +35,12 @@
     Selected from the top 9% of UC Berkeley EE/CS GSIs and group tutors. The
     department selects one top EE and one top CS GSI for the award each
     year.
+  # Long form, from the handcrafted latex/5-awards.tex.
+  # summary: >-
+  #   Faculty nominate the top nine percent of UC Berkeley EE or CS GSIs and
+  #   Group Tutors from the semesters of the previous calendar year. From
+  #   these, the EECS Student Awards committee selects one top EE and one CS
+  #   GSI for the departmental award. Because EECS is a large department with
+  #   about 180 GSIs per semester, it is a great honor to be selected as an
+  #   Outstanding GSI.
   url:     "https://www2.eecs.berkeley.edu/Students/Awards/#13"

@@ -19,6 +19,9 @@ This is Michael Ball's CV repo. Content lives in `data/*.yml` plus `personal.bib
    - Date ranges: quoted with an en-dash, e.g. `"2024–2025"` (not `-`).
    - Quoted strings: quote any value containing `:`, `!`, `#`, leading/trailing whitespace, or that starts with a digit.
    - `personal.bib` is the source of truth for a real conference paper; `data/publications.yml` references it via `bib: <key>`. For one-off talks, posters, BoFs, etc., inline the entry under the right group.
+   - Publication `venue:` carries the **full** proceedings title (`"SIGCSE 2026: Proceedings of the 57th ACM Technical Symposium on Computer Science Education V. 2"`), not the short conference name.
+   - `date:` is the precise display string (`"May 6–13, 2026"`, `"March 2024"`) and wins over `year:`. Ask for it; fall back to `year:` alone only when the exact date genuinely isn't known.
+   - Don't write `(Abstract Only)` anywhere — `lib/cv/bib.rb` strips ACM's version of that tag automatically.
 6. **Never commit.** Michael commits on his own. Build and show what changed; don't `git commit`.
 
 ## Workflow
@@ -100,7 +103,7 @@ For the chosen section, do this:
 
 4. **Cross-check external sources** when relevant (ask Michael first if he wants to):
    - `make dblp` — refreshes `dblp.bib` for new conference papers indexed at DBLP. Diff against `personal.bib` and surface unmatched entries as candidates.
-   - `git log -- latex/6-publications-*.tex` and `personal.bib` for items that might already exist in BibTeX but haven't been linked from `data/publications.yml`.
+   - `git log -- personal.bib` for items that already exist in BibTeX but haven't been linked from `data/publications.yml`. The retired `latex/6-publications-*.tex` files are also worth grepping — they still hold TODO comments and candidate URLs.
    - `TODO.md` lines tagged with the current section.
 
 ### 4. Edit
@@ -120,13 +123,13 @@ Once Michael confirms a new entry:
 ### 6. Verify
 
 - Run `make test` (fast, ~26 tests) to make sure schema changes didn't break the renderer.
-- Run `make` to rebuild `cv.md`, `cv.html`, and the PDFs. Surface any LaTeX warnings.
+- Run `make md` and `make pdf` to rebuild the Markdown and the PDFs. Surface any LaTeX warnings. (Don't run bare `make` — it chains `preview`, which blocks on an HTTP server.)
 - Show a concise diff summary: which files changed and which sections gained/lost entries. Do **not** commit — Michael commits on his own.
 
 ## What this skill does NOT do
 
 - Style or formatting overhauls (e.g., "make all author names First-Last") — those are tracked separately in `TODO.md`'s style section.
-- LaTeX template edits in `templates/latex/` or in the handcrafted `latex/*.tex` files — out of scope for an interview-based update pass.
+- LaTeX template edits in `templates/latex/` — out of scope for an interview-based update pass. Never edit the retired `latex/*.tex` section files at all; they no longer feed any output.
 - Inventing co-authors, DOIs, dates, amounts, or URLs from memory or web searches without confirmation.
 
 ## Quick reference: file → ask about

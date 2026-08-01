@@ -127,5 +127,14 @@ module CV
         a == bold_self ? "**#{rendered}**" : rendered
       end.join('; ')
     end
+
+    # LaTeX form. Mirrors the `\me` macro the handcrafted documents used, so
+    # the author's own name stays bold in every published PDF.
+    def authors_to_latex(authors, bold_self: 'Ball, Michael')
+      Array(authors).map do |a|
+        rendered = to_latex(a)
+        a == bold_self ? "\\textbf{#{rendered}}" : rendered
+      end.join('; ')
+    end
   end
 end
