@@ -34,29 +34,46 @@ jobs:
             exit 1
           fi
 
-      # ---------- 1. Build PDFs from LaTeX ----------
+      # ---------- 1. Render LaTeX + PDFs from YAML ----------
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec rake test
+
+      # Every CV PDF is generated from data/*.yml, so this has to run before
+      # LaTeX. It writes build/cv.tex plus the cv-full / cv-public /
+      # cv-unredacted wrappers that \input it. cv-unredacted is never compiled
+      # here — it carries referees' phone numbers and stays private.
+      - name: Render LaTeX from YAML
+        run: bundle exec rake tex:build
+
       # The Source Sans 3 fonts ship with TeX Live itself (the sourcesanspro
       # package), so no extra system font packages are needed — the
       # Debian-style fonts-* names don't exist in the action's Alpine image.
-      - name: Build full CV (latex/main.tex)
+      - name: Build full CV
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: latex/main.tex
+          root_file: build/cv-full.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
+      # cv-public.tex sets \publicversion, which swaps the referee list for
+      # "References available upon request" — this is the site-root download.
+      - name: Build public CV
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: build/cv-public.tex
+          work_in_root_file_dir: true
+          latexmk_use_lualatex: true
+
+      # The one-page résumé has no YAML source and stays hand-written.
       - name: Build one-page resume
         uses: xu-cheng/latex-action@v3
         with:
           root_file: latex/one-page-resume.tex
-          work_in_root_file_dir: true
-          latexmk_use_lualatex: true
-
-      # latex/public.tex is a wrapper that excludes references for the public site.
-      - name: Build public CV
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: latex/public.tex
           work_in_root_file_dir: true
           latexmk_use_lualatex: true
 
@@ -65,7 +82,7 @@ jobs:
       - name: Print LaTeX logs on failure
         if: failure()
         run: |
-          for f in latex/*.log; do
+          for f in build/*.log latex/*.log; do
             [ -e "$f" ] || continue
             echo "::group::$f"
             cat "$f"
@@ -77,18 +94,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: latex-logs
-          path: "latex/*.log"
+          path: |
+            build/*.log
+            latex/*.log
           if-no-files-found: ignore
           retention-days: 7
 
       # ---------- 2. Build cv.md from YAML+bib ----------
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-
-      - name: Run tests
-        run: bundle exec rake test
 
       - name: Render cv-embed.md + sidebar fragment + assets
         run: bundle exec rake site:embed
@@ -116,9 +128,9 @@ jobs:
           cp build/cv.css              _deploy/cv/cv.css
           cp build/cv-theme.js         _deploy/cv/cv-theme.js
           cp build/cv-nav.js           _deploy/cv/cv-nav.js
-          cp latex/main.pdf            _deploy/cv/cv-full.pdf
+          cp build/cv-full.pdf         _deploy/cv/cv-full.pdf
           cp latex/one-page-resume.pdf _deploy/cv/resume.pdf
-          cp latex/public.pdf          _deploy/michael-ball-cv.pdf
+          cp build/cv-public.pdf       _deploy/michael-ball-cv.pdf
           find _deploy -type f | sort
 
       # ---------- 4. Push to cycomachead/cycomachead.github.io ----------

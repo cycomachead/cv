@@ -64,15 +64,22 @@
 
 % Personal data
 \name{<%= h(data.basics['name'].split(' ').first) %>}{<%= h(data.basics['name'].split(' ', 2).last) %>}
-\title{<%= h(data.basics['title']) %>}
+\title{<%= h(data.basics['pdf_title'] || data.basics['title']) %>}
 \address{<%= h(data.basics['address']) %>}{}
+<%- if data.basics['phone'] -%>
+\phone[mobile]{<%= h(data.basics['phone']) %>}
+<%- end -%>
 \email{<%= h(data.basics['email']) %>}
 \homepage{<%= data.basics['homepage'] %>}
+<%# Only the profiles moderncv can render as a \social get an icon here.
+    LinkedIn is supported by moderncv but is intentionally web-only, so it is
+    not in this map. Faculty page / DBLP / Snap! have no moderncv equivalent. -%>
 <%- (data.basics['profiles'] || []).each do |p| -%>
-<%- if p['kind'] == 'github' -%>
-\social[github]{<%= h(p['url'].sub(%r{^https?://github\.com/}, '')) %>}
-<%- elsif p['kind'] == 'linkedin' -%>
-\social[linkedin]{<%= h(p['url'].sub(%r{^https?://(?:www\.)?linkedin\.com/in/}, '').chomp('/')) %>}
+<%- case p['kind'] -%>
+<%- when 'github' -%>
+\social[github]{<%= h(p['url'].sub(%r{^https?://github\.com/}, '').chomp('/')) %>}
+<%- when 'orcid' -%>
+\social[orcid]{<%= h(p['url'].sub(%r{^https?://orcid\.org/}, '').chomp('/')) %>}
 <%- end -%>
 <%- end -%>
 
@@ -234,8 +241,14 @@
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% References %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The public PDF (build/cv-public.tex) is served at mball.co/michael-ball-cv.pdf,
+% so it must not carry the referees' names, emails, or phone numbers at all.
+% The full PDF lists names/titles/emails but redacts phones via \refphone.
 \section{References}
 \vspace{6pt}
+\ifdefined\publicversion
+\cvitem{}{References available upon request.}
+\else
 <%- refs = data.references; refs.each_slice(2) do |a, b| -%>
 \cvlistdoubleitem{
     <%= h(a['name']) %><%= a['title'] ? "\\newline #{h(a['title'])}" : '' %><%= a['email'] ? "\\newline #{h(a['email'])}" : '' %><%= a['phone'] ? "\\refphone{#{h(a['phone'])}}" : '' %>
@@ -244,6 +257,7 @@
 }
 \vspace{4pt}
 <% end -%>
+\fi
 
 \emptysection{}\closesection
 \vfill

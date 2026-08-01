@@ -35,7 +35,7 @@ module CV
       def authors(list)
         case @format
         when :markdown then CV::Macros.authors_to_md(list)
-        when :latex    then list.map { |a| CV::Macros.to_latex(a) }.join('; ')
+        when :latex    then CV::Macros.authors_to_latex(list)
         else list.join('; ')
         end
       end

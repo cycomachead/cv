@@ -40,7 +40,10 @@
     body << h(title)
     body << " (#{h(item['kind'])})" if item['kind']
     body << '.'
-    body << "\n    \\newline #{h(venue)}#{year ? ", #{year}" : ''}." if venue
+    # `date` is the precise "May 6–13, 2026" / "March 2024" string when we have
+    # one; `year` is the fallback for entries recorded only to the year.
+    when_ = item['date'] || year
+    body << "\n    \\newline #{h(venue)}#{when_ ? ", #{h(when_)}" : ''}." if venue
     body << "\n    \\newline #{link(url, url)}" if url
   end
 -%>

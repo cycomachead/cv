@@ -1,19 +1,20 @@
 # cv
 
-Source for Michael Ball's CV, maintained in three output forms:
+Source for Michael Ball's CV. **`data/*.yml` + `personal.bib` are the single
+source of truth** — every output below is generated from them:
 
-- **Markdown** (`build/cv.md`) — canonical, drops into the Jekyll site at
+- **Markdown** (`build/cv.md`) — drops into the Jekyll site at
   [cycomachead.github.io/cv](https://cycomachead.github.io/cv/)
 - **HTML preview** (`build/cv.html`) — kramdown-rendered standalone for local
   review; mirrors what the deployed Jekyll site will produce
-- **LaTeX → PDF** (`latex/main.pdf`, `latex/public.pdf`,
-  `latex/one-page-resume.pdf`) — handcrafted moderncv documents in
-  [`latex/`](latex/README.md), kept for the printable CV
+- **LaTeX → PDF** (`build/cv-full.pdf`, `build/cv-public.pdf`) — moderncv
+  documents rendered from `templates/latex/cv.tex.erb`
 
-The YAML data drives the Markdown/HTML outputs and the experimental generated
-LaTeX scaffold. The PDFs published by CI still come from the separate,
-handcrafted `latex/*.tex` files; keeping those documents in sync is currently
-manual. Both paths can use publication records from `personal.bib`.
+The one exception is `latex/one-page-resume.tex`, a genuinely different
+document with no YAML source, which stays hand-written. Everything else under
+[`latex/`](latex/README.md) is **retired** — those files are kept for
+reference only and no longer feed any published PDF. Editing them changes
+nothing; edit `data/*.yml` instead.
 
 ## Quick start
 
@@ -37,14 +38,19 @@ PDF builds need `lualatex` (`latexmk -lualatex`) and the
 
 ## Authoring
 
-Web and generated-scaffold content lives in `data/*.yml`. Each file is loaded
-by name (`data.basics`, `data.education`, `data.publications`, …) and consumed
-by `templates/markdown/cv.md.erb`. Published PDF content remains separately
-handcrafted under `latex/`.
+All content lives in `data/*.yml`. Each file is loaded by name (`data.basics`,
+`data.education`, `data.publications`, …) and consumed by both
+`templates/markdown/cv.md.erb` (web) and `templates/latex/cv.tex.erb` (PDF).
+One edit updates every output.
 
 - **`basics.yml`** — name, title, contact, profile links (faculty page,
   GitHub, DBLP, ORCID, LinkedIn, Snap!), plus four reusable bios under
-  `bio:` in Markdown:
+  `bio:` in Markdown. Two fields are output-specific by design: `phone` is
+  rendered on the PDF only (the web CV never prints a number), and `pdf_title`
+  sets the PDF masthead independently of the web CV's subtitle. Of the
+  profile links, only GitHub and ORCID reach the PDF — moderncv has no
+  `\social` type for the faculty page, DBLP, or Snap!, and LinkedIn is
+  web-only by choice. The bios are:
   - `oneline` — one sentence, no links (Twitter / signatures)
   - `short`   — 2–3 sentences with a couple of links (top of the web CV)
   - `medium`  — paragraph (talk intros, grant applications)
@@ -53,14 +59,29 @@ handcrafted under `latex/`.
 - **Add a publication**: edit `data/publications.yml`. Items are one of:
   - `{ bib: <key>, kind?: ..., venue_override?: ..., url?: ... }` — pulls
     authors/title/venue/year from `personal.bib`
-  - `{ authors: [...], title, kind?, venue, url?, year? }` — fully inline
+  - `{ authors: [...], title, kind?, venue, url?, date?, year? }` — fully inline
   - `{ text: "..." }` — free-form Markdown for entries that don't fit a schema
+
+  `date:` is the precise, display-ready string (`"May 6–13, 2026"`,
+  `"March 2024"`) and wins over `year:` when both are set. Use `year:` alone
+  when only the year is known. `venue:` should carry the full proceedings
+  title (`"SIGCSE 2026: Proceedings of the 57th ACM Technical Symposium on
+  Computer Science Education V. 2"`), not the short conference name.
+
+  ACM's DL export tags non-archival items `(Abstract Only)` inside the
+  `title` field. `lib/cv/bib.rb` strips that automatically — leave it in
+  `personal.bib` (it keeps the record faithful) and don't repeat it as a
+  `kind:`.
 - **Reorder publications**: just reorder the array in `data/publications.yml`.
   Set `reverse: true` on a group to render it as a reverse-numbered list
   (matches the LaTeX `etaremune` style).
 - **Add a section**: drop a YAML file under `data/`, add a heading + ERB
-  block in `templates/markdown/cv.md.erb`. (For repeated patterns, factor a
-  partial into `templates/markdown/_*.md.erb`.)
+  block in `templates/markdown/cv.md.erb` *and* `templates/latex/cv.tex.erb`.
+  (For repeated patterns, factor a partial into `templates/markdown/_*.md.erb`.)
+- **Long-form alternates**: several awards, grants, and the thesis carry a
+  fuller description commented out beneath the live `summary:`. Those are the
+  original wordings from the retired handcrafted LaTeX; swap one in by
+  uncommenting it and deleting the short version.
 
 ### Inline conventions
 
@@ -94,12 +115,14 @@ across Markdown, HTML, and LaTeX:
 - **Heading font**: `preview.css` `@import`s Source Serif 4 from Google
   Fonts and applies it to `.cv-content h1`–`h6` via `--cv-heading-font`.
   Body copy stays on the system sans stack.
-- **References**: the Markdown output is the *public* web CV, so its
-  References section is only ever "References available upon request".
-  `data/references.yml` feeds the generated scaffold.
-  `latex/references.tex` holds the handcrafted document's real contact details;
-  `latex/public.pdf` swaps in
-  `latex/references-public.tex`, which carries the same placeholder.
+- **References**: `data/references.yml` is the only copy of the referee list.
+  Three different renderings come out of it, by design:
+  - the Markdown / web CV shows only "References available upon request"
+  - `build/cv-public.pdf` (the site-root download) does the same, via
+    `\publicversion`
+  - `build/cv-full.pdf` lists names, titles, and emails, but suppresses phone
+    numbers via `\refphone` — only `build/cv-unredacted.pdf` includes those,
+    and it is gitignored and never deployed
 
 ## Refreshing publications from DBLP
 
@@ -111,22 +134,29 @@ make dblp DBLP_URL=<other>     # override the profile URL
 Manually merge interesting entries into `personal.bib`. We don't pull
 `dblp.bib` directly into the build because DBLP keys are unstable.
 
-## Regenerating the LaTeX CV from YAML
-
-There are two LaTeX paths:
+## The LaTeX / PDF path
 
 ```sh
-make tex            # build/cv.tex — single-file scaffold from data/*.yml + personal.bib
-make cv-pdf         # build/cv.pdf — same, then compile via lualatex
+make pdf            # every published PDF
+make tex            # just the LaTeX: build/cv.tex + the variant wrappers
+make unredacted     # build/cv-unredacted.pdf — private, includes referee phones
 make pubs-tex       # build/publications.tex — just the publications subsection
 ```
 
-The scaffold (`templates/latex/cv.tex.erb`) mirrors the moderncv preamble
-in `latex/main.tex` and emits `\cventry`, `\cvline`, etc. for every section
-from YAML. Treat it as a starting point — the handcrafted files in `latex/`
-remain the production source for printable PDFs until the generated path is
-ready to replace them. See [`latex/README.md`](latex/README.md) for entry
-points, build requirements, and privacy notes.
+`templates/latex/cv.tex.erb` emits `\cventry`, `\cvline`, etc. for every
+section in `data/*.yml`. `bin/cv tex` writes the document body to
+`build/cv.tex` plus three one-line wrappers that `\input` it, each selecting a
+variant:
+
+| Wrapper                  | Defines           | Output                    | Published as |
+|--------------------------|-------------------|---------------------------|--------------|
+| `build/cv-full.tex`      | —                 | `build/cv-full.pdf`       | `cv/cv-full.pdf` |
+| `build/cv-public.tex`    | `\publicversion`  | `build/cv-public.pdf`     | root `michael-ball-cv.pdf` |
+| `build/cv-unredacted.tex`| `\unredacted`     | `build/cv-unredacted.pdf` | never — private |
+
+latexmk runs from inside `build/` so each wrapper's `\input{cv}` resolves.
+See [`latex/README.md`](latex/README.md) for build requirements and privacy
+notes.
 
 Special-character escaping (`&`, `%`, `$`, `#`, `_`) happens automatically
 in `lib/cv/macros.rb#to_latex`, so a grant amount like `$50,000` or a
@@ -135,14 +165,14 @@ title containing `&` renders correctly.
 ## Project layout
 
 ```
-data/                        # YAML content for web output + generated LaTeX scaffold
+data/                        # YAML content — the single source of truth
 personal.bib                 # citation database (manual + future DBLP imports)
 lib/cv/                      # Ruby: macros, bib (bibtex-ruby shim), data, renderer, markdown, latex, preview
 templates/markdown/          # cv.md.erb + 1 partial + preview shell + preview.css
                              #   + sidebar.html.erb, cv-theme.js, cv-nav.js
-templates/latex/             # cv.tex.erb (full scaffold) + publications.tex.erb (fragment)
+templates/latex/             # cv.tex.erb (drives the PDFs) + publications.tex.erb (fragment)
 test/                        # minitest suite (`make test`)
-latex/                       # handcrafted moderncv documents (drive the PDFs)
+latex/                       # one-page-resume.tex (live) + retired handcrafted sources
 site/                        # static landing page (legacy; not part of the deploy)
 .github/workflows/           # CI (build-cv.yml) and deploy (deploy.yml)
 ```
@@ -169,8 +199,8 @@ Two workflows:
   | `build/cv.css`          | `cv/cv.css`                                |
   | `build/cv-theme.js`     | `cv/cv-theme.js`                           |
   | `build/cv-nav.js`       | `cv/cv-nav.js` (TOC scroll spy)            |
-  | `latex/public.pdf`          | `michael-ball-cv.pdf` (site root — the public download; references withheld) |
-  | `latex/main.pdf`            | `cv/cv-full.pdf`                           |
+  | `build/cv-public.pdf`       | `michael-ball-cv.pdf` (site root — the public download; references withheld) |
+  | `build/cv-full.pdf`         | `cv/cv-full.pdf`                           |
   | `latex/one-page-resume.pdf` | `cv/resume.pdf`                            |
 
   The `cv-sidebar.html` "Download CV (PDF)" button links to the root

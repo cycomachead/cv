@@ -1,17 +1,26 @@
 name:     Michael Ball
 title:    Continuing Lecturer, UC Berkeley EECS & Data Science
+# Masthead line on the PDF, beside the name. Kept separate from `title` so the
+# web CV can carry the job title while the PDF keeps the document name it has
+# always used. Set to the same value as `title` if you'd rather they match.
+pdf_title: Curriculum Vitae
 address:  San Francisco, CA
 email:    ball@berkeley.edu
 homepage: https://mball.co
 
+# Rendered on the PDF only (moderncv \phone). The web CV never prints a phone
+# number — templates/markdown/cv.md.erb deliberately ignores this field.
+phone:    "(909) 993-3988"
+
 # Profile links shown in the contact line. Order matters; reorder freely.
-# Each entry needs `label` (display text) and `url`. The `kind` is optional
-# metadata for future use (e.g. icons in the deployed Jekyll layout).
+# Each entry needs `label` (display text) and `url`. `kind` selects the icon
+# on the PDF: templates/latex/cv.tex.erb maps `github` and `orcid` onto
+# moderncv's \social types. Everything else (faculty page, DBLP, Snap!) has no
+# moderncv equivalent, and LinkedIn is intentionally web-only.
 profiles:
   - label: Faculty page
     kind:  faculty
-    # TODO: replace with the canonical Berkeley EECS / Data Science URL
-    url:   https://www2.eecs.berkeley.edu/Faculty/Homepages/ball.html
+    url:   https://www2.eecs.berkeley.edu/Faculty/Homepages/mball.html
   - label: GitHub
     kind:  github
     url:   https://github.com/cycomachead

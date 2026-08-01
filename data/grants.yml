@@ -78,6 +78,21 @@
     Diversity initiatives in CS to support high schools nationwide. The
     course CS10 / Beauty and Joy of Computing was developed into an AP
     course, delivered through an edX SPOC.
+  # Long form, from the handcrafted latex/5-awards.tex.
+  # summary: >-
+  #   For the support of diversity initiatives in CS to support high schools
+  #   nationwide. The High School Initiative focuses on high school computer
+  #   science teachers, led by Professor Dan Garcia. In response to NSF Program
+  #   Manager Jan Cuny's charge to change the face of computing by engaging and
+  #   preparing 10,000 teachers to teach computer science courses, Professor
+  #   Garcia and colleagues have developed our non-major computer science class
+  #   CS10: The Beauty and Joy of Computing (BJC) into a course that is fully
+  #   aligned with the high school Advanced Placement (AP) specification. The
+  #   plan is to accomplish this objective via an edX Small Private Online
+  #   Course (SPOC) experience, with the high school teacher in control. The
+  #   course recently received national exposure when it had more women than
+  #   men in an intro CS course for the first time since records were
+  #   digitized.
 
 - when:    2015
   title:   Google CS Engagement Award
@@ -97,6 +112,15 @@
     via "Scaling Computer Science through Targeted Engagement." Goals
     included reducing the intro GPA gap, increasing software-engineering
     enrollment, and tripling women and URM CS majors.
+  # Long form, from the handcrafted latex/5-awards.tex.
+  # summary: >-
+  #   Authored by Dan Garcia. Funding to the department for a 3-year project to
+  #   grow undergraduate capacity and support diversity via our "Scaling
+  #   Computer Science through Targeted Engagement" project. The three
+  #   objectives are (1) Decrease the intro GPA gap between experienced and
+  #   inexperienced students by 50%, (2) Increase Software Engineering and UI
+  #   Design enrollment by 500 total students/year, and (3) Increase the number
+  #   of women and underrepresented minority CS majors by a factor of 3.
 
 - when:    2014
   title:   "NSF STEM-C BJC4NYC: Bringing the Beauty and Joy of Computing to the Largest School System in the US"
@@ -108,6 +132,19 @@
     100 NYC high-school teachers; reviewed/edited curriculum with EDC;
     developed BJCx (with auto-grading) as a SPOC; supported teachers
     online.
+  # Long form, from the handcrafted latex/5-awards.tex.
+  # summary: >-
+  #   For the development of curricular materials, based on the Beauty and Joy
+  #   of Computing, for teaching CS Principles at the high school level using
+  #   the Snap! programming language. Development of the Snap! language,
+  #   including the cloud back-end, and BJC curriculum software. During the
+  #   project, 100 high school teachers in New York City were trained to teach
+  #   BJC, and early participants became teacher-trainers who worked with later
+  #   participants. The teachers involved became part of a Community of
+  #   Practice that continues to provide support for the teacher cohorts. I
+  #   worked with EDC curriculum developers to review and suggest changes,
+  #   developed BJCx (with auto-grading features) for teachers as a small
+  #   private online course (SPOC), and supported BJC teachers online.
 
 - when:    2014
   title:   edX
@@ -118,3 +155,14 @@
     SPOC for high schools, a synchronous open MOOC, and an asynchronous
     self-study course. Supported Snap! cloud integration, autograding, and
     online support for students and teachers.
+  # Long form, from the handcrafted latex/5-awards.tex.
+  # summary: >-
+  #   For the development of BJCx, a Computer Science Principles edX MOOC to be
+  #   offered (1) as a synchronous Small Private Online Course (SPOC) for high
+  #   schools, (2) a synchronous open-to-all MOOC for others, and (3) an
+  #   asynchronous self-study course. The development concluded in creating
+  #   four sub-MOOCs, which together were the sum of the BJC offering. I
+  #   supported Snap! cloud integration, developed autograding (remote grading
+  #   of Python and Snap! assignments and lab activities on a remote server)
+  #   and an automated lab content builder, and supported BJC students and
+  #   teachers in an online forum.
