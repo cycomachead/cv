@@ -67,7 +67,8 @@ check-latex:
 md:
 	@$(RUBY) bin/cv md
 
-# Header-stripped Markdown for the Jekyll embed (no name/title/contact block).
+# Markdown for the Jekyll embed (no in-page name/title — the site layout
+# renders those itself).
 md-embed:
 	@$(RUBY) bin/cv md:embed
 
@@ -76,7 +77,9 @@ sidebar: md
 	@$(RUBY) bin/cv sidebar
 
 # Full embed bundle: cv-embed.md + cv-sidebar.html + cv.css + the scripts.
-embed:
+# Depends on md for the same reason `sidebar` does: the TOC is built from the
+# rendered cv.md.
+embed: md
 	@$(RUBY) bin/cv embed
 
 # ---------------- HTML preview ----------------
