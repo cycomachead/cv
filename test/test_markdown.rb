@@ -84,20 +84,38 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
-  def test_md_embed_strips_page_header_but_keeps_front_matter
+  def test_md_embed_strips_page_title_but_keeps_front_matter
     Dir.mktmpdir do |dir|
       out = CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md'))
       md  = File.read(out, encoding: 'UTF-8')
 
       assert_match(/\A---\nlayout: cv\n/, md,
                    'jekyll front matter is preserved')
+      # The site's cv layout renders the <h1> + subtitle from the front
+      # matter, so the body must not repeat them.
       refute_includes md, '# Michael Ball'
-      refute_includes md, '{:.contact}'
-      refute_includes md, '{:.bio}'
 
       # Body content is still there.
       assert_includes md, '## Education'
       assert_includes md, '## Positions'
+    end
+  end
+
+  # The site layout has no contact block of its own, so anything the embed
+  # drops here is simply absent from mball.co/cv.
+  def test_md_embed_keeps_contact_links_and_bio
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build_embed(output: File.join(dir, 'cv-embed.md')),
+                     encoding: 'UTF-8')
+      basics = CV::Data.load.basics
+
+      assert_includes md, '{:.contact}'
+      assert_includes md, basics['email']
+      assert_includes md, basics['homepage']
+      Array(basics['profiles']).each { |p| assert_includes md, p['url'] }
+
+      assert_includes md, '{:.bio}'
+      assert_includes md, basics['bio']['short'].strip.lines.first.strip
     end
   end
 

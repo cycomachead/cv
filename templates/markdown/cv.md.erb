@@ -5,6 +5,10 @@
     Note on the `{:.entry}` IAL: kramdown attaches the class to the
     preceding paragraph; preview.css and the deployed Jekyll layout target
     `.entry` to make role/title lines visually distinct from the body. -%>
+<%# `page_header` covers the name + job title only. The Jekyll embed turns it
+    off because the site layout renders its own <h1> and subtitle — but the
+    contact line, profile links, and bio have no equivalent there, so they are
+    emitted either way or the deployed CV loses them entirely. -%>
 <%- show_header = defined?(page_header) ? page_header : true -%>
 <%- if jekyll_front_matter -%>
 ---
@@ -19,6 +23,7 @@ permalink: /cv/
 # <%= h(data.basics['name']) %>
 
 **<%= h(data.basics['title']) %>**
+<%- end -%>
 
 <%= [data.basics['address'], link("mailto:#{data.basics['email']}", data.basics['email']),
      link(data.basics['homepage'])
@@ -35,7 +40,6 @@ permalink: /cv/
 <% end %>
 
 ---
-<%- end -%>
 
 ## Education
 
