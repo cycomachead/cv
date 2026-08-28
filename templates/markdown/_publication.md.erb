@@ -24,9 +24,11 @@
     title_part += " (#{h(item['kind'])})" if item['kind']
     parts << title_part
     # `date` is the precise "May 6–13, 2026" / "March 2024" string when we have
-    # one; `year` is the fallback for entries recorded only to the year.
+    # one; `year` is the fallback for entries recorded only to the year. An
+    # entry with a date but no venue still gets to say when it happened.
     when_ = item['date'] || year
-    parts << "#{h(venue)}#{when_ ? ", #{h(when_)}" : ''}" if venue
+    dateline = [(h(venue) if venue), (h(when_) if when_)].compact.join(', ')
+    parts << dateline unless dateline.empty?
     parts << link(url) if url
     # Each part is its own sentence. An author list ending in an initial
     # ("… Malan, David J.") already supplies the period, so don't add a

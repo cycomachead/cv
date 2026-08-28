@@ -47,9 +47,11 @@
     body << " (#{h(item['kind'])})" if item['kind']
     body << '.'
     # `date` is the precise "May 6–13, 2026" / "March 2024" string when we have
-    # one; `year` is the fallback for entries recorded only to the year.
+    # one; `year` is the fallback for entries recorded only to the year. An
+    # entry with a date but no venue still gets to say when it happened.
     when_ = item['date'] || year
-    body << "\n    \\newline #{h(venue)}#{when_ ? ", #{h(when_)}" : ''}." if venue
+    dateline = [(h(venue) if venue), (h(when_) if when_)].compact.join(', ')
+    body << "\n    \\newline #{dateline}." unless dateline.empty?
     body << "\n    \\newline #{link(url, url)}" if url
   end
 -%>
