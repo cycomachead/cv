@@ -119,6 +119,36 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
+  # Jekyll renders with the GFM parser and hard_wrap: false, so a soft line
+  # break in the markdown is not a line break on the deployed page. Entry
+  # blocks have to carry their own <br> or the employer, location, advisor and
+  # thesis lines all run together into one paragraph.
+  def test_entry_lines_break_under_jekylls_kramdown_settings
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
+                     encoding: 'UTF-8')
+      html = render_like_jekyll(md)
+
+      entry = html[%r{<p class="entry">.*?</p>}m]
+      refute_nil entry, 'no .entry paragraph in the rendered CV'
+      assert_includes entry, '<br', 'entry lines collapsed into one line'
+    end
+  end
+
+  # The preview only earns its "mirrors the deployed site" billing if both
+  # renderings agree on where the line breaks are.
+  def test_preview_line_breaks_match_the_deployed_render
+    Dir.mktmpdir do |dir|
+      md   = CV::Markdown.build(output: File.join(dir, 'cv.md'))
+      html = File.read(CV::Preview.build(input: md, output: File.join(dir, 'cv.html')),
+                       encoding: 'UTF-8')
+      deployed = render_like_jekyll(File.read(md, encoding: 'UTF-8'))
+
+      assert_equal deployed.scan('<br />').size, html.scan('<br />').size,
+                   'preview and deployed renderings disagree on line breaks'
+    end
+  end
+
   def test_md_links_course_sites_after_descriptions
     Dir.mktmpdir do |dir|
       md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
@@ -205,5 +235,17 @@ class MarkdownBuildTest < Minitest::Test
                               resume_pdf_url: '/one-page.pdf')
     assert_includes html, 'href="/cv-full.pdf"'
     assert_includes html, 'href="/one-page.pdf"'
+  end
+
+  private
+
+  # Render cv.md the way the deployed Jekyll site does: GFM parser, auto ids,
+  # and hard_wrap off (Jekyll's default — the gem's own default is true).
+  def render_like_jekyll(md)
+    require 'kramdown'
+    require 'kramdown-parser-gfm'
+    ::Kramdown::Document.new(md.sub(/\A---\n.*?\n---\n+/m, ''),
+                             input: 'GFM', auto_ids: true,
+                             hard_wrap: false).to_html
   end
 end

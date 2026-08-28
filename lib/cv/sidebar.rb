@@ -103,9 +103,11 @@ module CV
       require 'kramdown-parser-gfm'
       md = File.read(CV::Markdown::DEFAULT_OUTPUT, encoding: 'UTF-8')
       md = md.sub(/\A---\n.*?\n---\n+/m, '')
+      # Same options as CV::Preview, so the TOC is built from the headings the
+      # deployed page actually renders (see the note there on hard_wrap).
       ::Kramdown::Document.new(
         md,
-        input: 'GFM', auto_ids: true
+        input: 'GFM', auto_ids: true, hard_wrap: false
       ).to_html
     end
   end

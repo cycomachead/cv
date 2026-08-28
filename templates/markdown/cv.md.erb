@@ -44,14 +44,11 @@ permalink: /cv/
 ## Education
 
 <%- data.education.each do |e| -%>
-**<%= h(e['degree']) %>** · <%= e['when'] %>
-<%= h(e['institution']) %><%- if e['location'] %>, <%= h(e['location']) -%><% end %>
-<%- if e['advisor'] -%>
-Advisor: <%= h(e['advisor']) %>
-<%- end -%>
-<%- if e['thesis'] -%>
-Thesis: _<%= h(e['thesis']) %>_
-<%- end -%>
+<%- lines = ["**#{h(e['degree'])}** · #{e['when']}",
+             [h(e['institution']), (h(e['location']) if e['location'])].compact.join(', ')]
+    lines << "Advisor: #{h(e['advisor'])}" if e['advisor']
+    lines << "Thesis: _#{h(e['thesis'])}_"  if e['thesis'] -%>
+<%= lines.join("<br>\n") %>
 {:.entry}
 
 <% end -%>
@@ -59,8 +56,8 @@ Thesis: _<%= h(e['thesis']) %>_
 ## Positions
 
 <%- data.positions.each do |p| -%>
-**<%= h(p['role']) %>** · <%= p['when'] %>
-<%= h(p['employer']) %><%- if p['location'] %>, <%= h(p['location']) -%><% end %>
+<%= ["**#{h(p['role'])}** · #{p['when']}",
+     [h(p['employer']), (h(p['location']) if p['location'])].compact.join(', ')].join("<br>\n") %>
 {:.entry}
 <%- if p['summary'] %>
 
@@ -90,10 +87,11 @@ Thesis: _<%= h(e['thesis']) %>_
 
 ### Teaching Assignments
 
-<%- Array(data.teaching['notes']).each do |n| -%>
 <%# A leading `*` (the co-taught legend) would otherwise parse as a list
     bullet inside the blockquote and disappear — escape it for kramdown. -%>
-> <%= h(n).sub(/\A\*/) { '\*' } %>
+<%- notes = Array(data.teaching['notes']).map { |n| h(n).sub(/\A\*/) { '\*' } } -%>
+<%- unless notes.empty? -%>
+> <%= notes.join("<br>\n> ") %>
 <%- end %>
 
 <%- data.teaching['assignments'].each do |a| -%>
@@ -118,8 +116,8 @@ Thesis: _<%= h(e['thesis']) %>_
 ## Grants & Gifts
 
 <%- data.grants.each do |g| -%>
-**<%= h(g['title']) %>** · <%= g['when'] %>
-<%= [g['amount'], g['role']].compact.map { |s| h(s) }.join(' · ') %>
+<%= ["**#{h(g['title'])}** · #{g['when']}",
+     [g['amount'], g['role']].compact.map { |s| h(s) }.join(' · ')].reject(&:empty?).join("<br>\n") %>
 {:.entry}
 <%- if g['summary'] %>
 

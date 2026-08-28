@@ -25,9 +25,15 @@ module CV
       # Default smart quotes (lsquo/rsquo/ldquo/rdquo) — matches what the
       # deployed Jekyll kramdown produces, and keeps opening/closing quotes
       # paired (the old apos/rsquo mix rendered 'like this’).
+      #
+      # hard_wrap has to be spelled out: kramdown-parser-gfm defaults it to
+      # true, Jekyll's kramdown config sets it to false. Left at the gem
+      # default the preview turned every soft line break into a <br> that the
+      # deployed page never had, so the two renderings disagreed on every
+      # multi-line entry. cv.md.erb emits its own <br> where a break is meant.
       html_body = ::Kramdown::Document.new(
         md,
-        input: 'GFM', auto_ids: true
+        input: 'GFM', auto_ids: true, hard_wrap: false
       ).to_html
 
       sidebar = CV::Sidebar.render(html_body: html_body,
