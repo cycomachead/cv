@@ -36,7 +36,13 @@
     end
 
     body = +''
-    body << "#{authors(authors_list)}.\n    \\newline " unless authors_list.empty?
+    # An author list ending in an initial ("… Malan, David J.") already
+    # supplies the sentence period; don't print a second one.
+    unless authors_list.empty?
+      rendered_authors = authors(authors_list)
+      rendered_authors += '.' unless rendered_authors.end_with?('.')
+      body << "#{rendered_authors}\n    \\newline "
+    end
     body << h(title)
     body << " (#{h(item['kind'])})" if item['kind']
     body << '.'

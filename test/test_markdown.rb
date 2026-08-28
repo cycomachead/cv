@@ -165,6 +165,18 @@ class MarkdownBuildTest < Minitest::Test
     end
   end
 
+  # Author lists ending in an initial already carry a period; the entry
+  # separator must not add a second one ("Malan, David J.. _Title_").
+  def test_publications_never_double_up_periods
+    Dir.mktmpdir do |dir|
+      md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),
+                     encoding: 'UTF-8')
+      section = md[/^## Writing & Publications$.*?(?=^## )/m]
+      refute_nil section, 'Publications section is missing'
+      refute_match(/\.\./, section)
+    end
+  end
+
   def test_md_withholds_referee_contact_details
     Dir.mktmpdir do |dir|
       md = File.read(CV::Markdown.build(output: File.join(dir, 'cv.md')),

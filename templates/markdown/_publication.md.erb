@@ -28,7 +28,10 @@
     when_ = item['date'] || year
     parts << "#{h(venue)}#{when_ ? ", #{h(when_)}" : ''}" if venue
     parts << link(url) if url
-    out = parts.join('. ') + '.'
+    # Each part is its own sentence. An author list ending in an initial
+    # ("… Malan, David J.") already supplies the period, so don't add a
+    # second one.
+    out = parts.map { |part| part.end_with?('.') ? part : "#{part}." }.join(' ')
   end
 -%>
 <%= out %>
