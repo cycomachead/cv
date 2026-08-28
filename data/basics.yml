@@ -37,8 +37,10 @@ profiles:
     kind:  snap
     url:   https://snap.berkeley.edu/user?username=cycomachead
 
-# Reusable bios. Each is Markdown — the renderer pastes the value through
-# verbatim (links, *italic*, kramdown-compatible inline HTML are all fine).
+# Reusable bios. Each is Markdown — the renderer passes the value through
+# with only the usual macro substitutions applied (so `Snap!` is stylized
+# here exactly as it is everywhere else); links, *italic*, and
+# kramdown-compatible inline HTML are all fine.
 # The web CV uses `short`; the others are available for talk intros, funding
 # applications, twitter/Bluesky bios, etc.
 #

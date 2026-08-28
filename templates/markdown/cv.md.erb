@@ -30,12 +30,13 @@ permalink: /cv/
     ].compact.reject(&:empty?).join(' · ') %>
 {:.contact}
 
-<%= [*Array(data.basics['profiles']).map { |p| link(p['url'], p['label']) }
+<%# Labels go through h() so the Snap! link reads like the rest of the CV. -%>
+<%= [*Array(data.basics['profiles']).map { |p| link(p['url'], h(p['label'])) }
     ].compact.reject(&:empty?).join(' · ') %>
 {:.contact}
 
 <%- if data.basics['bio'] && data.basics['bio']['short'] %>
-<%= data.basics['bio']['short'].strip %>
+<%= h(data.basics['bio']['short'].strip) %>
 {:.bio}
 <% end %>
 

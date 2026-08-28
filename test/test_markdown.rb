@@ -115,7 +115,7 @@ class MarkdownBuildTest < Minitest::Test
       Array(basics['profiles']).each { |p| assert_includes md, p['url'] }
 
       assert_includes md, '{:.bio}'
-      assert_includes md, basics['bio']['short'].strip.lines.first.strip
+      assert_includes md, CV::Macros.to_md(basics['bio']['short'].strip)
     end
   end
 
