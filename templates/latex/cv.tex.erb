@@ -129,7 +129,7 @@
 \vspace{5pt}
 \begin{description}\setlength\itemsep{0.7em}
 <%- data.teaching['courses'].each do |c| -%>
-  \item[<%= h(c['code']) %>] \textit{<%= h(c['title']) %>}<% if c['units'] %> (<%= c['units'] %> units)<% end %>. <%= h(c['description']) %><% if c['url'] %> \small{<%= link(c['url']) %>}<% end %>
+  \item[<%= h(c['code']) %>] \textit{<%= h(c['title']) %>}<% if c['units'] %> (<%= c['units'] %> <%= c['units'].to_s.strip == '1' ? 'unit' : 'units' %>)<% end %>. <%= h(c['description']) %><% if c['url'] %> \small{<%= link(c['url']) %>}<% end %>
 <%- end -%>
 \end{description}
 \vspace{5pt}
@@ -185,7 +185,11 @@
 \vspace{6pt}
 \begin{itemize}\setlength\itemsep{1em}
 <%- data.students.each do |s| -%>
-  \report{<%= h(s['when']) %>}{<%= h(s['name']) %>}{<%= h(s['title']) %>}{<%= h(s['advising']) %>}{<%= s['url'] %>}
+<%# The URL goes through link() like every other section, so the report is
+    clickable and the visible label is escaped. It used to be emitted raw,
+    which printed dead text and made an `_` or `&` in a future report URL a
+    compile error rather than a link. -%>
+  \report{<%= h(s['when']) %>}{<%= h(s['name']) %>}{<%= h(s['title']) %>}{<%= h(s['advising']) %>}{<%= link(s['url'], s['url']) %>}
 <%- end -%>
 \end{itemize}
 

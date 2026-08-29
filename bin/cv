@@ -26,13 +26,17 @@ when 'preview'
   out = CV::Preview.build
   puts "wrote #{out}"
 when 'sidebar'
-  CV::Markdown.build unless File.file?(CV::Markdown::DEFAULT_OUTPUT)
+  # The sidebar's TOC comes from the rendered cv.md, so build it first —
+  # otherwise the fragment is missing (fresh clone) or stale (edited data).
+  # Mirrors the `sidebar => md` dependency in the Rakefile.
+  CV::Markdown.build
   out = CV::Sidebar.build
   puts "wrote #{out}"
 when 'embed'
   require 'fileutils'
-  CV::Markdown.build_embed
-  CV::Sidebar.build
+  CV::Markdown.build
+  puts "wrote #{CV::Markdown.build_embed}"
+  puts "wrote #{CV::Sidebar.build}"
   %w[preview.css cv-theme.js cv-nav.js].each do |asset|
     src  = CV::TEMPLATE_DIR.join('markdown', asset)
     dest = CV::BUILD_DIR.join(asset == 'preview.css' ? 'cv.css' : asset)

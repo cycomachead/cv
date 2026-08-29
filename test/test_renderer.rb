@@ -43,4 +43,14 @@ class RendererTest < Minitest::Test
                     'LaTeX output should use \snap{} macro'
     assert_includes tex, '\href{'
   end
+
+  # The dateline used to hang off `venue`, so an entry recorded with a date
+  # but no venue lost the date entirely.
+  def test_publication_keeps_the_date_without_a_venue
+    item = { 'title' => 'A Talk With No Venue', 'date' => 'March 2024' }
+    md = CV::Renderer.new(format: :markdown)
+                     .render('_publication', data: @data, bib: @bib,
+                             locals: { item: item })
+    assert_includes md, 'March 2024'
+  end
 end

@@ -27,9 +27,12 @@ module CV
     end
 
     # Variant for the Jekyll site: keeps front matter, drops the in-page
-    # name/title/contact/bio block. The deployed page already has its own
-    # site-level page header, and the CV-specific download buttons + TOC
-    # live in the sidebar include rather than the markdown.
+    # name + job title. The deployed page renders those itself (the cv layout
+    # emits an <h1> from `title:` and a subtitle from `subtitle:`), and the
+    # CV-specific download buttons + TOC live in the sidebar include rather
+    # than the markdown. The contact line, profile links, and bio stay in —
+    # the site layout has no equivalent, so gating them here dropped them
+    # from the published CV altogether.
     #
     # Referee contact details need no gate here: the Markdown output is public
     # either way, so cv.md.erb never emits them at all.

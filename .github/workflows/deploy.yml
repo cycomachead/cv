@@ -156,16 +156,24 @@ jobs:
           DEPLOY_TOKEN: ${{ secrets.CYCOMACHEAD_GH_PAGES_TOKEN }}
         run: |
           set -euo pipefail
+
+          # Clone outside the workspace. `site/` here is this repo's own legacy
+          # landing page, so cloning into ./site failed every run with
+          # "destination path 'site' already exists and is not an empty
+          # directory" — and keeping the tokenised remote out of the workspace
+          # means it can't be swept into an artifact either.
+          SITE_REPO="${RUNNER_TEMP:-/tmp}/site-repo"
+          rm -rf "$SITE_REPO"
           git clone --depth 1 \
             "https://x-access-token:${DEPLOY_TOKEN}@github.com/cycomachead/cycomachead.github.io.git" \
-            site
+            "$SITE_REPO"
 
           # Sync only the CV bundle. --delete prunes stale files, but scoped to
           # cv/ so it can't affect anything outside that directory.
-          rsync -a --delete _deploy/cv/ site/cv/
-          cp _deploy/michael-ball-cv.pdf site/michael-ball-cv.pdf
+          rsync -a --delete _deploy/cv/ "$SITE_REPO/cv/"
+          cp _deploy/michael-ball-cv.pdf "$SITE_REPO/michael-ball-cv.pdf"
 
-          cd site
+          cd "$SITE_REPO"
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add cv michael-ball-cv.pdf
